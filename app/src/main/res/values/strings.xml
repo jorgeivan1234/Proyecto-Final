@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DualHabit</string>
+    <string name="iniciar">INICIAR</string>
+    <string name="bienvenido_a_dualhabit">Bienvenido a DualHabit</string>
+</resources>
