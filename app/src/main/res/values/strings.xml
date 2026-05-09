@@ -2,4 +2,7 @@
     <string name="app_name">DualHabit</string>
     <string name="iniciar">INICIAR</string>
     <string name="bienvenido_a_dualhabit">Bienvenido a DualHabit</string>
+    <string name="login">Inicia Sesión</string>
+    <string name="Forgot_your_password">Recuperar contraseña</string>
+    <string name="Register">Registrarse</string>
 </resources>

@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -21,11 +20,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.fic.dualhabit10.R
 
 
+
 @Composable
-fun InicioScreen() {
+fun InicioScreen(navController: NavController) {
 
     Box(
         modifier = Modifier
@@ -51,7 +52,7 @@ fun InicioScreen() {
 
         Button(
             onClick = {
-
+                navController.navigate("login")
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.LightGray
