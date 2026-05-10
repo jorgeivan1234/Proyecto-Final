@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.ui.screens.InicioScreen
 import com.fic.dualhabit10.ui.screens.LoginScreen
 import com.fic.dualhabit10.ui.screens.RegisterScreen
+import com.fic.dualhabit10.ui.screens.RegisterSuccessful
 
 
 class MainActivity : ComponentActivity() {
@@ -33,6 +34,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("register") {
                         RegisterScreen(navController = navController)
+                    }
+                    composable("register_successful"){
+                        RegisterSuccessful(navController = navController)
                     }
                 }
             }

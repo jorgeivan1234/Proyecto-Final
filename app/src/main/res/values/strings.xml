@@ -4,5 +4,7 @@
     <string name="bienvenido_a_dualhabit">Bienvenido a DualHabit</string>
     <string name="login">Inicia Sesión</string>
     <string name="Register">Registrarse</string>
+    <string name="continu">Continuar</string>
     <string name="Text_Register">Prepara para mantenerte sano a ti y a tu mascota</string>
+    <string name="Register_Successful">¡El Registro fue Exitoso!</string>
 </resources>

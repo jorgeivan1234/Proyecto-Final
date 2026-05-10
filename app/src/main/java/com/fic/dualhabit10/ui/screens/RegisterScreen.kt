@@ -172,9 +172,11 @@ fun RegisterScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Button(
-                onClick = { /* Agregar logica para ir a la pantalla principal */ },
+                onClick = {
+                    navController.navigate("register_successful")
+                },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF4376A3) // Azul oscuro
+                    containerColor = Color(0xFF4376A3)
                 ),
                 modifier = Modifier.size(width = 200.dp, height = 50.dp),
                 shape = RoundedCornerShape(50.dp)
