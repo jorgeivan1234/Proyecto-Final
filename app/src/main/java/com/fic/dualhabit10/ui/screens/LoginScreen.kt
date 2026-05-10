@@ -2,6 +2,7 @@ package com.fic.dualhabit10.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavController
 import com.fic.dualhabit10.R
 
 
@@ -97,16 +99,22 @@ fun LoginScreen(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(text = stringResource(id = R.string.Forgot_your_password),
+            Text(text = "Recuperar Contraseña",
                 color = Color.White,
-                fontSize =  14.sp
+                fontSize =  14.sp,
+                modifier = Modifier.clickable{
+                    navController.navigate("forget_password")
+                }
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(text = stringResource(id = R.string.Register),
+            Text(text = "Registrarse",
                 color = Color.White,
-                fontSize =  14.sp
+                fontSize =  14.sp,
+                modifier = Modifier.clickable{
+                    navController.navigate("register")
+                }
             )
 
             Spacer(modifier = Modifier.height(8.dp))

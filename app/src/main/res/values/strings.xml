@@ -3,6 +3,6 @@
     <string name="iniciar">INICIAR</string>
     <string name="bienvenido_a_dualhabit">Bienvenido a DualHabit</string>
     <string name="login">Inicia Sesión</string>
-    <string name="Forgot_your_password">Recuperar contraseña</string>
     <string name="Register">Registrarse</string>
+    <string name="Text_Register">Prepara para mantenerte sano a ti y a tu mascota</string>
 </resources>
