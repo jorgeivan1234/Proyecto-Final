@@ -7,4 +7,7 @@
     <string name="continu">Continuar</string>
     <string name="Text_Register">Prepara para mantenerte sano a ti y a tu mascota</string>
     <string name="Register_Successful">¡El Registro fue Exitoso!</string>
+    <string name="text_forget_password">Olvidaste tu contraseña</string>
+    <string name="Send_Code">Enviar codigo</string>
+    <string name="Login_Back">Regresar</string>
 </resources>

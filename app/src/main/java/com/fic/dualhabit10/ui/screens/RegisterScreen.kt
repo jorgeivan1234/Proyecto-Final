@@ -103,12 +103,11 @@ fun RegisterScreen(navController: NavHostController) {
                 )
             )
             Spacer(modifier = Modifier.height(16.dp))
-
-            var password by remember { mutableStateOf("") }
+            var email by remember { mutableStateOf("") }
             TextField(
-                value = password,
-                onValueChange = {password = it},
-                label = { Text("Contraseña") },
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Correo Electronico") },
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
@@ -116,13 +115,14 @@ fun RegisterScreen(navController: NavHostController) {
                     disabledContainerColor = Color.Transparent
                 )
             )
+
             Spacer(modifier = Modifier.height(16.dp))
 
-            var email by remember { mutableStateOf("") }
+            var password by remember { mutableStateOf("") }
             TextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("Correo Electronico") },
+                value = password,
+                onValueChange = {password = it},
+                label = { Text("Contraseña") },
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,

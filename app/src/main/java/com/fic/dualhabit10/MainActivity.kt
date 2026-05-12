@@ -7,32 +7,37 @@ import androidx.compose.material3.MaterialTheme
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.fic.dualhabit10.ui.screens.Forget_Password
 import com.fic.dualhabit10.ui.screens.InicioScreen
 import com.fic.dualhabit10.ui.screens.LoginScreen
+import com.fic.dualhabit10.ui.screens.Mascotas_V
 import com.fic.dualhabit10.ui.screens.RegisterScreen
 import com.fic.dualhabit10.ui.screens.RegisterSuccessful
 
 
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(){
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
 
-        setContent {
-            MaterialTheme {
+        setContent{
+            MaterialTheme{
                 val navController = rememberNavController()
 
                 NavHost(
                     navController = navController,
                     startDestination = "inicio"
                 ) {
-                    composable("inicio") {
+                    composable("inicio"){
                         InicioScreen(navController = navController)
                     }
-                    composable("login") {
+                    composable("login"){
                         LoginScreen(navController = navController)
                     }
-                    composable("register") {
+                    composable("forget_password"){
+                        Forget_Password(navController = navController)
+                    }
+                    composable("register"){
                         RegisterScreen(navController = navController)
                     }
                     composable("register_successful"){
