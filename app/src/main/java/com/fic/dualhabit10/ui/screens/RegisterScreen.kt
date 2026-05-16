@@ -13,8 +13,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -33,6 +38,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import com.fic.dualhabit10.R
 
 
@@ -118,12 +125,32 @@ fun RegisterScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            var passwordVisible by remember { mutableStateOf(false)}
             var password by remember { mutableStateOf("") }
+
             TextField(
                 value = password,
                 onValueChange = {password = it},
                 label = { Text("Contraseña") },
                 modifier = Modifier.fillMaxWidth(),
+                    visualTransformation =  if(passwordVisible)
+                        VisualTransformation.None
+                    else
+                        PasswordVisualTransformation(),
+                    trailingIcon = {
+                        val icon = if (passwordVisible)
+                            Icons.Filled.Visibility
+                        else
+                            Icons.Filled.VisibilityOff
+
+                    IconButton(onClick = {passwordVisible =!passwordVisible}) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = if (passwordVisible) "Ocultar contraseña"
+                            else "Mostrar contraseña"
+                        )
+                    }
+                },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,

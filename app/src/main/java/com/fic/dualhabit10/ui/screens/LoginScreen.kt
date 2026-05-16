@@ -42,8 +42,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lint.kotlin.metadata.Visibility
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
 
 
@@ -122,7 +124,6 @@ fun LoginScreen(navController: NavHostController) {
                                 )
                         }
                     },
-
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
