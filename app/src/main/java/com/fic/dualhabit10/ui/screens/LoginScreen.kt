@@ -1,6 +1,5 @@
 package com.fic.dualhabit10.ui.screens
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,13 +38,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lint.kotlin.metadata.Visibility
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
 
 
@@ -153,7 +147,12 @@ fun LoginScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Button(
-                onClick = { },
+                onClick = {
+                    navController.navigate("habitos"){
+                        //es para limpiar el historial para no regresar al login
+                        popUpTo("login") { inclusive = true }
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF4376A3)
                 ),

@@ -55,7 +55,7 @@ fun InicioScreen(navController: NavController) {
                 navController.navigate("login")
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.LightGray
+                containerColor = Color(0xFF42E592)
             ),
             modifier = Modifier
                 .align(Alignment.TopCenter)
