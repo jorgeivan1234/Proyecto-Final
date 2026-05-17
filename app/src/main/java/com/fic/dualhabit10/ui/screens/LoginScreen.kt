@@ -40,6 +40,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
 
 
@@ -165,4 +167,11 @@ fun LoginScreen(navController: NavHostController) {
             }
         }
     }
+}
+
+@Composable
+@Preview
+fun LoginPreview(){
+    val nav = rememberNavController()
+    LoginScreen(navController = nav)
 }

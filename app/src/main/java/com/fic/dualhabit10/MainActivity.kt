@@ -1,8 +1,6 @@
 package com.fic.dualhabit10
 
-import android.os.Build
 import android.os.Bundle
-import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
@@ -14,7 +12,7 @@ import com.fic.dualhabit10.ui.screens.Forget_Password
 import com.fic.dualhabit10.ui.screens.HabitosScreen
 import com.fic.dualhabit10.ui.screens.InicioScreen
 import com.fic.dualhabit10.ui.screens.LoginScreen
-import com.fic.dualhabit10.ui.screens.Mascotas_V
+import com.fic.dualhabit10.ui.screens.MascotasMenu
 import com.fic.dualhabit10.ui.screens.RegisterScreen
 import com.fic.dualhabit10.ui.screens.RegisterSuccessful
 
@@ -31,27 +29,46 @@ class MainActivity : ComponentActivity(){
             MaterialTheme{
                 val navController = rememberNavController()
 
+                /*
+                    Cualquier Modificación al NavHost debe añadir de donde sale hacia donde redirecciona
+                    ejemplo
+
+                    //InicioScreen -> LoginScreen
+                    composable("inicio"){   //Donde inicia la acción
+                        InicioScreen(navController = navController) //Donde redirige la acción
+                    }
+                */
                 NavHost(
                     navController = navController,
                     startDestination = "inicio"
                 ) {
+                    //InicioScreen -> LoginScreen
                     composable("inicio"){
                         InicioScreen(navController = navController)
                     }
-                    composable("login"){
+                    //LoginScreen -> HabitosScreen
+                    composable("login") {
                         LoginScreen(navController = navController)
                     }
+                    //LoginScreen -> ForgetPassword
                     composable("forget_password"){
                         Forget_Password(navController = navController)
                     }
+                    //LoginScreen -> RegisterScreen
                     composable("register"){
                         RegisterScreen(navController = navController)
                     }
+                    //RegisterScreen -> RegisterSuccessful
                     composable("register_successful"){
                         RegisterSuccessful(navController = navController)
                     }
+                    //LoginScreen -> HabitosScreen
                     composable("habitos") {
                         HabitosScreen(navController = navController)
+                    }
+                    //HabitosScreen -> MascotasMenu
+                    composable("mascota_menu"){
+                        MascotasMenu(navController = navController)
                     }
                 }
             }

@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.material3.Icon
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
 
 
@@ -39,12 +41,36 @@ data class HabitoItem(
 @Composable
 fun HabitosScreen(navController: NavController) {
     val listaHabitos = listOf(
-        HabitoItem("Hidratacion", R.drawable.img_hidratacion, "hidratacion_screen"),
-        HabitoItem("Sueño", R.drawable.img_sueno, "sueno_screen"),
-        HabitoItem("Actividad\nFisica", R.drawable.img_ejercicio, "ejercicio_screen"),
-        HabitoItem("Alimentacion", R.drawable.img_alimentacion, "alimentacion_screen"),
-        HabitoItem("mascotas", R.drawable.img_mascotas_v, "mascotas_screen"),
-        HabitoItem("Resumen", R.drawable.img_resumen, "resumen_screen")
+        HabitoItem(
+            titulo = "Hidratacion",
+            imagenRes = R.drawable.img_hidratacion,
+            rutaNavigation = "" //Agregar ruta. ejmp | hidratacion | Cuando se cree la pantalla
+        ),
+        HabitoItem(
+            titulo = "Sueño",
+            imagenRes = R.drawable.img_sueno,
+            rutaNavigation = "" //Agregar ruta. ejmp | sueno | Cuando se cree la pantalla
+        ),
+        HabitoItem(
+            titulo = "Actividad\nFisica",
+            imagenRes = R.drawable.img_ejercicio,
+            rutaNavigation = "" //Agregar ruta. ejmp | actividad fisica | Cuando se cree la pantalla
+        ),
+        HabitoItem(
+            titulo = "Alimentacion",
+            imagenRes = R.drawable.img_alimentacion,
+            rutaNavigation = "" //Agregar ruta. ejmp | alimentacion | Cuando se cree la pantalla
+        ),
+        HabitoItem(
+            titulo = "mascotas",
+            imagenRes = R.drawable.img_mascotas_v,
+            rutaNavigation = "mascota_menu"
+        ),
+        HabitoItem(
+            titulo = "Resumen",
+            imagenRes = R.drawable.img_resumen,
+            rutaNavigation = "" //Agregar ruta. ejmp | resumen | Cuando se cree la pantalla
+        )
     )
 
     Column(
@@ -183,4 +209,10 @@ fun Tarjetahabito(habito: HabitoItem, onClick: () -> Unit) {
             )
         }
     }
+}
+@Composable
+@Preview
+fun PreviewHabitos(){
+    val nav = rememberNavController()
+    HabitosScreen(navController = nav)
 }
