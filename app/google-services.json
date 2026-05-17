@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1036164031752",
+    "project_id": "dualhabit-a232c",
+    "storage_bucket": "dualhabit-a232c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1036164031752:android:82e69391ac40645c8638bd",
+        "android_client_info": {
+          "package_name": "com.fic.dualhabit10"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTgvBQLdImSAOg6Aov9FNfoxJ7Z5477x8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
