@@ -9,7 +9,7 @@
     <string name="Register_Successful">¡El Registro fue Exitoso!</string>
     <string name="text_forget_password">Olvidaste tu contraseña</string>
     <string name="Send_Code">Enviar codigo</string>
-    <string name="Login_Back">Regresar</string>
+    <string name="Login_Back">Volver al Login</string>
     <string name="Menu_Mascota">Menu de la mascota</string>
     <string name="Ver_Mascota">Ver mascotas Virtual</string>
 </resources>

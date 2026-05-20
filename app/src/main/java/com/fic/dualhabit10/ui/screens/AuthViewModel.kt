@@ -47,4 +47,19 @@ class AuthViewModel : ViewModel(){
             .addOnSuccessListener { onExito() }
             .addOnFailureListener { e -> onError(e.localizedMessage ?: "Error al enviar correo") }
     }
+
+    fun iniciarSesion (
+        email: String,
+        pass: String,
+        onExito: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        auth.signInWithEmailAndPassword(email, pass)
+            .addOnSuccessListener {
+                onExito()
+            }
+            .addOnFailureListener { e ->
+                onError(e.localizedMessage ?: "Correo o contraseña incorrectos")
+            }
+    }
 }

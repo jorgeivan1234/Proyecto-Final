@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -35,7 +37,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.ImeAction
 import com.fic.dualhabit10.R
 
 
@@ -47,7 +52,29 @@ fun Forget_Password(navController: NavHostController,
     var email by remember { mutableStateOf("")}
     var errorMensaje by remember { mutableStateOf("")}
     var mostrarAlertaExito by remember { mutableStateOf(false)}
-
+    var campoError by remember {mutableStateOf(false)}
+    val focusManager = LocalFocusManager.current
+    val procesarRecuperacion = {
+        val emailLimpio = email.trim()
+        if (emailLimpio.isBlank()){
+            campoError = true
+            errorMensaje = "Obligatorio: Por favor ingrese su cuenta de correo"
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailLimpio).matches()) {
+            campoError = true
+            errorMensaje = "Por favor, ingresa un formato de correo valido"
+        } else {
+            campoError = false
+            authViewModel.enviarEnlaceRecuperacion(
+                email = emailLimpio,
+                onExito = {
+                    mostrarAlertaExito = true
+                },
+                onError = { mensajeError ->
+                    errorMensaje = "No encontramos nunguna cuenta registrada con este correo"
+                }
+            )
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -86,9 +113,20 @@ fun Forget_Password(navController: NavHostController,
 
             TextField(
                 value = email,
-                onValueChange = {email = it; errorMensaje = "" },
+                onValueChange = {email = it; errorMensaje = ""; campoError = false },
                 label = { Text("Correo electronico") },
                 modifier = Modifier.fillMaxWidth(),
+                isError = campoError,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Send  // el boton enter cambia a icono de enviar
+                ),
+                keyboardActions = KeyboardActions(
+                    onSend = {
+                        focusManager.clearFocus()
+                        procesarRecuperacion()
+                    }
+                ),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
@@ -142,8 +180,13 @@ fun Forget_Password(navController: NavHostController,
                 text = stringResource(id = R.string.Login_Back),
                 color = Color.White,
                 fontSize =  14.sp,
-                modifier = Modifier.clickable{
-                    navController.navigate("login")
+                modifier = Modifier.clickable {
+                    navController.navigate("login") {
+                    popUpTo("forget_password") {
+                        inclusive = true
+                    }
+                        }
+
                 }
             )
         }

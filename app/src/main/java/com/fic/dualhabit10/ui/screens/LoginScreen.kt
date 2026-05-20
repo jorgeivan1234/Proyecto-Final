@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -38,8 +40,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
@@ -47,8 +54,44 @@ import com.fic.dualhabit10.R
 
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(navController: NavHostController,
+                authViewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
+    var email by remember { mutableStateOf ("") }
+    var password by remember { mutableStateOf ("") }
+    var passwordVisible by remember { mutableStateOf (false) }
+    var errorMensaje by remember { mutableStateOf ("") }
+    var camposVaciosError by remember { mutableStateOf(false)}
+    val focusManager = LocalFocusManager.current
 
+    val ejecutarLogin= {
+        val emailLimpio = email.trim()
+        val passwordLimpio = password.trim()
+
+        if (email.isBlank() || password.isBlank()){
+            camposVaciosError = true
+            errorMensaje = "Obligatorio Tiene que ingresar cuenta y contraseña"
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailLimpio).matches()) {
+            camposVaciosError = true
+            errorMensaje = "Por favor, ingresa un correo electronico valido"
+        } else {
+            camposVaciosError = false
+            authViewModel.iniciarSesion(
+                email = emailLimpio,
+                pass = passwordLimpio,
+                onExito = {
+                    //si todo sale bien pasa a habitos limpiando el historial
+                    navController.navigate("habitos"){
+                        popUpTo("login") { inclusive = true }
+                    }
+                },            //es la validacion local antes de ir a internet
+                onError = { mensajeErrorFirebase ->
+                    //si esta mal o el usuario no existe firebase avisara
+                    errorMensaje = "El correo electronico o la contraseña son incorrectos"
+                }
+            )
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -79,53 +122,69 @@ fun LoginScreen(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(40.dp))
 
-            var email by remember { mutableStateOf("") }
-                TextField(
-                    value = email,
-                    onValueChange = {email = it},
-                    label = { Text("Ingresar correo electronico") },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent
+            TextField(
+                value = email,
+                onValueChange = {email = it; errorMensaje = ""; camposVaciosError = false},
+                label = { Text("Ingresar correo electronico") },
+                modifier = Modifier.fillMaxWidth(),
+                isError = camposVaciosError, //se pone rojo si esta vacio
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down)}
+                ),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent
                 )
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            var passwordVisible by remember { mutableStateOf(false)}
-            var password by remember { mutableStateOf("") }
-
-                TextField(
+            TextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = { password = it; errorMensaje = ""; camposVaciosError = false },
                 label = { Text("Contraseña") },
                 modifier = Modifier.fillMaxWidth(),
-                    visualTransformation =  if(passwordVisible)
-                        VisualTransformation.None
-                                else
-                        PasswordVisualTransformation(),
-
-                    trailingIcon = {
-                        val icon = if (passwordVisible)
-                            Icons.Filled.Visibility
-                        else
-                            Icons.Filled.VisibilityOff
-
-                        IconButton(onClick = {passwordVisible =!passwordVisible}) {
-                            Icon(
-                                imageVector = icon,
-                                contentDescription = if (passwordVisible) "Ocultar contraseña"
-                                    else "Mostrar contraseña"
-                                )
-                        }
-                    },
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent
+                isError = camposVaciosError,
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                        ejecutarLogin()
+                    }
+                ),
+                trailingIcon = {
+                    val icon = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña"
+                        )
+                    }
+                },
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent
                 )
             )
+            if (errorMensaje.isNotEmpty()){
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = errorMensaje,
+                    color = Color(0xFFD32F2F),
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+            }
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(text = "Recuperar Contraseña",
@@ -146,13 +205,29 @@ fun LoginScreen(navController: NavHostController) {
                 }
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = {
-                    navController.navigate("habitos"){
-                        //es para limpiar el historial para no regresar al login
-                        popUpTo("login") { inclusive = true }
+                    //es la validacion local antes de ir a internet
+                    if(email.isBlank() || password.isBlank()) {
+                        errorMensaje = "Por favor, llena todos los campos"
+                    }else {
+                        //llama ala base de datos
+                        authViewModel.iniciarSesion(
+                            email = email,
+                            pass = password,
+                            onExito = {
+                                //si todo sale bien pasa a habitos limpiando el historial
+                                navController.navigate("habitos"){
+                                    popUpTo("login") { inclusive = true }
+                                }
+                            },
+                            onError = { mensajeErrorFirebase ->
+                                //si esta mal o el usuario no existe firebase avisara
+                                errorMensaje = mensajeErrorFirebase
+                            }
+                        )
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -169,8 +244,8 @@ fun LoginScreen(navController: NavHostController) {
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-@Preview
 fun LoginPreview(){
     val nav = rememberNavController()
     LoginScreen(navController = nav)
