@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.core.view.WindowCompat
 import com.fic.dualhabit10.ui.screens.Forget_Password
 import com.fic.dualhabit10.ui.screens.HabitosScreen
+import com.fic.dualhabit10.ui.screens.HidratacionScreen
 import com.fic.dualhabit10.ui.screens.InicioScreen
 import com.fic.dualhabit10.ui.screens.LoginScreen
 import com.fic.dualhabit10.ui.screens.MascotasMenu
@@ -69,6 +70,10 @@ class MainActivity : ComponentActivity(){
                     //HabitosScreen -> MascotasMenu
                     composable("mascota_menu"){
                         MascotasMenu(navController = navController)
+                    }
+                    //HabitosScreen -> HidratacionScreen
+                    composable(route = "hidratacion"){
+                        HidratacionScreen(navController = navController)
                     }
                 }
             }

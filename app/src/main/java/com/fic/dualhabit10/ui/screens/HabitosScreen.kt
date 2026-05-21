@@ -11,10 +11,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
@@ -69,7 +69,7 @@ class HabitosViewModel (application: Application) : AndroidViewModel(application
         val hoy = LocalDate.now()
         // recupera los datos guardados en la memoria
         val rachaGuardada = prefs.getInt("racha_contador", 0)
-        val ultimaFechaStr = prefs.getString("ultima_fecha_regstro", null)
+        val ultimaFechaStr = prefs.getString("ultima_fecha_registro", null)
 
         // recupera los dias del mes guardado que se completaron
         val diasCompletadosGuardados = prefs.getStringSet("dias_completados_set", emptySet()) ?: emptySet()
@@ -122,7 +122,7 @@ class HabitosViewModel (application: Application) : AndroidViewModel(application
             //guarda de forma permanente en el chip del telefono
             prefs.edit()
                 .putInt("racha_contador", rachaContador)
-                .putString("ultima_efecha_registro", hoy.toString())
+                .putString("ultima_fecha_registro", hoy.toString())
                 .putStringSet("dias_completados_set", diasCompletados)
                 .apply()
 
@@ -177,7 +177,7 @@ fun HabitosScreen(
         HabitoItem(
             titulo = "Hidratacion",
             imagenRes = R.drawable.img_hidratacion,
-            rutaNavigation = "" //Agregar ruta. ejmp | hidratacion | Cuando se cree la pantalla
+            rutaNavigation = "hidratacion"
         ),
         HabitoItem(
             titulo = "Sueño",
