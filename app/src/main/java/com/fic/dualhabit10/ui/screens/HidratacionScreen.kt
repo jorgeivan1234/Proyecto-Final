@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.onFocusedBoundsChanged
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -68,127 +69,140 @@ fun HidratacionScreen(navController: NavController,
                         shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
                     )
                     .statusBarsPadding()
-                    .padding(start = 12.dp, end = 12.dp, bottom = 20.dp),
+                    .padding(start = 16.dp, end = 16.dp, bottom = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    IconButton(onClick = {
-                        scope.launch { drawerState.open() }
-                    }) {
+                    IconButton(
+                        onClick = {
+                            scope.launch { drawerState.open() } },
+                        modifier = Modifier.align(Alignment.CenterStart)
+                    ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
                             contentDescription = "Abrir Menu",
                             tint = Color.Black,
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.size(35.dp)
                         )
                     }
-                    Text(
-                        text = "Hidratacion",
-                        color = Color.Black,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-
                     Box(
                         modifier = Modifier
-                            .background(Color(0xFF81D4FA), shape = RoundedCornerShape(50.dp))
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                            .align(Alignment.CenterEnd)
+                            .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))
+                            .padding(horizontal = 30.dp, vertical = 8.dp)
+                    ) {
+                        Text(
+                            text = "Hidratacion",
+                            color = Color.Black,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .background(Color(0xFF81D4FA), shape = RoundedCornerShape(24.dp))
                             .clickable {/* ruta futra*/ }
+                            .padding(horizontal = 36.dp, vertical = 18.dp)
                     ) {
                         Text(
                             text = "Historial",
                             color = Color.Black,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
                         )
                     }
+                    Image(
+                        painter = painterResource(id = R.drawable.img_bol_perro),
+                        contentDescription = "Cuenco de agua",
+                        modifier = Modifier.size(150.dp),
+                        contentScale = ContentScale.Fit
+                    )
                 }
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Image(
-                    painter = painterResource(id = R.drawable.img_hidratacion),
-                    contentDescription = "Cuenco de agua",
-                    modifier = Modifier.size(100.dp),
-                    contentScale = ContentScale.Fit
-                )
             }
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .padding(horizontal = 24.dp, vertical = 20.dp),
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Top
             ) {
                 // contenedor principal
                 Column(
-                    modifier = Modifier.weight(1.3f),
+                    modifier = Modifier.weight(1.2f),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     //botones
-                    BotonConsumoOvalado(texto = "+250ml", onClick = { viewModel.agregarAgua(250) })
-                    Spacer(modifier = Modifier.height(12.dp))
-                    BotonConsumoOvalado(texto = "+500ml", onClick = { viewModel.agregarAgua(500) })
-                    Spacer(modifier = Modifier.height(12.dp))
-                    BotonConsumoOvalado(texto = "+1L", onClick = { viewModel.agregarAgua(1000) })
-
-                    Spacer(modifier = Modifier.height(40.dp))
-                    //texto informativo
+                    BotonConsumoOvalado(
+                        texto = "+250ml",
+                        imagenRes = R.drawable.img_vaso,
+                        onClick = { viewModel.agregarAgua(250) }
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    BotonConsumoOvalado(
+                        texto = "+500ml",
+                        imagenRes = R.drawable.img_termo,
+                        onClick = { viewModel.agregarAgua(500) }
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    BotonConsumoOvalado(
+                        texto = "+1L",
+                        imagenRes = R.drawable.img_jarra,
+                        onClick = { viewModel.agregarAgua(1000) }
+                    )
+                    Spacer(modifier = Modifier.height(36.dp))
                     Text(
-                        text = "Calcul\ncuanta debes\ntomar",
+                        text = "¿Cuanta agua\nnecesito?",
                         color = Color.Black,
-                        fontSize = 18.sp,
+                        fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        lineHeight = 22.sp
+                        lineHeight = 28.sp
                     )
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                    //boton de calcular
-                    Box(
+                    Image(
+                        painter = painterResource(id = R.drawable.img_calculadora),
+                        contentDescription = "Calcular requerimiento",
                         modifier = Modifier
-                            .background(Color(0xFFFFEE58), shape = RoundedCornerShape(50.dp))
-                            .padding(horizontal = 32.dp, vertical = 12.dp)
-                            .clickable { navController.navigate("perfil_screen") }
-                    ) {
-                        Text(
-                            text = "Calcular",
-                            color = Color.Black,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                            .size(190.dp)
+                            .clickable { navController.navigate("perfil_screen") },
+                        contentScale = ContentScale.Fit
+                    )
                 }
                 //botella y panel indicador
                 Column(
                     modifier = Modifier.weight(1f),
                     horizontalAlignment = Alignment.End,
-                    verticalArrangement = Arrangement.Top
+                    verticalArrangement = Arrangement.SpaceBetween
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.img_hidratacion),
                         contentDescription = "Botella de agua",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(210.dp),
+                            .height(340.dp),
                         contentScale = ContentScale.Fit
                     )
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(15.dp))
 
                     Box(
                         modifier = Modifier
                             .background(Color(0xFF448AFF), shape = RoundedCornerShape(12.dp))
-                            .padding(horizontal = 16.dp, vertical = 12.dp)
+                            .padding(horizontal = 22.dp, vertical = 16.dp)
                     ) {
                         Text(
                             text = "Consumo:\n${
@@ -199,10 +213,10 @@ fun HidratacionScreen(navController: NavController,
                                 )
                             } litros",
                             color = Color.White,
-                            fontSize = 15.sp,
+                            fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
-                            lineHeight = 20.sp
+                            lineHeight = 24.sp
                         )
                     }
                 }
@@ -213,22 +227,35 @@ fun HidratacionScreen(navController: NavController,
 @Composable
 fun BotonConsumoOvalado(
     texto: String,
+    imagenRes: Int,
     onClick: () -> Unit
-){
+) {
     Box(
         modifier = Modifier
-            .width(130.dp)
-            .background(Color.Black, shape = RoundedCornerShape(50.dp))
-            .padding(vertical = 12.dp)
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
+            .width(180.dp)
+            .background(Color(0xFFB3E5FC), shape = RoundedCornerShape(50.dp))
+            .clickable { onClick() }
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        contentAlignment = Alignment.CenterStart
     ) {
-        Text(
-            text = texto,
-            color = Color.White,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Image(
+                painter = painterResource(id = imagenRes),
+                contentDescription = texto,
+                modifier = Modifier.size(36.dp),
+                contentScale = ContentScale.Fit
+            )
+            Spacer(modifier = Modifier.width(14.dp))
+            Text(
+                text = texto,
+                color = Color.Black,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
 @Preview(showBackground = true)

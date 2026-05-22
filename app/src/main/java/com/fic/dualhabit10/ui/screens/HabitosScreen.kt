@@ -175,7 +175,8 @@ data class DiaData(
 data class HabitoItem(
     val titulo: String,
     val imagenRes: Int,
-    val rutaNavigation: String
+    val rutaNavigation: String,
+    val colorFondo: Color
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -191,32 +192,38 @@ fun HabitosScreen(
         HabitoItem(
             titulo = "Hidratacion",
             imagenRes = R.drawable.img_hidratacion,
-            rutaNavigation = "hidratacion"
+            rutaNavigation = "hidratacion",
+            colorFondo = Color(0xFFB3E5FC)
         ),
         HabitoItem(
             titulo = "Sueño",
             imagenRes = R.drawable.img_sueno,
-            rutaNavigation = "" //Agregar ruta. ejmp | sueno | Cuando se cree la pantalla
+            rutaNavigation = "", //Agregar ruta. ejmp | sueno | Cuando se cree la pantalla,
+            colorFondo = Color(0xFF1A237E)
         ),
         HabitoItem(
             titulo = "Actividad\nFisica",
             imagenRes = R.drawable.img_ejercicio,
-            rutaNavigation = "" //Agregar ruta. ejmp | actividad fisica | Cuando se cree la pantalla
+            rutaNavigation = "", //Agregar ruta. ejmp | actividad fisica | Cuando se cree la pantalla
+            colorFondo = Color(0xFFFFCDD2)
         ),
         HabitoItem(
             titulo = "Alimentacion",
             imagenRes = R.drawable.img_alimentacion,
-            rutaNavigation = "" //Agregar ruta. ejmp | alimentacion | Cuando se cree la pantalla
+            rutaNavigation = "", //Agregar ruta. ejmp | alimentacion | Cuando se cree la pantalla
+            colorFondo = Color(0xFFFFF9C4)
         ),
         HabitoItem(
             titulo = "mascotas",
             imagenRes = R.drawable.img_mascotas_v,
-            rutaNavigation = "mascota_menu"
+            rutaNavigation = "mascota_menu",
+            colorFondo = Color(0xFFD7CCC8)
         ),
         HabitoItem(
             titulo = "Resumen",
             imagenRes = R.drawable.img_resumen,
-            rutaNavigation = "perfil" //Agregar ruta. ejmp | resumen | Cuando se cree la pantalla
+            rutaNavigation = "perfil", //Agregar ruta. ejmp | resumen | Cuando se cree la pantalla
+            colorFondo = Color(0xFFEE1BEE7)
         )
     )
 
@@ -381,6 +388,7 @@ fun DiaItem(diaSemana: String, numeroDia: String, esHoy: Boolean, esCompletado: 
 
 @Composable
 fun Tarjetahabito(habito: HabitoItem, onClick: () -> Unit) {
+    val colorText = if (habito.colorFondo == Color(0xFF1A237E)) Color.White else Color.Black
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -388,7 +396,7 @@ fun Tarjetahabito(habito: HabitoItem, onClick: () -> Unit) {
             .clickable{ onClick ()},
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFD2D2D2)
+            containerColor = habito.colorFondo
         )
     ) {
         Column(
