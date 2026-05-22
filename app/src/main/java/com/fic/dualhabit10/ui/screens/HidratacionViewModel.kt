@@ -97,7 +97,6 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
             .putString("perfil_actividad", actividad)
             .putString("perfil_entorno", entorno)
             .apply()
-
         calcularMetaHidratacionDinamica()
     }
 }

@@ -221,175 +221,114 @@ fun HabitosScreen(
     )
 
     //contenedor del menu despegable
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet(
-                modifier = Modifier.width(280.dp),
-                drawerContainerColor = Color(0xFF9EFFEB)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-                    // cabera del menu lateral
-                    Text(
-                        text = "DualHabit App",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Black,
-                        color = Color(0xFFFF7A22)
-                    )
-
-                    HorizontalDivider(color = Color.Black.copy(alpha = 0.2f))
-
-                    //opcion interactuar para ir a gestionar perfil
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color(0xFFFF7A22), shape = RoundedCornerShape(12.dp))
-                            .clickable {
-                                scoper.launch { drawerState.close() }
-                                navController.navigate("perfil")
-                            }
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.AccountCircle,
-                            contentDescription = null,
-                            tint = Color.Black
-                        )
-                        Text(
-                            text = "Ver Perfil compartido",
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
-                        )
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    Text(
-                        text = "Proyecto Final de Ciclo v1.0",
-                        fontSize = 12.sp,
-                        color = Color.DarkGray,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-        }
-    ) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF9EFFEB))
-    ) {
+    BaseCustomDrawer(navController = navController, drawerState = drawerState){
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    Color(0xFFFF7A22),
-                    shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
-                )
-                .statusBarsPadding()
-                .padding(start = 12.dp, end = 12.dp, bottom = 20.dp)
+                .fillMaxSize()
+                .background(Color(0xFF9EFFEB))
         ) {
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp)
-            ) {
-                IconButton(
-                    onClick = {
-                        scoper.launch { drawerState.open() }
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "Menu",
-                        tint = Color.Black,
-                        modifier = Modifier.size(32.dp)
+                    .background(
+                        Color(0xFFFF7A22),
+                        shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
                     )
-                }
+                    .statusBarsPadding()
+                    .padding(start = 12.dp, end = 12.dp, bottom = 20.dp)
+            ) {
                 Box(
                     modifier = Modifier
-                        .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))
-                        .clickable(enabled = !viewModel.rachaRegistradaHoy) {
-                            viewModel.registrarRachasDeHoy()
-                        }
-                        .padding(horizontal = 20.dp, vertical = 6.dp)
-                        .align(Alignment.Center)
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                    IconButton(
+                        onClick = {
+                            scoper.launch { drawerState.open() }
+                        }
                     ) {
-                        if (viewModel.rachaRegistradaHoy) {
-                            Icon(
-                                imageVector = Icons.Default.Check,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = "Racha de hoy Lista",
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        } else {
-                            Text(
-                                text = "Activar Racha: ${viewModel.rachaContador} dias",
-                                color = Color.Black,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold
-                            )
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = "Menu",
+                            tint = Color.Black,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))
+                            .clickable(enabled = !viewModel.rachaRegistradaHoy) {
+                                viewModel.registrarRachasDeHoy()
+                            }
+                            .padding(horizontal = 20.dp, vertical = 6.dp)
+                            .align(Alignment.Center)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            if (viewModel.rachaRegistradaHoy) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "Racha de hoy Lista",
+                                    color = Color.White,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            } else {
+                                Text(
+                                    text = "Activar Racha: ${viewModel.rachaContador} dias",
+                                    color = Color.Black,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                         }
                     }
                 }
-            }
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Row(
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    viewModel.diasSemanaActual.forEach { dia ->
+                        DiaItem(
+                            diaSemana = dia.nombre,
+                            numeroDia = dia.numero,
+                            esHoy = dia.esHoy,
+                            esCompletado = dia.estaCompletado
+                        )
+                    }
+                }
+            }
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2), //para que sean nomas dos columnas
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxSize()
+                    .weight(1f)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                viewModel.diasSemanaActual.forEach { dia ->
-                    DiaItem(
-                        diaSemana = dia.nombre,
-                        numeroDia = dia.numero,
-                        esHoy = dia.esHoy,
-                        esCompletado = dia.estaCompletado
-                    )
+                items(listaHabitos) { habito ->
+                    Tarjetahabito(habito = habito, onClick = {
+                        if (habito.rutaNavigation.isNotEmpty()) {
+                            navController.navigate(habito.rutaNavigation)
+                        }
+                    })
                 }
             }
         }
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2), //para que sean nomas dos columnas
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(1f)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(listaHabitos) { habito ->
-                Tarjetahabito(habito = habito, onClick = {
-                    if (habito.rutaNavigation.isNotEmpty()) {
-                        navController.navigate(habito.rutaNavigation)
-                    }
-                })
-            }
-        }
-    }
     }
 }
 
