@@ -15,10 +15,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,14 +36,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.AndroidViewModel
 import com.fic.dualhabit10.R
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -75,11 +84,12 @@ class HabitosViewModel (application: Application) : AndroidViewModel(application
         val diasCompletadosGuardados = prefs.getStringSet("dias_completados_set", emptySet()) ?: emptySet()
         diasCompletados = diasCompletadosGuardados
 
-        if (ultimaFechaStr == null) {
+        if (ultimaFechaStr  == null) {
             //caso de usuario nuevo
             rachaContador = 0
             rachaRegistradaHoy = false
         } else {
+
             val ultimaFecha = LocalDate.parse(ultimaFechaStr)
             // para calcular la diferencia de dias reales entre la ultima vez que pulso el boton
             val diasDeDiferencia = ChronoUnit.DAYS.between(ultimaFecha, hoy)
@@ -168,11 +178,15 @@ data class HabitoItem(
     val rutaNavigation: String
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitosScreen(
     navController: NavController,
     viewModel: HabitosViewModel = viewModel()
 ) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scoper = rememberCoroutineScope()
+
     val listaHabitos = listOf(
         HabitoItem(
             titulo = "Hidratacion",
@@ -202,9 +216,72 @@ fun HabitosScreen(
         HabitoItem(
             titulo = "Resumen",
             imagenRes = R.drawable.img_resumen,
-            rutaNavigation = "" //Agregar ruta. ejmp | resumen | Cuando se cree la pantalla
+            rutaNavigation = "perfil" //Agregar ruta. ejmp | resumen | Cuando se cree la pantalla
         )
     )
+
+    //contenedor del menu despegable
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet(
+                modifier = Modifier.width(280.dp),
+                drawerContainerColor = Color(0xFF9EFFEB)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+                    // cabera del menu lateral
+                    Text(
+                        text = "DualHabit App",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Black,
+                        color = Color(0xFFFF7A22)
+                    )
+
+                    HorizontalDivider(color = Color.Black.copy(alpha = 0.2f))
+
+                    //opcion interactuar para ir a gestionar perfil
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color(0xFFFF7A22), shape = RoundedCornerShape(12.dp))
+                            .clickable {
+                                scoper.launch { drawerState.close() }
+                                navController.navigate("perfil")
+                            }
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AccountCircle,
+                            contentDescription = null,
+                            tint = Color.Black
+                        )
+                        Text(
+                            text = "Ver Perfil compartido",
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp
+                        )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Text(
+                        text = "Proyecto Final de Ciclo v1.0",
+                        fontSize = 12.sp,
+                        color = Color.DarkGray,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+    ) {
 
     Column(
         modifier = Modifier
@@ -227,7 +304,9 @@ fun HabitosScreen(
                     .padding(vertical = 4.dp)
             ) {
                 IconButton(
-                    onClick = { }
+                    onClick = {
+                        scoper.launch { drawerState.open() }
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Menu,
@@ -239,7 +318,7 @@ fun HabitosScreen(
                 Box(
                     modifier = Modifier
                         .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))
-                        .clickable(enabled = !viewModel.rachaRegistradaHoy){
+                        .clickable(enabled = !viewModel.rachaRegistradaHoy) {
                             viewModel.registrarRachasDeHoy()
                         }
                         .padding(horizontal = 20.dp, vertical = 6.dp)
@@ -248,8 +327,8 @@ fun HabitosScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
-                    ){
-                        if (viewModel.rachaRegistradaHoy){
+                    ) {
+                        if (viewModel.rachaRegistradaHoy) {
                             Icon(
                                 imageVector = Icons.Default.Check,
                                 contentDescription = null,
@@ -264,7 +343,7 @@ fun HabitosScreen(
                                 fontWeight = FontWeight.Bold
                             )
                         } else {
-                            Text (
+                            Text(
                                 text = "Activar Racha: ${viewModel.rachaContador} dias",
                                 color = Color.Black,
                                 fontSize = 18.sp,
@@ -283,7 +362,7 @@ fun HabitosScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                viewModel.diasSemanaActual.forEach{ dia ->
+                viewModel.diasSemanaActual.forEach { dia ->
                     DiaItem(
                         diaSemana = dia.nombre,
                         numeroDia = dia.numero,
@@ -293,12 +372,12 @@ fun HabitosScreen(
                 }
             }
         }
-
         LazyVerticalGrid(
             columns = GridCells.Fixed(2), //para que sean nomas dos columnas
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal =  16.dp, vertical = 12.dp),
+                .weight(1f)
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -310,6 +389,7 @@ fun HabitosScreen(
                 })
             }
         }
+    }
     }
 }
 

@@ -14,6 +14,7 @@ import com.fic.dualhabit10.ui.screens.HidratacionScreen
 import com.fic.dualhabit10.ui.screens.InicioScreen
 import com.fic.dualhabit10.ui.screens.LoginScreen
 import com.fic.dualhabit10.ui.screens.MascotasMenu
+import com.fic.dualhabit10.ui.screens.PerfilScreen
 import com.fic.dualhabit10.ui.screens.RegisterScreen
 import com.fic.dualhabit10.ui.screens.RegisterSuccessful
 
@@ -74,6 +75,10 @@ class MainActivity : ComponentActivity(){
                     //HabitosScreen -> HidratacionScreen
                     composable(route = "hidratacion"){
                         HidratacionScreen(navController = navController)
+                    }
+                    //tarjeta -> PerfilScreen
+                    composable("perfil") {
+                        PerfilScreen(navController = navController)
                     }
                 }
             }
