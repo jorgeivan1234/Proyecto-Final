@@ -57,13 +57,15 @@ import com.fic.dualhabit10.R
 fun LoginScreen(navController: NavHostController,
                 authViewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
+    /*
+            Variables del Login
+    */
     var email by remember { mutableStateOf ("") }
     var password by remember { mutableStateOf ("") }
     var passwordVisible by remember { mutableStateOf (false) }
     var errorMensaje by remember { mutableStateOf ("") }
     var camposVaciosError by remember { mutableStateOf(false)}
-    val focusManager = LocalFocusManager.current
-
+    val focusManager = LocalFocusManager.current //Contraseña
     val ejecutarLogin= {
         val emailLimpio = email.trim()
         val passwordLimpio = password.trim()
@@ -80,14 +82,14 @@ fun LoginScreen(navController: NavHostController,
                 email = emailLimpio,
                 pass = passwordLimpio,
                 onExito = {
-                    //si todo sale bien pasa a habitos limpiando el historial
+                    //si todo sale bien pasa a hábitos limpiando el historial
                     navController.navigate("habitos"){
                         popUpTo("login") { inclusive = true }
                     }
-                },            //es la validacion local antes de ir a internet
+                },            //es la validación local antes de ir a internet
                 onError = { mensajeErrorFirebase ->
                     //si esta mal o el usuario no existe firebase avisara
-                    errorMensaje = "El correo electronico o la contraseña son incorrectos"
+                errorMensaje = "El correo electronico o la contraseña son incorrectos"
                 }
             )
         }
@@ -124,10 +126,15 @@ fun LoginScreen(navController: NavHostController,
 
             TextField(
                 value = email,
-                onValueChange = {email = it; errorMensaje = ""; camposVaciosError = false},
+                onValueChange = {
+                    email = it
+                    errorMensaje = ""
+                    camposVaciosError = false
+                },
                 label = { Text("Ingresar correo electronico") },
                 modifier = Modifier.fillMaxWidth(),
-                isError = camposVaciosError, //se pone rojo si esta vacio
+                singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
+                isError = camposVaciosError, //se pone rojo si está vacío
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
@@ -145,10 +152,15 @@ fun LoginScreen(navController: NavHostController,
 
             TextField(
                 value = password,
-                onValueChange = { password = it; errorMensaje = ""; camposVaciosError = false },
+                onValueChange = {
+                    password = it
+                    errorMensaje = ""
+                    camposVaciosError = false
+                },
                 label = { Text("Contraseña") },
                 modifier = Modifier.fillMaxWidth(),
-                isError = camposVaciosError,
+                singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
+                isError = camposVaciosError, //se pone rojo si está vacío
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
@@ -209,7 +221,7 @@ fun LoginScreen(navController: NavHostController,
 
             Button(
                 onClick = {
-                    //es la validacion local antes de ir a internet
+                    //es la validación local antes de ir a internet
                     if(email.isBlank() || password.isBlank()) {
                         errorMensaje = "Por favor, llena todos los campos"
                     }else {
@@ -218,7 +230,7 @@ fun LoginScreen(navController: NavHostController,
                             email = email,
                             pass = password,
                             onExito = {
-                                //si todo sale bien pasa a habitos limpiando el historial
+                                //si todo sale bien pasa a hábitos limpiando el historial
                                 navController.navigate("habitos"){
                                     popUpTo("login") { inclusive = true }
                                 }

@@ -1,5 +1,6 @@
 package com.fic.dualhabit10.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,17 +15,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,17 +47,28 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import com.fic.dualhabit10.R
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 
-
-
+@SuppressLint("RememberInComposition")
 @Composable
 fun RegisterScreen(navController: NavHostController,
                    authViewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ){
+    /*
+            Variables del Register
+    */
     var nombre by remember {  mutableStateOf ("") }
     var apellido by remember { mutableStateOf ( "")}
     var email by remember { mutableStateOf ( "")}
@@ -59,6 +77,10 @@ fun RegisterScreen(navController: NavHostController,
     var fecha_nacimiento by remember { mutableStateOf ( "")}
     var passwordVisible by remember { mutableStateOf (false)}
     var errorMensaje by remember { mutableStateOf ( "")}
+    var Muestra_fecha by remember { mutableStateOf(false)}
+    var camposVaciosError by remember { mutableStateOf(false)}
+    val focusManager = LocalFocusManager.current //Contraseña
+
 
     Box(
         modifier = Modifier
@@ -101,6 +123,12 @@ fun RegisterScreen(navController: NavHostController,
                 value = nombre,
                 onValueChange = {nombre = it; errorMensaje = "" },
                 label = { Text("Nombre (S)") },
+                singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
+                isError = camposVaciosError, //se pone rojo si está vacío
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
@@ -114,6 +142,12 @@ fun RegisterScreen(navController: NavHostController,
                 onValueChange = { apellido = it; errorMensaje = "" },
                 label = { Text("Apellido (S)") },
                 modifier = Modifier.fillMaxWidth(),
+                singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
+                isError = camposVaciosError, //se pone rojo si está vacío
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
@@ -123,9 +157,18 @@ fun RegisterScreen(navController: NavHostController,
 
             TextField(
                 value = email,
-                onValueChange = { email = it; errorMensaje = "" },
+                onValueChange = {
+                    email = it
+                    errorMensaje = ""
+                },
                 label = { Text("Correo Electronico") },
                 modifier = Modifier.fillMaxWidth(),
+                singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
+                isError = camposVaciosError, //se pone rojo si está vacío
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
@@ -134,11 +177,24 @@ fun RegisterScreen(navController: NavHostController,
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            val telefonoFocus = FocusRequester() //Contraseña
             TextField(
                 value = password,
-                onValueChange = {password = it; errorMensaje = "" },
+                onValueChange = {
+                    password = it
+                    errorMensaje = ""
+                },
                 label = { Text("Contraseña") },
                 modifier = Modifier.fillMaxWidth(),
+                singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
+                isError = camposVaciosError, //se pone rojo si está vacío
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down)}
+                ),
                 visualTransformation =  if(passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     val icon = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
@@ -155,9 +211,20 @@ fun RegisterScreen(navController: NavHostController,
 
             TextField(
                 value = telefono,
-                onValueChange = { telefono = it; errorMensaje = "" },
+                onValueChange = {
+                    telefono = it
+                    errorMensaje = ""
+                },
                 label = { Text("Telefono") },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(telefonoFocus),
+                singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
+                isError = camposVaciosError, //se pone rojo si está vacío
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                ),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent
@@ -167,14 +234,48 @@ fun RegisterScreen(navController: NavHostController,
 
             TextField(
                 value = fecha_nacimiento,
-                onValueChange = { fecha_nacimiento = it; errorMensaje = "" },
+                onValueChange = {
+                    fecha_nacimiento = it
+                    errorMensaje = ""
+                },
                 label = { Text("Fecha de nacimiento DD/MM/AAAA") },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable{ Muestra_fecha = true },
+                enabled = false,
+                singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
+                isError = camposVaciosError, //se pone rojo si está vacío
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    disabledTextColor = Color.DarkGray,
+                    disabledLabelColor = Color.DarkGray,
+                    disabledIndicatorColor = Color.DarkGray
                 )
             )
+            if (Muestra_fecha) {
+                val Status_date = rememberDatePickerState()
+
+                DatePickerDialog(
+                    onDismissRequest = { Muestra_fecha = false },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            Status_date.selectedDateMillis?.let { millis ->
+                                val Date_formate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                                fecha_nacimiento = Date_formate.format(Date(millis))
+                            }
+                            Muestra_fecha = false
+                        }) { Text("Aceptar") }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { Muestra_fecha = false }) {
+                            Text("Cancelar")
+                        }
+                    }
+                ) {
+                    DatePicker(state = Status_date)
+                }
+            }
 
             if (errorMensaje.isNotEmpty()){
                 Spacer(modifier = Modifier.height(8.dp))
@@ -221,9 +322,9 @@ fun RegisterScreen(navController: NavHostController,
                                 //si firebase dice ok avanza
                                 navController.navigate("register_successful")
                             },
-                            onError = { mensajeErorFirebase ->
+                            onError = { mensajeErrorFirebase ->
                                 //si falla te mostrara en rojo
-                                errorMensaje = mensajeErorFirebase
+                                errorMensaje = mensajeErrorFirebase
                             }
                         )
                     }
