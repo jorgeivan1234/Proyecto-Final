@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Button
@@ -38,6 +39,7 @@ import kotlinx.coroutines.launch
 fun BaseCustomDrawer(
     navController: NavController,
     drawerState: DrawerState,
+    authViewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     content: @Composable () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -67,6 +69,7 @@ fun BaseCustomDrawer(
                     HorizontalDivider(color = Color.LightGray, thickness = 1.dp)
                     Spacer(modifier = Modifier.height(20.dp))
 
+                    //boton inicio
                     Button(
                         onClick = {
                             scope.launch { drawerState.close() } //una animacion de cerrar me gusto
@@ -100,6 +103,7 @@ fun BaseCustomDrawer(
                         }
                     }
                     Spacer (modifier = Modifier.height(12.dp))
+
                     //boton para el perfil
                     Button(
                         onClick = {
@@ -125,6 +129,43 @@ fun BaseCustomDrawer(
                             Text(
                                 text = "ver perfil",
                                 color = Color.Black,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    //cerrar sesion
+                    Button(
+                        onClick = {
+                            scope.launch { drawerState.close() }
+
+                            //authViewModel.cerrarSesion() aun no se si usarlo
+                            navController.navigate("login"){
+                                popUpTo(0) { inclusive = true }
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                                contentDescription = "cerrar sesion",
+                                tint = Color.White,
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                text = "Cerrar Sesión",
+                                color = Color.White,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp
                             )

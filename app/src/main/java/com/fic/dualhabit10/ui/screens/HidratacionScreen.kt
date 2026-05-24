@@ -40,11 +40,19 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImagePainter.State.Empty.painter
 import java.util.Locale
 import com.fic.dualhabit10.R
 import kotlinx.coroutines.launch
 
 @Composable
+fun HidratacionScreen(
+    navController: NavController,
+    viewModel: HidratacionViewModel = viewModel()
+ ) {
+    //conversion directa a litros para cada caja
+    val litrosConsumidos = viewModel.aguaConsumidaML / 1000f
+    val litrosMeta = viewModel.metaDiariaML / 1000f
 fun HidratacionScreen(navController: NavController,
                       viewModel: HidratacionViewModel = viewModel()
  ) {
@@ -164,6 +172,23 @@ fun HidratacionScreen(navController: NavController,
                     )
                     Spacer(modifier = Modifier.height(36.dp))
                     Text(
+                        text = "Configurar parametros\nde hidratacion",
+                        color = Color.Black,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        lineHeight = 20.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Image(
+                        painter = painterResource(id = R.drawable.img_calculadora),
+                        contentDescription = "Calculadora",
+                        modifier = Modifier
+                            .size(130.dp)
+                            .clickable {
+                            navController.navigate("calculadora_agua")
+                        },
                         text = "¿Cuanta agua\nnecesito?",
                         color = Color.Black,
                         fontSize = 24.sp,
@@ -202,6 +227,20 @@ fun HidratacionScreen(navController: NavController,
                     Box(
                         modifier = Modifier
                             .background(Color(0xFF448AFF), shape = RoundedCornerShape(12.dp))
+                            .padding(horizontal = 16.dp, vertical = 16.dp)
+                    ) {
+                        Text(
+                            text = String.format(
+                                    Locale.US,
+                                    "Llevas:\n%.1f / %.1f L",
+                                    litrosConsumidos,
+                                    litrosMeta
+                                ),
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            lineHeight = 22.sp
                             .padding(horizontal = 22.dp, vertical = 16.dp)
                     ) {
                         Text(
