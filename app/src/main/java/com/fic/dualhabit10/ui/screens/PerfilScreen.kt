@@ -60,6 +60,10 @@ import androidx.navigation.ActivityNavigatorExtras
 import coil.compose.AsyncImage
 import com.fic.dualhabit10.R
 import kotlin.math.exp
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.navigation.ActivityNavigatorExtras
+import coil.compose.AsyncImage
+import com.fic.dualhabit10.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,6 +94,10 @@ fun PerfilScreen(
         )
     }
 
+    var peso by remember { mutableStateOf(viewModel.usuarioPeso.toString() )}
+    var edad by remember { mutableStateOf(viewModel.usuarioEdad.toString() )}
+    var clima by remember { mutableStateOf(viewModel.entornoClima)}
+    var fotoUsuarioUri by remember { mutableStateOf<Uri?>(null) }
     var galeriaLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
@@ -111,6 +119,10 @@ fun PerfilScreen(
         }
     }
 
+        if (uri != null){
+            fotoUsuarioUri = uri
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -122,6 +134,8 @@ fun PerfilScreen(
                             edad.toIntOrNull() ?: 25,
                             genero,
                             actividad,
+                            "Masculino",
+                            "Moderado",
                             clima
                         )
                         navController.popBackStack()
@@ -150,11 +164,14 @@ fun PerfilScreen(
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     if (fotoUsuarioUri != null) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally){
+                    if(fotoUsuarioUri != null) {
                         AsyncImage(
                             model = fotoUsuarioUri,
                             contentDescription = "Foto elegida por el usuario",
                             modifier = Modifier
                                 .size(110.dp)
+                                .size(80.dp)
                                 .clip(CircleShape)
                                 .border(3.dp, Color.Black, CircleShape)
                                 .clickable {
@@ -174,6 +191,7 @@ fun PerfilScreen(
                             contentDescription = "Foto Humano",
                             modifier = Modifier
                                 .size(110.dp)
+                                .size(80.dp)
                                 .clip(CircleShape)
                                 .border(3.dp, Color.Black, CircleShape)
                                 .clickable {
@@ -197,6 +215,7 @@ fun PerfilScreen(
                         contentDescription = "Foto mascota",
                         modifier = Modifier
                             .size(110.dp)
+                            .size(80.dp)
                             .clip(CircleShape)
                             .border(3.dp, Color.Black, CircleShape),
                         contentScale = ContentScale.Crop
@@ -204,6 +223,7 @@ fun PerfilScreen(
                     Spacer(modifier = Modifier.height(4.dp))
                     Text("Mascota", fontWeight = FontWeight.Bold, fontSize = 14.sp)
                     Text("", fontSize = 10.sp)
+                    Text("Mascota", fontWeight = FontWeight.Bold, fontSize = 14.sp)
                 }
             }
 
@@ -246,6 +266,19 @@ fun PerfilScreen(
                 fontSize = 16.sp,
                 modifier = Modifier.fillMaxWidth()
             )
+                Column(modifier = Modifier.padding(16.dp)){
+                    Text("Nivel de Cuenta: ${viewModel.experienciaNivel}", color = Color.Yellow, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    LinearProgressIndicator(
+                        progress = viewModel.experienciaPuntos / (100f * viewModel.experienciaNivel),
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                        color = Color(0xFF29B6F6)
+                    )
+                    Text("Puntos de Experiencia para el siguiente logro", color= Color.White, fontSize = 11.sp, modifier = Modifier.padding(top = 4.dp))
+                }
+            }
+
+            Text("Confirguracion de parametros Biometricos", fontWeight = FontWeight.Bold, fontSize = 16.sp, modifier = Modifier.fillMaxWidth())
+
             OutlinedTextField(
                 value = peso,
                 onValueChange = { peso = it },
@@ -317,6 +350,7 @@ fun PerfilScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             Button(
                 onClick = {
@@ -325,6 +359,8 @@ fun PerfilScreen(
                         edad.toIntOrNull() ?: 25,
                         genero,
                         actividad,
+                        "Masculino",
+                        "Moderado",
                         clima
                     )
                     navController.popBackStack()
@@ -332,6 +368,7 @@ fun PerfilScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
+                modifier = Modifier.fillMaxWidth().height(50.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7A22))
             ) {
                 Text("Guardar y Recalcular Meta", color = Color.Black, fontWeight = FontWeight.Bold)

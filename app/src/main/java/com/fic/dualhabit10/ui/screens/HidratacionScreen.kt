@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.onFocusedBoundsChanged
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -52,6 +53,11 @@ fun HidratacionScreen(
     //conversion directa a litros para cada caja
     val litrosConsumidos = viewModel.aguaConsumidaML / 1000f
     val litrosMeta = viewModel.metaDiariaML / 1000f
+fun HidratacionScreen(navController: NavController,
+                      viewModel: HidratacionViewModel = viewModel()
+ ) {
+    //conversion directa a litros para cada caja
+    val litrosConsumidos = viewModel.aguaConsumidaML / 1000f
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -183,6 +189,21 @@ fun HidratacionScreen(
                             .clickable {
                             navController.navigate("calculadora_agua")
                         },
+                        text = "¿Cuanta agua\nnecesito?",
+                        color = Color.Black,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        lineHeight = 28.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Image(
+                        painter = painterResource(id = R.drawable.img_calculadora),
+                        contentDescription = "Calcular requerimiento",
+                        modifier = Modifier
+                            .size(190.dp)
+                            .clickable { navController.navigate("perfil_screen") },
                         contentScale = ContentScale.Fit
                     )
                 }
@@ -220,6 +241,21 @@ fun HidratacionScreen(
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
                             lineHeight = 22.sp
+                            .padding(horizontal = 22.dp, vertical = 16.dp)
+                    ) {
+                        Text(
+                            text = "Consumo:\n${
+                                String.format(
+                                    Locale.US,
+                                    "%.1f",
+                                    litrosConsumidos
+                                )
+                            } litros",
+                            color = Color.White,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            lineHeight = 24.sp
                         )
                     }
                 }
