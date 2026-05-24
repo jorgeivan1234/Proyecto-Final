@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.core.view.WindowCompat
+import com.fic.dualhabit10.ui.screens.ActividadFisicaScreen
 import com.fic.dualhabit10.ui.screens.CalculadoraHidratacionScreen
 import com.fic.dualhabit10.ui.screens.Forget_Password
 import com.fic.dualhabit10.ui.screens.HabitosMascotaScreen
@@ -18,6 +19,7 @@ import com.fic.dualhabit10.ui.screens.HistorialScreen
 import com.fic.dualhabit10.ui.screens.InicioScreen
 import com.fic.dualhabit10.ui.screens.LoginScreen
 import com.fic.dualhabit10.ui.screens.MascotasMenu
+import com.fic.dualhabit10.ui.screens.PerfilMascotaScreen
 import com.fic.dualhabit10.ui.screens.PerfilScreen
 import com.fic.dualhabit10.ui.screens.RegisterScreen
 import com.fic.dualhabit10.ui.screens.RegisterSuccessful
@@ -99,6 +101,12 @@ class MainActivity : ComponentActivity(){
                     }
                     composable("hidratacion_mascota"){
                         HidratacionMascotaScreen(navController = navController)
+                    }
+                    composable("perfil_mascota"){
+                        PerfilMascotaScreen(navController = navController)
+                    }
+                    composable("actividad_fisica_mascota"){
+                        ActividadFisicaScreen(navController = navController)
                     }
                 }
             }

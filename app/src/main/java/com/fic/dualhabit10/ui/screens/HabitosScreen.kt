@@ -204,7 +204,7 @@ fun HabitosScreen(
         HabitoItem(
             titulo = "Actividad\nFisica",
             imagenRes = R.drawable.img_ejercicio,
-            rutaNavigation = "", //Agregar ruta. ejmp | actividad fisica | Cuando se cree la pantalla
+            rutaNavigation = "actividad_fisica_mascota",
             colorFondo = Color(0xFFFFCDD2)
         ),
         HabitoItem(

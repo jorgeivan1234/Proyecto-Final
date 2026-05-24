@@ -197,12 +197,15 @@ fun PerfilScreen(
                         modifier = Modifier
                             .size(110.dp)
                             .clip(CircleShape)
-                            .border(3.dp, Color.Black, CircleShape),
+                            .border(3.dp, Color.Black, CircleShape)
+                            .clickable {
+                                navController.navigate("perfil_mascota")
+                            },
                         contentScale = ContentScale.Crop
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text("Mascota", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                    Text("", fontSize = 10.sp)
+                    Text("Ver perfil", fontSize = 10.sp, color = Color.Gray)
                 }
             }
 
