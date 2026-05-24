@@ -168,7 +168,6 @@ fun PerfilScreen(
                             contentScale = ContentScale.Crop
                         )
                     } else {
-
                         Image(
                             painter = painterResource(id = R.drawable.img_hidratacion),
                             contentDescription = "Foto Humano",

@@ -148,7 +148,7 @@ fun CalculadoraHidratacionScreen(
                         viewModel.usuarioGenero,
                         actividad,
                         clima
-                        )
+                    )
                     navController.navigate("resultado_hidratacion")
                 },
                 modifier = Modifier.fillMaxWidth().height(50.dp),

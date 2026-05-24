@@ -1,6 +1,5 @@
 package com.fic.dualhabit10.ui.screens
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,7 +38,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.AsyncImagePainter.State.Empty.painter
 import java.util.Locale
 import com.fic.dualhabit10.R
 import kotlinx.coroutines.launch
@@ -48,21 +46,19 @@ import kotlinx.coroutines.launch
 fun HidratacionScreen(
     navController: NavController,
     viewModel: HidratacionViewModel = viewModel()
- ) {
-    //conversion directa a litros para cada caja
+) {
     val litrosConsumidos = viewModel.aguaConsumidaML / 1000f
     val litrosMeta = viewModel.metaDiariaML / 1000f
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
     BaseCustomDrawer(navController = navController, drawerState = drawerState) {
-
-        //barra superior
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFF9EFFEB))
         ) {
+            // Barra superior
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -79,8 +75,7 @@ fun HidratacionScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     IconButton(
-                        onClick = {
-                            scope.launch { drawerState.open() } },
+                        onClick = { scope.launch { drawerState.open() } },
                         modifier = Modifier.align(Alignment.CenterStart)
                     ) {
                         Icon(
@@ -113,7 +108,7 @@ fun HidratacionScreen(
                     Box(
                         modifier = Modifier
                             .background(Color(0xFF81D4FA), shape = RoundedCornerShape(24.dp))
-                            .clickable {navController.navigate("historial") }
+                            .clickable { navController.navigate("historial") }
                             .padding(horizontal = 36.dp, vertical = 18.dp)
                     ) {
                         Text(
@@ -131,6 +126,8 @@ fun HidratacionScreen(
                     )
                 }
             }
+
+            // Contenido Principal
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -139,14 +136,13 @@ fun HidratacionScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Top
             ) {
-                // contenedor principal
+                // Contenedor de Botones (Izquierda)
                 Column(
                     modifier = Modifier.weight(1.2f),
                     horizontalAlignment = Alignment.Start
                 ) {
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    //botones
                     BotonConsumoOvalado(
                         texto = "+250ml",
                         imagenRes = R.drawable.img_vaso,
@@ -165,6 +161,7 @@ fun HidratacionScreen(
                         onClick = { viewModel.agregarAgua(1000) }
                     )
                     Spacer(modifier = Modifier.height(36.dp))
+
                     Text(
                         text = "Configurar parametros\nde hidratacion",
                         color = Color.Black,
@@ -180,13 +177,12 @@ fun HidratacionScreen(
                         contentDescription = "Calculadora",
                         modifier = Modifier
                             .size(130.dp)
-                            .clickable {
-                            navController.navigate("calculadora_agua")
-                        },
+                            .clickable { navController.navigate("calculadora_agua") },
                         contentScale = ContentScale.Fit
                     )
                 }
-                //botella y panel indicador
+
+                // Botella e Indicador (Derecha)
                 Column(
                     modifier = Modifier.weight(1f),
                     horizontalAlignment = Alignment.End,
@@ -210,11 +206,11 @@ fun HidratacionScreen(
                     ) {
                         Text(
                             text = String.format(
-                                    Locale.US,
-                                    "Llevas:\n%.1f / %.1f L",
-                                    litrosConsumidos,
-                                    litrosMeta
-                                ),
+                                Locale.US,
+                                "Llevas:\n%.1f / %.1f L",
+                                litrosConsumidos,
+                                litrosMeta
+                            ),
                             color = Color.White,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
@@ -227,6 +223,7 @@ fun HidratacionScreen(
         }
     }
 }
+
 @Composable
 fun BotonConsumoOvalado(
     texto: String,
@@ -261,6 +258,7 @@ fun BotonConsumoOvalado(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewHidratacion(){

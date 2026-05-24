@@ -170,3 +170,4 @@ fun DesgloseItem(label: String, value: String, color: Color = Color.Black) {
         Text(text = value, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = color)
     }
 }
+
