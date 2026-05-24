@@ -12,6 +12,10 @@ foundationLayout = "1.11.1"
 material3Lint = "1.4.0"
 material3 = "1.4.0"
 foundation = "1.11.2"
+places = "5.2.0"
+foundationLayoutVersion = "1.11.2"
+uiGraphics = "1.11.2"
+uiText = "1.11.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +36,10 @@ androidx-compose-foundation-layout = { group = "androidx.compose.foundation", na
 androidx-compose-material3-lint = { group = "androidx.compose.material3", name = "material3-lint", version.ref = "material3Lint" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
+places = { group = "com.google.android.libraries.places", name = "places", version.ref = "places" }
+androidx-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayoutVersion" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
+androidx-compose-ui-text = { group = "androidx.compose.ui", name = "ui-text", version.ref = "uiText" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

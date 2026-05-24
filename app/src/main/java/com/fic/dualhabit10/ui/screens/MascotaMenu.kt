@@ -31,49 +31,64 @@ data class MascotaMenu(
     val titulo: String,
     val imagenRes: Int?, //El ? Sirve para poder poner null en el imagenres en caso de que las cards no tengan imagen
     val rutaNavigation: String,
-    val enMantenimiento: Boolean = false
+    val enMantenimiento: Boolean = false,
+    val colorFondo: Color
 )
 
 @Composable
 fun MascotasMenu(navController: NavController) {
 
+    val colores = listOf(
+        Color(0xFFFFE0B2),
+        Color(0xFFE1BEE7),
+        Color(0xFFC8E6C9),
+        Color(0xFFFFF9C4),
+        Color(0xFFF8BBD0),
+        Color(0xFFBBDEFB)
+    )
     //La lista las tarjetas
     val Listacards = listOf(
         MascotaMenu(
             titulo = "Noticias de mascotas",
             imagenRes = null,
             rutaNavigation = "", //Agregar ruta. ejmp | noticia_mascota | Cuando se cree la pantalla
-            enMantenimiento = true
+            enMantenimiento = true,
+            colorFondo = colores[0]
         ),
         MascotaMenu(
             titulo = "Juegos",
             imagenRes = null,
             rutaNavigation = "", //Agregar ruta. ejmp | juegos | Cuando se cree la pantalla
-            enMantenimiento = true
+            enMantenimiento = true,
+            colorFondo = colores[1]
         ),
         MascotaMenu(
             titulo = "Enciclopedia",
             imagenRes = null,
             rutaNavigation = "", //Agregar ruta. ejmp | enciclopedia | Cuando se cree la pantalla
-            enMantenimiento = true
+            enMantenimiento = true,
+            colorFondo = colores[2]
         ),
         MascotaMenu(
             titulo = "Ir a mis hábitos humanos",
             imagenRes = null,
-            rutaNavigation = "", //Agregar ruta. ejmp | habitos_humanos | Cuando se cree la pantalla
-            enMantenimiento = true
+            rutaNavigation = "habitos",
+            enMantenimiento = false,
+            colorFondo = colores[3]
         ),
         MascotaMenu(
             titulo = "Aprender (PetDex)",
             imagenRes = null,
             rutaNavigation = "", //Agregar ruta. ejmp | petdex | Cuando se cree la pantalla
-            enMantenimiento = true
+            enMantenimiento = true,
+            colorFondo = colores[4]
         ),
         MascotaMenu(
             titulo = "Ejercicios",
             imagenRes = null,
             rutaNavigation = "", //Agregar ruta. ejmp | ejercicios | Cuando se cree la pantalla
-            enMantenimiento = true
+            enMantenimiento = true,
+            colorFondo = colores[5]
         )
     )
 
@@ -122,7 +137,8 @@ fun MascotasMenu(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Tarjeta_Mascota_Grande(
-            onClick = { navController.navigate("mascota_home") }
+            colorFondo = Color(0xFFF5F5F5),
+            onClick = { navController.navigate("habitos_mascota_menu") }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -139,7 +155,11 @@ fun MascotasMenu(navController: NavController) {
             items(Listacards) { item ->
                 TarjetaMenuMascota(
                     item = item,
-                    onClick = { navController.navigate(item.rutaNavigation) }
+                    onClick = {
+                        if (!item.enMantenimiento && item.rutaNavigation.isNotEmpty()){
+                            navController.navigate(item.rutaNavigation)
+                        }
+                    }
                 )
             }
         }
@@ -147,7 +167,7 @@ fun MascotasMenu(navController: NavController) {
 }
 //Funcion para la tarjeta grande de la mascota
 @Composable
-fun Tarjeta_Mascota_Grande(onClick: () -> Unit) {
+fun Tarjeta_Mascota_Grande(colorFondo: Color, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -155,7 +175,7 @@ fun Tarjeta_Mascota_Grande(onClick: () -> Unit) {
             .padding(horizontal = 16.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFD2D2D2))
+        colors = CardDefaults.cardColors(containerColor = colorFondo)
     ) {
         Row(
             modifier = Modifier
@@ -165,19 +185,20 @@ fun Tarjeta_Mascota_Grande(onClick: () -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = stringResource(id = R.string.Ver_Mascota),
+                text = "Habitos de mascota",
                 color = Color.Black,
-                fontSize = 25.sp,
+                fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .weight(1f)
-                    .wrapContentWidth(Alignment.CenterHorizontally)
+                    .weight(1.2f)
+                    .wrapContentWidth(Alignment.CenterHorizontally),
+                textAlign = TextAlign.Center
             )
             Image(
                 painter = painterResource(id = R.drawable.img_perro_coloreado),
                 contentDescription = null,
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(0.8f)
                     .fillMaxWidth()
                     .padding(4.dp),
                 contentScale = ContentScale.Fit
@@ -195,7 +216,8 @@ fun TarjetaMenuMascota(item: MascotaMenu, onClick: () -> Unit) {
             .height(130.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFD2D2D2))
+        colors = CardDefaults.cardColors(containerColor = item.colorFondo),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier
@@ -207,10 +229,10 @@ fun TarjetaMenuMascota(item: MascotaMenu, onClick: () -> Unit) {
             Text(
                 text = item.titulo,
                 color = Color.Black,
-                fontSize = 20.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                lineHeight = 20.sp
+                lineHeight = 22.sp
             )
             // Etiqueta "(mantenimiento)" igual que en la imagen
             if (item.enMantenimiento) {
@@ -219,7 +241,8 @@ fun TarjetaMenuMascota(item: MascotaMenu, onClick: () -> Unit) {
                     text = "(mantenimiento)",
                     color = Color.DarkGray,
                     fontSize = 11.sp,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Medium
                 )
             }
         }

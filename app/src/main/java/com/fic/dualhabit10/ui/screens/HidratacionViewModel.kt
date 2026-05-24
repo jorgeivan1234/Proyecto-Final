@@ -2,17 +2,20 @@ package com.fic.dualhabit10.ui.screens
 
 import android.app.Application
 import android.content.Context
-import androidx.collection.mutableFloatSetOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
+import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDate
 
 class HidratacionViewModel (application: Application) : AndroidViewModel(application){
     private val prefs = application.getSharedPreferences("dualhabit_prefs", Context.MODE_PRIVATE)
+    private val db = FirebaseFirestore.getInstance()
+    private val usuarioId = "usuario_prueba_1"
 
     var aguaConsumidaML by mutableIntStateOf(0)
         private set
@@ -28,9 +31,15 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
     var experienciaNivel by mutableIntStateOf(1)
     var experienciaPuntos by mutableIntStateOf(0)
 
+    val hoyStr = LocalDate.now().toString()
+
+    //almacena el historial en la base de datos
+    val historialConsumoMap = mutableStateMapOf<String, Int>()
     init{
         cargarDatosLocales()
         calcularMetaHidratacionDinamica()
+        subirMetaFirebase()
+        escucharHistoriaFirebase()
     }
 
     private fun cargarDatosLocales(){
@@ -74,6 +83,16 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
         aguaConsumidaML += ml
         prefs.edit().putInt("agua_consumida_real", aguaConsumidaML).apply()
 
+        //sinconizacion con la base de datos
+        val datosRegistro = hashMapOf(
+            "cantidadML" to aguaConsumidaML,
+            "metaML" to metaDiariaML,
+            "fecha" to hoyStr
+        )
+        db.collection("usuarios").document(usuarioId)
+            .collection("historial_agua").document(hoyStr)
+            .set(datosRegistro)
+
         //sistema de recompensa
         experienciaPuntos += (ml/10)
         if(experienciaPuntos >= 100 * experienciaNivel){
@@ -98,5 +117,30 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
             .putString("perfil_entorno", entorno)
             .apply()
         calcularMetaHidratacionDinamica()
+        subirMetaFirebase()
+    }
+    private fun subirMetaFirebase() {
+        val datosPerfil = hashMapOf(
+            "peso" to usuarioPeso,
+            "actividadNivel" to actividadNivel,
+            "entornoClima" to entornoClima,
+            "metaDairiaML" to metaDiariaML
+        )
+        db.collection("usuario").document(usuarioId).set(datosPerfil)
+    }
+
+    private fun escucharHistoriaFirebase() {
+        db.collection("Usuarios").document(usuarioId)
+            .collection("historia_agua")
+            .addSnapshotListener { snapshot, e ->
+                if (e != null || snapshot == null) return@addSnapshotListener
+
+                historialConsumoMap.clear()
+                for (doc in snapshot.documents) {
+                    val fecha = doc.id
+                    val cantidad = doc.getLong("cantidadML")?.toInt() ?: 0
+                    historialConsumoMap[fecha] = cantidad
+                }
+            }
     }
 }

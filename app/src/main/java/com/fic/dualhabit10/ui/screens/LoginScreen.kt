@@ -1,10 +1,13 @@
 package com.fic.dualhabit10.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ContextualFlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +23,8 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -41,6 +46,7 @@ import androidx.navigation.NavHostController
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -52,17 +58,34 @@ import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
 
 
-
 @Composable
 fun LoginScreen(navController: NavHostController,
                 authViewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    var email by remember { mutableStateOf ("") }
-    var password by remember { mutableStateOf ("") }
+    val context = LocalContext.current
+    val sharedPreferences = remember {
+        context.getSharedPreferences("login_preferences", Context.MODE_PRIVATE)
+    }
+
+    var email by remember { mutableStateOf (sharedPreferences.getString("saved_email", "") ?: "") }
+    var password by remember { mutableStateOf (sharedPreferences.getString("saved_password", "") ?: "") }
+    var recordarDatos by remember { mutableStateOf(sharedPreferences.getBoolean("remember_active", false)) }
     var passwordVisible by remember { mutableStateOf (false) }
     var errorMensaje by remember { mutableStateOf ("") }
     var camposVaciosError by remember { mutableStateOf(false)}
     val focusManager = LocalFocusManager.current
+
+    val gestionarGuardadoCredenciales: () -> Unit = {
+        val editor = sharedPreferences.edit()
+        if(recordarDatos){
+            editor.putString("saved_email", email.trim())
+            editor.putString("saved_password", password.trim())
+            editor.putBoolean("remember_active", true)
+        } else {
+            editor.clear()
+        }
+        editor.apply()
+    }
 
     val ejecutarLogin= {
         val emailLimpio = email.trim()
@@ -80,6 +103,7 @@ fun LoginScreen(navController: NavHostController,
                 email = emailLimpio,
                 pass = passwordLimpio,
                 onExito = {
+                    gestionarGuardadoCredenciales() //guardara el checkbox si esta activo
                     //si todo sale bien pasa a habitos limpiando el historial
                     navController.navigate("habitos"){
                         popUpTo("login") { inclusive = true }
@@ -175,7 +199,27 @@ fun LoginScreen(navController: NavHostController,
                     disabledContainerColor = Color.Transparent
                 )
             )
-            if (errorMensaje.isNotEmpty()){
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = recordarDatos,
+                    onCheckedChange = { recordarDatos = it },
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = Color(0xFF4376A3),
+                        uncheckedColor = Color.Black
+                    )
+                )
+                Text(
+                    text = "Recordar mis datos",
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+            if (errorMensaje.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = errorMensaje,

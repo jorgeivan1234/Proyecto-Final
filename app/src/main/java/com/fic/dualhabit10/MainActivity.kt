@@ -8,15 +8,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.core.view.WindowCompat
+import com.fic.dualhabit10.ui.screens.CalculadoraHidratacionScreen
 import com.fic.dualhabit10.ui.screens.Forget_Password
+import com.fic.dualhabit10.ui.screens.HabitosMascotaScreen
 import com.fic.dualhabit10.ui.screens.HabitosScreen
+import com.fic.dualhabit10.ui.screens.HidratacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.HidratacionScreen
+import com.fic.dualhabit10.ui.screens.HistorialScreen
 import com.fic.dualhabit10.ui.screens.InicioScreen
 import com.fic.dualhabit10.ui.screens.LoginScreen
 import com.fic.dualhabit10.ui.screens.MascotasMenu
 import com.fic.dualhabit10.ui.screens.PerfilScreen
 import com.fic.dualhabit10.ui.screens.RegisterScreen
 import com.fic.dualhabit10.ui.screens.RegisterSuccessful
+import com.fic.dualhabit10.ui.screens.ResultadoHidratacionScreen
 
 
 class MainActivity : ComponentActivity(){
@@ -79,6 +84,21 @@ class MainActivity : ComponentActivity(){
                     //tarjeta -> PerfilScreen
                     composable("perfil") {
                         PerfilScreen(navController = navController)
+                    }
+                    composable("calculadora_agua"){
+                        CalculadoraHidratacionScreen(navController = navController)
+                    }
+                    composable("resultado_hidratacion"){
+                        ResultadoHidratacionScreen(navController = navController)
+                    }
+                    composable("historial") {
+                        HistorialScreen(navController = navController)
+                    }
+                    composable("habitos_mascota_menu"){
+                        HabitosMascotaScreen(navController)
+                    }
+                    composable("hidratacion_mascota"){
+                        HidratacionMascotaScreen(navController = navController)
                     }
                 }
             }

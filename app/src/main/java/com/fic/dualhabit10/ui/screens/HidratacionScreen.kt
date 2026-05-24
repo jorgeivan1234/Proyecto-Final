@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.onFocusedBoundsChanged
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -40,16 +39,19 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImagePainter.State.Empty.painter
 import java.util.Locale
 import com.fic.dualhabit10.R
 import kotlinx.coroutines.launch
 
 @Composable
-fun HidratacionScreen(navController: NavController,
-                      viewModel: HidratacionViewModel = viewModel()
+fun HidratacionScreen(
+    navController: NavController,
+    viewModel: HidratacionViewModel = viewModel()
  ) {
     //conversion directa a litros para cada caja
     val litrosConsumidos = viewModel.aguaConsumidaML / 1000f
+    val litrosMeta = viewModel.metaDiariaML / 1000f
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -111,7 +113,7 @@ fun HidratacionScreen(navController: NavController,
                     Box(
                         modifier = Modifier
                             .background(Color(0xFF81D4FA), shape = RoundedCornerShape(24.dp))
-                            .clickable {/* ruta futra*/ }
+                            .clickable {navController.navigate("historial") }
                             .padding(horizontal = 36.dp, vertical = 18.dp)
                     ) {
                         Text(
@@ -164,21 +166,23 @@ fun HidratacionScreen(navController: NavController,
                     )
                     Spacer(modifier = Modifier.height(36.dp))
                     Text(
-                        text = "¿Cuanta agua\nnecesito?",
+                        text = "Configurar parametros\nde hidratacion",
                         color = Color.Black,
-                        fontSize = 24.sp,
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
-                        lineHeight = 28.sp
+                        lineHeight = 20.sp
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     Image(
                         painter = painterResource(id = R.drawable.img_calculadora),
-                        contentDescription = "Calcular requerimiento",
+                        contentDescription = "Calculadora",
                         modifier = Modifier
-                            .size(190.dp)
-                            .clickable { navController.navigate("perfil_screen") },
+                            .size(130.dp)
+                            .clickable {
+                            navController.navigate("calculadora_agua")
+                        },
                         contentScale = ContentScale.Fit
                     )
                 }
@@ -202,21 +206,20 @@ fun HidratacionScreen(navController: NavController,
                     Box(
                         modifier = Modifier
                             .background(Color(0xFF448AFF), shape = RoundedCornerShape(12.dp))
-                            .padding(horizontal = 22.dp, vertical = 16.dp)
+                            .padding(horizontal = 16.dp, vertical = 16.dp)
                     ) {
                         Text(
-                            text = "Consumo:\n${
-                                String.format(
+                            text = String.format(
                                     Locale.US,
-                                    "%.1f",
-                                    litrosConsumidos
-                                )
-                            } litros",
+                                    "Llevas:\n%.1f / %.1f L",
+                                    litrosConsumidos,
+                                    litrosMeta
+                                ),
                             color = Color.White,
-                            fontSize = 18.sp,
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
-                            lineHeight = 24.sp
+                            lineHeight = 22.sp
                         )
                     }
                 }
