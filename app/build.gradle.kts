@@ -66,4 +66,5 @@ dependencies {
     //depedencjas para le inicio de sesion y la base a tiempo real
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 }

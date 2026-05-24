@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.core.view.WindowCompat
+import com.fic.dualhabit10.ui.screens.CalculadoraHidratacionScreen
 import com.fic.dualhabit10.ui.screens.Forget_Password
 import com.fic.dualhabit10.ui.screens.HabitosScreen
 import com.fic.dualhabit10.ui.screens.HidratacionScreen
@@ -79,6 +80,9 @@ class MainActivity : ComponentActivity(){
                     //tarjeta -> PerfilScreen
                     composable("perfil") {
                         PerfilScreen(navController = navController)
+                    }
+                    composable("calculadora_agua"){
+                        CalculadoraHidratacionScreen(navController = navController)
                     }
                 }
             }
