@@ -210,7 +210,7 @@ fun HabitosScreen(
         HabitoItem(
             titulo = "Alimentacion",
             imagenRes = R.drawable.img_alimentacion,
-            rutaNavigation = "", //Agregar ruta. ejmp | alimentacion | Cuando se cree la pantalla
+            rutaNavigation = "alimentacion",
             colorFondo = Color(0xFFFFF9C4)
         ),
         HabitoItem(

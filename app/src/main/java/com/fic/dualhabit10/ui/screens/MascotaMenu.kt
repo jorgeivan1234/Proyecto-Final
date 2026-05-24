@@ -86,8 +86,8 @@ fun MascotasMenu(navController: NavController) {
         MascotaMenu(
             titulo = "Ejercicios",
             imagenRes = null,
-            rutaNavigation = "", //Agregar ruta. ejmp | ejercicios | Cuando se cree la pantalla
-            enMantenimiento = true,
+            rutaNavigation = "actividad_fisica_mascota",
+            enMantenimiento = false,
             colorFondo = colores[5]
         )
     )
