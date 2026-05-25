@@ -42,7 +42,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.input.ImeAction
 import com.fic.dualhabit10.R
-
+import com.fic.dualhabit10.ui.viewmodels.AuthViewModel
 
 
 @Composable

@@ -1,4 +1,4 @@
-package com.fic.dualhabit10.ui.screens
+package com.fic.dualhabit10.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth

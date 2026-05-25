@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.fic.dualhabit10.ui.viewmodels.AuthViewModel
 import kotlinx.coroutines.launch
 
 @Composable

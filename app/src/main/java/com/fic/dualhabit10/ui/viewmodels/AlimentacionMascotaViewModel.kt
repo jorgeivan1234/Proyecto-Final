@@ -1,4 +1,4 @@
-package com.fic.dualhabit10.ui.screens
+package com.fic.dualhabit10.ui.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

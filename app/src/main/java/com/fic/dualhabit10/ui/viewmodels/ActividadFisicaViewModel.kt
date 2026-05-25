@@ -1,7 +1,8 @@
-package com.fic.dualhabit10.ui.screens
+package com.fic.dualhabit10.ui.viewmodels
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import com.fic.dualhabit10.data.model.ActividadMascota
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 

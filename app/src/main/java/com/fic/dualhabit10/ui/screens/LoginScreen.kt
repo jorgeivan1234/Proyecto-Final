@@ -55,6 +55,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
+import com.fic.dualhabit10.ui.viewmodels.AuthViewModel
 
 @Composable
 fun LoginScreen(navController: NavHostController,

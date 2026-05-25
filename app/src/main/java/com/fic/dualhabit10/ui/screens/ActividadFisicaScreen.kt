@@ -22,6 +22,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fic.dualhabit10.data.model.ActividadMascota
+import com.fic.dualhabit10.ui.viewmodels.ActividadFisicaViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)

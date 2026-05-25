@@ -59,6 +59,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.ActivityNavigatorExtras
 import coil.compose.AsyncImage
 import com.fic.dualhabit10.R
+import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
 import kotlin.math.exp
 
 @OptIn(ExperimentalMaterial3Api::class)

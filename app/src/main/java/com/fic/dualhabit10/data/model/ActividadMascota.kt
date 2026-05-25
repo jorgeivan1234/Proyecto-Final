@@ -1,4 +1,4 @@
-package com.fic.dualhabit10.ui.screens
+package com.fic.dualhabit10.data.model
 
 import androidx.compose.ui.graphics.Color
 

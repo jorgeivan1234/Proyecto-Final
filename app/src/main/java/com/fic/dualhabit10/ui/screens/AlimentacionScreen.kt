@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.fic.dualhabit10.ui.viewmodels.AlimentacionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

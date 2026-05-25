@@ -42,6 +42,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.fic.dualhabit10.data.model.ComidaMascota
+import com.fic.dualhabit10.ui.viewmodels.AlimentacionMascotaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

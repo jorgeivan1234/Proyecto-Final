@@ -60,6 +60,7 @@ import java.util.Locale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
+import com.fic.dualhabit10.ui.viewmodels.AuthViewModel
 
 @SuppressLint("RememberInComposition")
 @Composable

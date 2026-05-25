@@ -1,4 +1,4 @@
-package com.fic.dualhabit10.ui.screens
+package com.fic.dualhabit10.ui.viewmodels
 
 import android.app.Application
 import android.content.Context
@@ -9,13 +9,16 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDate
+
 
 class HidratacionViewModel (application: Application) : AndroidViewModel(application){
     private val prefs = application.getSharedPreferences("dualhabit_prefs", Context.MODE_PRIVATE)
     private val db = FirebaseFirestore.getInstance()
-    private val usuarioId = "usuario_prueba_1"
+    private val usuarioId: String
+        get() = FirebaseAuth.getInstance().currentUser?.uid ?: "usuario_anonimo"
 
     var aguaConsumidaML by mutableIntStateOf(0)
         private set
@@ -43,7 +46,6 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
     }
 
     private fun cargarDatosLocales(){
-        val hoyStr = LocalDate.now().toString()
         val fechaGuardadaAgua = prefs.getString("fecha_agua", null)
         //carga o reinicio diario del agua
         if (fechaGuardadaAgua == hoyStr){
@@ -124,14 +126,15 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
             "peso" to usuarioPeso,
             "actividadNivel" to actividadNivel,
             "entornoClima" to entornoClima,
-            "metaDairiaML" to metaDiariaML
+            "metaDiariaML" to metaDiariaML
         )
-        db.collection("usuario").document(usuarioId).set(datosPerfil)
+        db.collection("usuarios").document(usuarioId)
+            .set(datosPerfil, com.google.firebase.firestore.SetOptions.merge())
     }
 
     private fun escucharHistoriaFirebase() {
-        db.collection("Usuarios").document(usuarioId)
-            .collection("historia_agua")
+        db.collection("usuarios").document(usuarioId)
+            .collection("historial_agua")
             .addSnapshotListener { snapshot, e ->
                 if (e != null || snapshot == null) return@addSnapshotListener
 

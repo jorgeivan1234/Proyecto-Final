@@ -198,7 +198,7 @@ fun HabitosScreen(
         HabitoItem(
             titulo = "Sueño",
             imagenRes = R.drawable.img_sueno,
-            rutaNavigation = "", //Agregar ruta. ejmp | sueno | Cuando se cree la pantalla,
+            rutaNavigation = "sueño",
             colorFondo = Color(0xFF1A237E)
         ),
         HabitoItem(

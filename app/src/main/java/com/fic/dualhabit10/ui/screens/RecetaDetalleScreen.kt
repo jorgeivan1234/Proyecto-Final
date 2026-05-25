@@ -1,6 +1,5 @@
 package com.fic.dualhabit10.ui.screens
 
-import android.R.attr.data
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,7 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.google.common.collect.Multimaps.index
+import com.fic.dualhabit10.ui.viewmodels.AlimentacionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

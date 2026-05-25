@@ -23,6 +23,7 @@ import com.fic.dualhabit10.ui.screens.HidratacionScreen
 import com.fic.dualhabit10.ui.screens.HistorialScreen
 import com.fic.dualhabit10.ui.screens.InicioScreen
 import com.fic.dualhabit10.ui.screens.LoginScreen
+import com.fic.dualhabit10.ui.screens.MantenimientoSuenoScreen
 import com.fic.dualhabit10.ui.screens.MascotasMenu
 import com.fic.dualhabit10.ui.screens.PerfilMascotaScreen
 import com.fic.dualhabit10.ui.screens.PerfilScreen
@@ -124,6 +125,10 @@ class MainActivity : ComponentActivity(){
                         arguments = listOf(navArgument("recetaId") { type = NavType.StringType })
                     ){
 
+                    }
+
+                    composable("sueño"){
+                        MantenimientoSuenoScreen(navController = navController)
                     }
                 }
             }
