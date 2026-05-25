@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
+
 class AlimentacionViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
     private val _recetas = MutableStateFlow<List<Comida>>(emptyList())

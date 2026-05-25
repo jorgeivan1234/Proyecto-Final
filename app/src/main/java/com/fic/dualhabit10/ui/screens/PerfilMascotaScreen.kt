@@ -58,6 +58,7 @@ fun PerfilMascotaScreen(navController: NavController) {
     val scrollState = rememberScrollState()
 
     var nombreMascota by remember { mutableStateOf("") }
+    var tipoMascota by remember { mutableStateOf("") }
     var razaMascota by remember { mutableStateOf("") }
     var pesoMascota by remember { mutableStateOf("") }
     var edadMascota by remember { mutableStateOf("") }
@@ -167,6 +168,14 @@ fun PerfilMascotaScreen(navController: NavController) {
             )
 
             OutlinedTextField(
+                value = tipoMascota,
+                onValueChange = { razaMascota = it },
+                label = { Text("Tipo de mascota (Ej: Perro, Gato, Ave") },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp)
+            )
+
+            OutlinedTextField(
                 value = razaMascota,
                 onValueChange = { razaMascota = it },
                 label = { Text("Raza") },
@@ -205,7 +214,7 @@ fun PerfilMascotaScreen(navController: NavController) {
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7A22)),
             ) {
                 Text(
-                    "Guardar Datos del Perrito",
+                    "Guardar Datos de la Mascota",
                     color = Color.Black,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp

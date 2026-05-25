@@ -12,6 +12,7 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.fic.dualhabit10.ui.screens.ActividadFisicaScreen
+import com.fic.dualhabit10.ui.screens.AlimentacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.AlimentacionScreen
 import com.fic.dualhabit10.ui.screens.CalculadoraHidratacionScreen
 import com.fic.dualhabit10.ui.screens.Forget_Password
@@ -114,6 +115,15 @@ class MainActivity : ComponentActivity(){
                     }
                     composable("alimentacion"){
                         AlimentacionScreen(navController = navController)
+                    }
+                    composable("alimentacion_mascota") {
+                        AlimentacionMascotaScreen(navController = navController)
+                    }
+                    composable (
+                        route = "receta_mascota_detalle/{recetaId}",
+                        arguments = listOf(navArgument("recetaId") { type = NavType.StringType })
+                    ){
+
                     }
                 }
             }
