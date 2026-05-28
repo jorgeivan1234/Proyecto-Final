@@ -1,6 +1,5 @@
 package com.fic.dualhabit10.ui.screens
 
-import androidx.compose.material3.TextField
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,27 +17,29 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.text.style.TextAlign
-import com.fic.dualhabit10.R
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.fic.dualhabit10.R
 
 @Composable
 fun SugerenciasScreen(
-    navController: NavController
+    navHostController: NavHostController
 )
 {
     var sugerencias by remember { mutableStateOf("") }
@@ -82,28 +83,31 @@ fun SugerenciasScreen(
 
             TextField(
                 value = sugerencias,
-                onValueChange = {sugerencias = it; errorMensaje("") },
+                onValueChange = {sugerencias = it; errorMensaje ="" },
                 label = { Text("Nombre de Sugerencia") },
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,))
+                    unfocusedContainerColor = Color.Transparent,)
+            )
+
             Spacer(modifier = Modifier.height(16.dp))
 
             TextField(
-                value ="descripcion",
-                onValueChange = { descripcion = it
-                    errorMensaje("")
+                value = descripcion,
+                onValueChange = { descripcion = it;
+                    errorMensaje = ""
                     camposVaciosError = false },
-                label = { Text(text = "Descripción")},
+                label = { Text(text = "Descripcion") },
                 singleLine = false,
-                minLines = 4, //lineas de texto minimas a 4
                 maxLines = 7, //limita las lineas de texto 7
                 isError = camposVaciosError,
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.colors(),
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,)
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Black,
+                    unfocusedIndicatorColor = Color.Gray) )
             if (errorMensaje.isNotEmpty()){
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -112,14 +116,17 @@ fun SugerenciasScreen(
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
-                ) }
+                )
+            }
+
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(onClick = {
                 if (sugerencias.isBlank() || descripcion.isBlank()){
                     camposVaciosError = true
                     errorMensaje = "Por Favor de rellenar todos los campos"
-                }else{()
+                }else{
+                    navHostController.navigate("sugerencias_send")
                     errorMensaje ="Sugerencia enviada correctamente"
                     sugerencias = ""
                     descripcion = ""

@@ -12,4 +12,5 @@
     <string name="Login_Back">Volver al Login</string>
     <string name="Menu_Mascota">Menu de la mascota</string>
     <string name="Ver_Mascota">Ver mascotas Virtual</string>
+    <string name="Sugerencia_enviada">Sugerencia Enviada Correctamente</string>
 </resources>

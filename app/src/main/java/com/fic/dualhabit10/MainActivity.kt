@@ -16,6 +16,7 @@ import com.fic.dualhabit10.ui.screens.LoginScreen
 import com.fic.dualhabit10.ui.screens.MascotasMenu
 import com.fic.dualhabit10.ui.screens.RegisterScreen
 import com.fic.dualhabit10.ui.screens.RegisterSuccessful
+import com.fic.dualhabit10.ui.screens.SugerenciasSend
 
 
 class MainActivity : ComponentActivity(){
@@ -74,6 +75,10 @@ class MainActivity : ComponentActivity(){
                     //HabitosScreen -> HidratacionScreen
                     composable(route = "hidratacion"){
                         HidratacionScreen(navController = navController)
+                    }
+                    //SugerenciasScreen -> SugerenciasSend
+                    composable("sugerencias_send"){
+                        SugerenciasSend(navController = navController)
                     }
                 }
             }
