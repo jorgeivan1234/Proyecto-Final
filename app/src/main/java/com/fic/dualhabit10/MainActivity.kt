@@ -101,6 +101,11 @@ class MainActivity : ComponentActivity(){
                         HidratacionScreen(navController = navController, viewModel = hidratacionViewModel)
                     }
 
+                    //HidratacionScreen -> HidratacionMascotaScreen
+                    composable(route = "hidratacion_mascota"){
+                        HidratacionMascotaScreen(navController = navController)
+                    }
+
                     //tarjeta -> PerfilScreen
                     composable("perfil") {
                         PerfilScreen(navController = navController)

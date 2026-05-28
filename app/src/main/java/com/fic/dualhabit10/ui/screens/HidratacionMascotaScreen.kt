@@ -17,6 +17,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -27,7 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,11 +48,17 @@ fun HidratacionMascotaScreen(
     navController: NavController,
     viewModel: HidratacionMascotaViewModel = viewModel()
 ) {
-    val aguaHoy by viewModel.aguaConsumidaHoy.collectAsState()
-    val meta by viewModel.metaDiaria.collectAsState()
+    val aguaConsumida = viewModel.aguaMascotaConsumidaML
+    val metaDiaria = viewModel.metaMascotaDiariaML
 
     // porcentaje tomando para la barra de progreso
-    val progreso = if (meta > 0) (aguaHoy.toFloat() / meta.toFloat()).coerceIn(0f, 1f) else 0f
+    val progreso = remember(aguaConsumida, metaDiaria){
+        if (metaDiaria > 0) {
+            (aguaConsumida.toFloat() / metaDiaria.toFloat()).coerceIn(0f, 1f)
+        } else {
+            0f
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -101,7 +108,7 @@ fun HidratacionMascotaScreen(
                         color = Color.Black
                     )
                     Text(
-                        text = "$aguaHoy / $meta ml",
+                        text = "$aguaConsumida / $metaDiaria ml",
                         fontSize = 32.sp,
                         fontWeight = FontWeight.ExtraBold
                     )
@@ -136,7 +143,7 @@ fun HidratacionMascotaScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Button(
-                    onClick = {viewModel.agregarAgua(250)},
+                    onClick = {viewModel.sumarAguaMascota(250)},
                     modifier = Modifier.weight(1f).height(55.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2)),
                     shape = RoundedCornerShape(16.dp)
@@ -144,7 +151,7 @@ fun HidratacionMascotaScreen(
                     Text("+250 ml", fontSize = 16.sp, fontWeight = boldOrNormal(true), color = Color.White)
                 }
                 Button(
-                    onClick = { viewModel.agregarAgua(500) },
+                    onClick = { viewModel.sumarAguaMascota(500) },
                     modifier = Modifier.weight(1f).height(55.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1565C0)),
                     shape = RoundedCornerShape(16.dp)
@@ -155,7 +162,9 @@ fun HidratacionMascotaScreen(
 
             OutlinedButton(
                 onClick = { viewModel.reiniciarProgreso()},
-                modifier = Modifier.fillMaxWidth().height(50.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red),
                 shape = RoundedCornerShape(18.dp)
             ) {
