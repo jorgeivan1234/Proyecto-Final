@@ -46,13 +46,13 @@ fun ResultadoHidratacionScreen(
 ) {
     val scrollState = rememberScrollState()
     val metaLitros = viewModel.metaDiariaML / 1000f
-    val cantidadVasos = (viewModel.metaDiariaML / 250)
+    val cantidadVasos = if (viewModel.metaDiariaML > 0) viewModel.metaDiariaML / 250 else 0
     val basePeso = (viewModel.usuarioPeso * 35).toInt()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Tu plan de Hidratacion", fontWeight = FontWeight.Bold) },
+                title = { Text("Tu plan de Hidratacion", fontWeight = FontWeight.Bold, color = Color.White) },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF7A22))
             )
         }
@@ -73,7 +73,7 @@ fun ResultadoHidratacionScreen(
                 color = Color(0xFFFF7A22)
             )
             Spacer(modifier = Modifier.height(16.dp))
-
+            // tarjeta con el resultado de litros
             Card(
                 shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -98,10 +98,11 @@ fun ResultadoHidratacionScreen(
             Text(
                 text = "Equivale a aproximadamente: ",
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                fontSize = 16.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
-
+            // equivalente a un vaso de agua
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
@@ -123,10 +124,11 @@ fun ResultadoHidratacionScreen(
             Text(
                 text = "¿Como llegamos a este numero?",
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                fontSize = 16.sp
             )
             Spacer(modifier = Modifier.height(12.dp))
-
+            //tarjeta de desglose
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFFE0F7FA))
@@ -134,28 +136,37 @@ fun ResultadoHidratacionScreen(
                 Column( modifier = Modifier.padding(16.dp)){
                     DesgloseItem(label="Base por peso (${viewModel.usuarioPeso}kg)", value = "${basePeso}ml")
 
-                    if(viewModel.actividadNivel == "Intenso") {
-                        DesgloseItem(label="Ajuste por actividad intensa", value = "+600ml", color = Color(0xFF2E7D32))
+                    if(viewModel.actividadNivel == "Alto" || viewModel.actividadNivel == "Intenso") {
+                        DesgloseItem(
+                            label="Ajuste por actividad(${viewModel.actividadNivel.lowercase()})",
+                            value = "+600ml",
+                            color = Color(0xFF2E7D32)
+                        )
                     }
-                    if(viewModel.entornoClima == "Calido") {
-                        DesgloseItem(label="Ajuste por Clima calido", value = "+500ml", color = Color(0xFFD84315))
+                    if(viewModel.entornoClima == "Calido" || viewModel.entornoClima == "Extremo") {
+                        DesgloseItem(
+                            label="Ajuste por Clima calido${viewModel.entornoClima.lowercase()}",
+                            value = "+500ml",
+                            color = Color(0xFFD84315)
+                        )
                     }
                 }
             }
-            Spacer(modifier = Modifier.weight(1f))
-            Spacer(modifier = Modifier.height(24.dp))
-
+            Spacer(modifier = Modifier.height(32.dp))
+            // boton de aceptar
             Button(
                 onClick = {
                     navController.navigate("hidratacion") {
                         popUpTo("hidratacion") { inclusive = true }
                     }
                 },
-                modifier = Modifier.fillMaxWidth().height(55.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(55.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7A22)),
                 shape = RoundedCornerShape(16.dp)
             ) {
-                Text("¡Entendido, aceptar meta!", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text("¡Entendido, aceptar meta!", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
             }
         }
     }
@@ -164,7 +175,9 @@ fun ResultadoHidratacionScreen(
 @Composable
 fun DesgloseItem(label: String, value: String, color: Color = Color.Black) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = label, fontSize = 14.sp)

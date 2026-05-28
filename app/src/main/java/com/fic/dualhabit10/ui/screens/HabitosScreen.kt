@@ -223,7 +223,7 @@ fun HabitosScreen(
             titulo = "Resumen",
             imagenRes = R.drawable.img_resumen,
             rutaNavigation = "perfil", //Agregar ruta. ejmp | resumen | Cuando se cree la pantalla
-            colorFondo = Color(0xFFEE1BEE7)
+            colorFondo = Color(0xFFEE1BEE)
         )
     )
 

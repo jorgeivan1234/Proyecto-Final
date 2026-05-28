@@ -9,17 +9,18 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.lifecycle.viewModelScope
+import com.fic.dualhabit10.data.local.AppDatabase
+import com.fic.dualhabit10.data.local.RegistroAguaEntity
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 
-class HidratacionViewModel (application: Application) : AndroidViewModel(application){
+class HidratacionViewModel (application: Application) : AndroidViewModel(application) {
     private val prefs = application.getSharedPreferences("dualhabit_prefs", Context.MODE_PRIVATE)
-    private val db = FirebaseFirestore.getInstance()
-    private val usuarioId: String
-        get() = FirebaseAuth.getInstance().currentUser?.uid ?: "usuario_anonimo"
 
+    private val database = AppDatabase.getDatebase(application)
+    private val dnHidratacionDao = database.hidratacionDao()
     var aguaConsumidaML by mutableIntStateOf(0)
         private set
     var metaDiariaML by mutableIntStateOf(2000)
@@ -38,23 +39,41 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
 
     //almacena el historial en la base de datos
     val historialConsumoMap = mutableStateMapOf<String, Int>()
-    init{
+
+    init {
         cargarDatosLocales()
         calcularMetaHidratacionDinamica()
-        subirMetaFirebase()
-        escucharHistoriaFirebase()
+        cargarAguaDesdeRoom()
+        cargarHistorialDesdeRoom()
     }
 
-    private fun cargarDatosLocales(){
-        val fechaGuardadaAgua = prefs.getString("fecha_agua", null)
-        //carga o reinicio diario del agua
-        if (fechaGuardadaAgua == hoyStr){
-            aguaConsumidaML = prefs.getInt("agua_consumida_real", 0)
-        } else {
-            aguaConsumidaML = 0
-            prefs.edit().putInt("agua_consumida_real", 0).putString("fecha_agua", hoyStr).apply()
+    private fun cargarAguaDesdeRoom() {
+        viewModelScope.launch {
+            val registroHoy = dnHidratacionDao.obtenerRegistroPorFecha(hoyStr)
+            if (registroHoy != null) {
+                aguaConsumidaML = registroHoy.cantidadML
+            } else {
+                aguaConsumidaML = 0
+                // si es un dia nuevo guardamos un registro en cero
+                dnHidratacionDao.insertarOActualizar(
+                    RegistroAguaEntity(fecha = hoyStr, cantidadML = 0, metaML = metaDiariaML)
+                )
+            }
         }
+    }
 
+    private fun cargarHistorialDesdeRoom() {
+        viewModelScope.launch {
+            dnHidratacionDao.obtenerTodoElHistorial().collect { listaEntiedades ->
+                historialConsumoMap.clear()
+                for (registro in listaEntiedades) {
+                    historialConsumoMap[registro.fecha] = registro.cantidadML
+                }
+            }
+        }
+    }
+
+    private fun cargarDatosLocales() {
         //cargara los parametros de perfil
         usuarioPeso = prefs.getFloat("perfil_peso", 70f)
         usuarioEdad = prefs.getInt("perfil_edad", 25)
@@ -63,48 +82,49 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
         entornoClima = prefs.getString("perfil_entorno", "Calido") ?: "Calido"
 
         //carga gamificacion
-        experienciaNivel = prefs.getInt("gamificacion_nivel",1)
-        experienciaPuntos = prefs.getInt("gamificacion_xp",0)
+        experienciaNivel = prefs.getInt("gamificacion_nivel", 1)
+        experienciaPuntos = prefs.getInt("gamificacion_xp", 0)
     }
+
     //calculo automatico de meta basado en el perfil y ajuste metereologico dinamico
-    fun calcularMetaHidratacionDinamica(){
+    fun calcularMetaHidratacionDinamica() {
         var baseMeta = (usuarioPeso * 35f).toInt()
 
         //ajuste por nivel de actividad fisica
-        if(actividadNivel == "Alto" || actividadNivel == "Intenso"){
+        if (actividadNivel == "Alto" || actividadNivel == "Intenso") {
             baseMeta += 600
         }
 
-        if(entornoClima == "Calido" || entornoClima == "Extremo"){
+        if (entornoClima == "Calido" || entornoClima == "Extremo") {
             baseMeta += 500
         }
         metaDiariaML = baseMeta
     }
+
     //registro de incrementeo de exp
-    fun agregarAgua(ml: Int){
+    fun agregarAgua(ml: Int) {
         aguaConsumidaML += ml
-        prefs.edit().putInt("agua_consumida_real", aguaConsumidaML).apply()
 
-        //sinconizacion con la base de datos
-        val datosRegistro = hashMapOf(
-            "cantidadML" to aguaConsumidaML,
-            "metaML" to metaDiariaML,
-            "fecha" to hoyStr
-        )
-        db.collection("usuarios").document(usuarioId)
-            .collection("historial_agua").document(hoyStr)
-            .set(datosRegistro)
-
+        viewModelScope.launch {
+            //sinconizacion con la base de datos
+            val nuevoRegistro = RegistroAguaEntity(
+                fecha = hoyStr,
+                cantidadML = aguaConsumidaML,
+                metaML = metaDiariaML,
+            )
+            dnHidratacionDao.insertarOActualizar(nuevoRegistro)
+        }
         //sistema de recompensa
-        experienciaPuntos += (ml/10)
-        if(experienciaPuntos >= 100 * experienciaNivel){
+        experienciaPuntos += (ml / 10)
+        if (experienciaPuntos >= 100 * experienciaNivel) {
             experienciaPuntos = 0
             experienciaNivel += 1
             prefs.edit().putInt("gamificacion_nivel", experienciaNivel).apply()
         }
         prefs.edit().putInt("gamificacion_xp", experienciaPuntos).apply()
     }
-    fun guardarPerfil(peso: Float, edad: Int, genero:String, actividad: String, entorno: String){
+
+    fun guardarPerfil(peso: Float, edad: Int, genero: String, actividad: String, entorno: String) {
         usuarioPeso = peso
         usuarioEdad = edad
         usuarioGenero = genero
@@ -119,31 +139,15 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
             .putString("perfil_entorno", entorno)
             .apply()
         calcularMetaHidratacionDinamica()
-        subirMetaFirebase()
-    }
-    private fun subirMetaFirebase() {
-        val datosPerfil = hashMapOf(
-            "peso" to usuarioPeso,
-            "actividadNivel" to actividadNivel,
-            "entornoClima" to entornoClima,
-            "metaDiariaML" to metaDiariaML
-        )
-        db.collection("usuarios").document(usuarioId)
-            .set(datosPerfil, com.google.firebase.firestore.SetOptions.merge())
-    }
 
-    private fun escucharHistoriaFirebase() {
-        db.collection("usuarios").document(usuarioId)
-            .collection("historial_agua")
-            .addSnapshotListener { snapshot, e ->
-                if (e != null || snapshot == null) return@addSnapshotListener
-
-                historialConsumoMap.clear()
-                for (doc in snapshot.documents) {
-                    val fecha = doc.id
-                    val cantidad = doc.getLong("cantidadML")?.toInt() ?: 0
-                    historialConsumoMap[fecha] = cantidad
-                }
-            }
+        viewModelScope.launch {
+            dnHidratacionDao.insertarOActualizar(
+                RegistroAguaEntity(
+                    fecha = hoyStr,
+                    cantidadML = aguaConsumidaML,
+                    metaML = metaDiariaML
+                )
+            )
+        }
     }
 }

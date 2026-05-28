@@ -47,6 +47,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -74,6 +75,10 @@ fun LoginScreen(navController: NavHostController,
     var camposVaciosError by remember { mutableStateOf(false)}
     val focusManager = LocalFocusManager.current
 
+    val msjCamposVacios = stringResource(id = R.string.err_campos_vacios)
+    val msjCorreoInvalido = stringResource(id = R.string.err_correo_invalido)
+    val msjCredencialesIncorrectas = stringResource(id = R.string.err_credenciales_incorrectas)
+
     val gestionarGuardadoCredenciales: () -> Unit = {
         val editor = sharedPreferences.edit()
         if(recordarDatos){
@@ -92,10 +97,10 @@ fun LoginScreen(navController: NavHostController,
 
         if (email.isBlank() || password.isBlank()){
             camposVaciosError = true
-            errorMensaje = "Obligatorio Tiene que ingresar cuenta y contraseña"
+            errorMensaje = msjCamposVacios
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailLimpio).matches()) {
             camposVaciosError = true
-            errorMensaje = "Por favor, ingresa un correo electronico valido"
+            errorMensaje = msjCorreoInvalido
         } else {
             camposVaciosError = false
             authViewModel.iniciarSesion(
@@ -103,7 +108,6 @@ fun LoginScreen(navController: NavHostController,
                 pass = passwordLimpio,
                 onExito = {
                     gestionarGuardadoCredenciales() //guardara el checkbox si esta activo
-                    //si todo sale bien pasa a habitos limpiando el historial
                     //si todo sale bien pasa a hábitos limpiando el historial
                     navController.navigate("habitos"){
                         popUpTo("login") { inclusive = true }
@@ -111,7 +115,7 @@ fun LoginScreen(navController: NavHostController,
                 },            //es la validación local antes de ir a internet
                 onError = { mensajeErrorFirebase ->
                     //si esta mal o el usuario no existe firebase avisara
-                    errorMensaje = "El correo electronico o la contraseña son incorrectos"
+                    errorMensaje = msjCredencialesIncorrectas
                 }
             )
         }
@@ -119,7 +123,7 @@ fun LoginScreen(navController: NavHostController,
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF5EDCFF))
+            .background(colorResource(id = R.color.azul_cielo))
     ){
         Image(
             painter = painterResource(id = R.drawable.bg_fondo_login),
@@ -132,7 +136,7 @@ fun LoginScreen(navController: NavHostController,
                 .align(Alignment.Center)
                 .width(360.dp)
                 .background(
-                    color = Color(0xFF58B1C2),
+                    color = colorResource(id = R.color.azul),
                     shape = RoundedCornerShape(48.dp)
                 )
                 .padding(24.dp),
@@ -153,7 +157,7 @@ fun LoginScreen(navController: NavHostController,
                     errorMensaje = ""
                     camposVaciosError = false
                 },
-                label = { Text("Ingresar correo electronico") },
+                label = { Text(text = stringResource(id = R.string.hint_correo)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
                 isError = camposVaciosError, //se pone rojo si está vacío
@@ -179,7 +183,7 @@ fun LoginScreen(navController: NavHostController,
                     errorMensaje = ""
                     camposVaciosError = false
                 },
-                label = { Text("Contraseña") },
+                label = { Text(text = stringResource(id = R.string.hint_password))},
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
                 isError = camposVaciosError, //se pone rojo si está vacío
@@ -199,7 +203,7 @@ fun LoginScreen(navController: NavHostController,
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
                             imageVector = icon,
-                            contentDescription = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña"
+                            contentDescription = if (passwordVisible) stringResource(id = R.string.desc_ocultar_pass) else stringResource(id = R.string.desc_mostrar_pass)
                         )
                     }
                 },
@@ -218,12 +222,12 @@ fun LoginScreen(navController: NavHostController,
                     checked = recordarDatos,
                     onCheckedChange = { recordarDatos = it },
                     colors = CheckboxDefaults.colors(
-                        checkedColor = Color(0xFF4376A3),
+                        checkedColor = colorResource(id = R.color.azul_fuerte),
                         uncheckedColor = Color.Black
                     )
                 )
                 Text(
-                    text = "Recordar mis datos",
+                    text = stringResource(id = R.string.chk_recordar),
                     color = Color.White,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
@@ -233,7 +237,7 @@ fun LoginScreen(navController: NavHostController,
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = errorMensaje,
-                    color = Color(0xFFD32F2F),
+                    color = colorResource(id = R.color.rojo),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
@@ -241,7 +245,7 @@ fun LoginScreen(navController: NavHostController,
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(text = "Recuperar Contraseña",
+            Text(text = stringResource(id = R.string.btn_recuperar_pass),
                 color = Color.White,
                 fontSize =  14.sp,
                 modifier = Modifier.clickable{
@@ -251,7 +255,7 @@ fun LoginScreen(navController: NavHostController,
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(text = "Registrarse",
+            Text(text = stringResource(id = R.string.Register),
                 color = Color.White,
                 fontSize =  14.sp,
                 modifier = Modifier.clickable{
@@ -263,29 +267,10 @@ fun LoginScreen(navController: NavHostController,
 
             Button(
                 onClick = {
-                    //es la validación local antes de ir a internet
-                    if(email.isBlank() || password.isBlank()) {
-                        errorMensaje = "Por favor, llena todos los campos"
-                    }else {
-                        //llama ala base de datos
-                        authViewModel.iniciarSesion(
-                            email = email,
-                            pass = password,
-                            onExito = {
-                                //si todo sale bien pasa a hábitos limpiando el historial
-                                navController.navigate("habitos"){
-                                    popUpTo("login") { inclusive = true }
-                                }
-                            },
-                            onError = { mensajeErrorFirebase ->
-                                //si esta mal o el usuario no existe firebase avisara
-                                errorMensaje = mensajeErrorFirebase
-                            }
-                        )
-                    }
+                    ejecutarLogin()
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF4376A3)
+                    containerColor = colorResource(id = R.color.azul_fuerte)
                 ),
                 modifier = Modifier.size(width = 200.dp, height = 50.dp),
                 shape = RoundedCornerShape(50.dp)

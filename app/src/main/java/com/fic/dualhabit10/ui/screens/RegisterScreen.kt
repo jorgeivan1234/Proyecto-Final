@@ -25,6 +25,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -62,6 +63,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import com.fic.dualhabit10.ui.viewmodels.AuthViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("RememberInComposition")
 @Composable
 fun RegisterScreen(navController: NavHostController,

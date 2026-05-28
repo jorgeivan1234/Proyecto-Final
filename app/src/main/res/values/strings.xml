@@ -12,4 +12,16 @@
     <string name="Login_Back">Volver al Login</string>
     <string name="Menu_Mascota">Menu de la mascota</string>
     <string name="Ver_Mascota">Ver mascotas Virtual</string>
+    <string name="desc_personaje_saludo">Personaje saludando amigablemente</string>
+    <string name="desc_perro_inicio">Mascota camina de bienvenida</string>
+    <string name="hint_correo">Ingresar correo electronico</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="btn_recuperar_pass">Recuperar Contraseña</string>
+    <string name="chk_recordar">Recordar mis datos</string>
+    <string name="err_campos_vacios">Obligatorio: Tiene que ingresaar cuenta y contraseña</string>
+    <string name="err_correo_invalido">Por favor, ingresa un correo electronico valido</string>
+    <string name="err_credenciales_incorrectas">El correo electronico o la contraseña son incorrectos</string>
+    <string name="err_llenar_campos">Por favor, llenar todos los campos</string>
+    <string name="desc_ocultar_pass">Ocultar contraseña</string>
+    <string name="desc_mostrar_pass">Mostrar contraseña</string>
 </resources>

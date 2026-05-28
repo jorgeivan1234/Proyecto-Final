@@ -145,7 +145,7 @@ fun VistaDiariaReal(viewModel: HidratacionViewModel) {
             Text("$consumo ml / $meta ml", fontSize = 26.sp, fontWeight = FontWeight.Black, color = Color(0xFF448AFF))
             Spacer(modifier = Modifier.height(16.dp))
             LinearProgressIndicator(
-                progress = { 0.75f },
+                progress = { porcentaje },
                 modifier = Modifier.fillMaxWidth().height(14.dp),
                 color = Color(0xFF448AFF),
                 trackColor = Color(0xFFE0E0E0),
