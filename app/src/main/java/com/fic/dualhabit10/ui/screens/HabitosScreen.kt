@@ -200,7 +200,7 @@ fun HabitosScreen(
             rutaNavigation = "mascota_menu"
         ),
         HabitoItem(
-            titulo = "Resumen",
+            titulo = "Sugerencìas",
             imagenRes = R.drawable.img_resumen,
             rutaNavigation = "" //Agregar ruta. ejmp | resumen | Cuando se cree la pantalla
         )

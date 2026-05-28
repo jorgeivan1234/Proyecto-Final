@@ -1,0 +1,138 @@
+Index: app/src/main/java/com/fic/dualhabit10/ui/screens/HabitosScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.fic.dualhabit10.ui.screens\r\n\r\nimport android.app.Application\r\nimport android.content.Context\r\nimport androidx.compose.foundation.Image\r\nimport androidx.compose.foundation.background\r\nimport androidx.compose.foundation.clickable\r\nimport androidx.compose.foundation.horizontalScroll\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.layout.Arrangement\r\nimport androidx.compose.foundation.lazy.grid.GridCells\r\nimport androidx.compose.foundation.lazy.grid.LazyVerticalGrid\r\nimport androidx.compose.foundation.shape.RoundedCornerShape\r\nimport androidx.compose.foundation.rememberScrollState\r\nimport androidx.compose.foundation.shape.CircleShape\r\nimport androidx.compose.material.icons.Icons\r\nimport androidx.compose.foundation.lazy.grid.items\r\nimport androidx.compose.material.icons.filled.AccountCircle\r\nimport androidx.compose.material.icons.filled.Check\r\nimport androidx.compose.material.icons.filled.Menu\r\nimport androidx.compose.material3.Card\r\nimport androidx.compose.material3.CardDefaults\r\nimport androidx.compose.material3.DrawerValue\r\nimport androidx.compose.material3.ExperimentalMaterial3Api\r\nimport androidx.compose.material3.HorizontalDivider\r\nimport androidx.compose.material3.IconButton\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.graphics.Color\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.text.font.FontWeight\r\nimport androidx.compose.ui.text.style.TextAlign\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.compose.ui.unit.sp\r\nimport androidx.navigation.NavController\r\nimport androidx.compose.material3.Icon\r\nimport androidx.compose.material3.ModalDrawerSheet\r\nimport androidx.compose.material3.ModalNavigationDrawer\r\nimport androidx.compose.material3.rememberDrawerState\r\nimport androidx.compose.runtime.mutableStateOf\r\nimport androidx.compose.runtime.setValue\r\nimport androidx.compose.ui.tooling.preview.Preview\r\nimport androidx.lifecycle.viewmodel.compose.viewModel\r\nimport androidx.navigation.compose.rememberNavController\r\nimport androidx.compose.runtime.getValue\r\nimport androidx.compose.runtime.rememberCoroutineScope\r\nimport androidx.lifecycle.AndroidViewModel\r\nimport com.fic.dualhabit10.R\r\nimport kotlinx.coroutines.launch\r\nimport java.time.DayOfWeek\r\nimport java.time.LocalDate\r\nimport java.time.format.TextStyle\r\nimport java.time.temporal.ChronoUnit\r\nimport java.util.Locale\r\n\r\nclass HabitosViewModel (application: Application) : AndroidViewModel(application){\r\n    private val prefs = application.getSharedPreferences(\"dualhabit_prefs\", Context.MODE_PRIVATE)\r\n    //estos son los estados que observa la ui\r\n    var rachaContador by mutableStateOf(0)\r\n        private set\r\n    var diasSemanaActual by mutableStateOf<List<DiaData>>(emptyList())\r\n        private set\r\n\r\n    var rachaRegistradaHoy by mutableStateOf(false)\r\n        private set\r\n\r\n    var diasCompletados by mutableStateOf(setOf<String>())\r\n        private set\r\n\r\n    init {\r\n        cargarYVerificarRacha()\r\n        generarDiasDeLaSemana()\r\n    }\r\n\r\n    private fun cargarYVerificarRacha() {\r\n        val hoy = LocalDate.now()\r\n        // recupera los datos guardados en la memoria\r\n        val rachaGuardada = prefs.getInt(\"racha_contador\", 0)\r\n        val ultimaFechaStr = prefs.getString(\"ultima_fecha_registro\", null)\r\n\r\n        // recupera los dias del mes guardado que se completaron\r\n        val diasCompletadosGuardados = prefs.getStringSet(\"dias_completados_set\", emptySet()) ?: emptySet()\r\n        diasCompletados = diasCompletadosGuardados\r\n\r\n        if (ultimaFechaStr  == null) {\r\n            //caso de usuario nuevo\r\n            rachaContador = 0\r\n            rachaRegistradaHoy = false\r\n        } else {\r\n\r\n            val ultimaFecha = LocalDate.parse(ultimaFechaStr)\r\n            // para calcular la diferencia de dias reales entre la ultima vez que pulso el boton\r\n            val diasDeDiferencia = ChronoUnit.DAYS.between(ultimaFecha, hoy)\r\n            when {\r\n                diasDeDiferencia == 0L -> {\r\n                    //ya pulso el boton hiy\r\n                    rachaContador = rachaGuardada\r\n                    rachaRegistradaHoy = true\r\n                }\r\n                diasDeDiferencia == 1L -> {\r\n                    //dia nuevo\r\n                    rachaContador = rachaGuardada\r\n                    rachaRegistradaHoy = false\r\n                }\r\n                else -> {\r\n                    //pasron 2 dias o mas\r\n                    rachaContador = 0\r\n                    rachaRegistradaHoy = false\r\n                    diasCompletados = emptySet()\r\n\r\n                    //limpia la memoria\r\n                    prefs.edit().putInt(\"racha_contador\", 0)\r\n                        .putStringSet(\"dias_completados_set\", emptySet())\r\n                        .apply()\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    fun registrarRachasDeHoy() {\r\n        if(!rachaRegistradaHoy) {\r\n            val hoy = LocalDate.now()\r\n            val hoyDiaStr = hoy.dayOfMonth.toString()\r\n\r\n            //incremento el numero de la racha\r\n            rachaContador += 1\r\n            rachaRegistradaHoy = true //bloquea el boton\r\n            diasCompletados = diasCompletados + hoyDiaStr //agrega el dia de hoy a la lista\r\n\r\n            //guarda de forma permanente en el chip del telefono\r\n            prefs.edit()\r\n                .putInt(\"racha_contador\", rachaContador)\r\n                .putString(\"ultima_fecha_registro\", hoy.toString())\r\n                .putStringSet(\"dias_completados_set\", diasCompletados)\r\n                .apply()\r\n\r\n            //Actualiza la lista visual de los dias para pintar los check\r\n            generarDiasDeLaSemana()\r\n        }\r\n    }\r\n    fun generarDiasDeLaSemana() {\r\n        val hoy = LocalDate.now()\r\n        val lunesDeEstaSemana = hoy.with(DayOfWeek.MONDAY)\r\n        val lista = mutableListOf<DiaData>()\r\n\r\n        for (i in 0..6) {\r\n            val fechaDia = lunesDeEstaSemana.plusDays(i.toLong())\r\n            val numeroDiaStr = fechaDia.dayOfMonth.toString()\r\n            val nombreCorto = fechaDia.dayOfWeek.getDisplayName(\r\n                TextStyle.SHORT,\r\n                Locale(\"es\", \"MX\")\r\n            ).replaceFirstChar { it.uppercase() }\r\n\r\n            lista.add(\r\n                DiaData(\r\n                    nombre = nombreCorto,\r\n                    numero = fechaDia.dayOfMonth.toString(),\r\n                    esHoy = fechaDia.isEqual(hoy),\r\n                    estaCompletado = diasCompletados.contains(numeroDiaStr)\r\n                )\r\n            )\r\n        }\r\n        diasSemanaActual = lista\r\n    }\r\n}\r\ndata class DiaData(\r\n    val nombre: String,\r\n    val numero: String,\r\n    val esHoy: Boolean,\r\n    val estaCompletado: Boolean\r\n)\r\n\r\ndata class HabitoItem(\r\n    val titulo: String,\r\n    val imagenRes: Int,\r\n    val rutaNavigation: String,\r\n    val colorFondo: Color\r\n)\r\n\r\n@OptIn(ExperimentalMaterial3Api::class)\r\n@Composable\r\nfun HabitosScreen(\r\n    navController: NavController,\r\n    viewModel: HabitosViewModel = viewModel()\r\n) {\r\n    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)\r\n    val scoper = rememberCoroutineScope()\r\n\r\n    val listaHabitos = listOf(\r\n        HabitoItem(\r\n            titulo = \"Hidratacion\",\r\n            imagenRes = R.drawable.img_hidratacion,\r\n            rutaNavigation = \"hidratacion\",\r\n            colorFondo = Color(0xFFB3E5FC)\r\n        ),\r\n        HabitoItem(\r\n            titulo = \"Sueño\",\r\n            imagenRes = R.drawable.img_sueno,\r\n            rutaNavigation = \"sueño\",\r\n            colorFondo = Color(0xFF1A237E)\r\n        ),\r\n        HabitoItem(\r\n            titulo = \"Actividad\\nFisica\",\r\n            imagenRes = R.drawable.img_ejercicio,\r\n            rutaNavigation = \"actividad_fisica_mascota\",\r\n            colorFondo = Color(0xFFFFCDD2)\r\n        ),\r\n        HabitoItem(\r\n            titulo = \"Alimentacion\",\r\n            imagenRes = R.drawable.img_alimentacion,\r\n            rutaNavigation = \"alimentacion\",\r\n            colorFondo = Color(0xFFFFF9C4)\r\n        ),\r\n        HabitoItem(\r\n            titulo = \"mascotas\",\r\n            imagenRes = R.drawable.img_mascotas_v,\r\n            rutaNavigation = \"mascota_menu\",\r\n            colorFondo = Color(0xFFD7CCC8)\r\n        ),\r\n        HabitoItem(\r\n            titulo = \"Resumen\",\r\n            imagenRes = R.drawable.img_resumen,\r\n            rutaNavigation = \"perfil\", //Agregar ruta. ejmp | resumen | Cuando se cree la pantalla\r\n            colorFondo = Color(0xFFEE1BEE7)\r\n        )\r\n    )\r\n\r\n    //contenedor del menu despegable\r\n    BaseCustomDrawer(navController = navController, drawerState = drawerState){\r\n        Column(\r\n            modifier = Modifier\r\n                .fillMaxSize()\r\n                .background(Color(0xFF9EFFEB))\r\n        ) {\r\n            Column(\r\n                modifier = Modifier\r\n                    .fillMaxWidth()\r\n                    .background(\r\n                        Color(0xFFFF7A22),\r\n                        shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)\r\n                    )\r\n                    .statusBarsPadding()\r\n                    .padding(start = 12.dp, end = 12.dp, bottom = 20.dp)\r\n            ) {\r\n                Box(\r\n                    modifier = Modifier\r\n                        .fillMaxWidth()\r\n                        .padding(vertical = 4.dp)\r\n                ) {\r\n                    IconButton(\r\n                        onClick = {\r\n                            scoper.launch { drawerState.open() }\r\n                        }\r\n                    ) {\r\n                        Icon(\r\n                            imageVector = Icons.Default.Menu,\r\n                            contentDescription = \"Menu\",\r\n                            tint = Color.Black,\r\n                            modifier = Modifier.size(32.dp)\r\n                        )\r\n                    }\r\n                    Box(\r\n                        modifier = Modifier\r\n                            .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))\r\n                            .clickable(enabled = !viewModel.rachaRegistradaHoy) {\r\n                                viewModel.registrarRachasDeHoy()\r\n                            }\r\n                            .padding(horizontal = 20.dp, vertical = 6.dp)\r\n                            .align(Alignment.Center)\r\n                    ) {\r\n                        Row(\r\n                            verticalAlignment = Alignment.CenterVertically,\r\n                            horizontalArrangement = Arrangement.Center\r\n                        ) {\r\n                            if (viewModel.rachaRegistradaHoy) {\r\n                                Icon(\r\n                                    imageVector = Icons.Default.Check,\r\n                                    contentDescription = null,\r\n                                    tint = Color.White,\r\n                                    modifier = Modifier.size(16.dp)\r\n                                )\r\n                                Spacer(modifier = Modifier.width(4.dp))\r\n                                Text(\r\n                                    text = \"Racha de hoy Lista\",\r\n                                    color = Color.White,\r\n                                    fontSize = 16.sp,\r\n                                    fontWeight = FontWeight.Bold\r\n                                )\r\n                            } else {\r\n                                Text(\r\n                                    text = \"Activar Racha: ${viewModel.rachaContador} dias\",\r\n                                    color = Color.Black,\r\n                                    fontSize = 18.sp,\r\n                                    fontWeight = FontWeight.Bold\r\n                                )\r\n                            }\r\n                        }\r\n                    }\r\n                }\r\n                Spacer(modifier = Modifier.height(16.dp))\r\n\r\n                Row(\r\n                    modifier = Modifier\r\n                        .fillMaxWidth()\r\n                        .horizontalScroll(rememberScrollState()),\r\n                    horizontalArrangement = Arrangement.spacedBy(12.dp),\r\n                    verticalAlignment = Alignment.CenterVertically\r\n                ) {\r\n                    viewModel.diasSemanaActual.forEach { dia ->\r\n                        DiaItem(\r\n                            diaSemana = dia.nombre,\r\n                            numeroDia = dia.numero,\r\n                            esHoy = dia.esHoy,\r\n                            esCompletado = dia.estaCompletado\r\n                        )\r\n                    }\r\n                }\r\n            }\r\n            LazyVerticalGrid(\r\n                columns = GridCells.Fixed(2), //para que sean nomas dos columnas\r\n                modifier = Modifier\r\n                    .fillMaxSize()\r\n                    .weight(1f)\r\n                    .padding(horizontal = 16.dp, vertical = 12.dp),\r\n                horizontalArrangement = Arrangement.spacedBy(16.dp),\r\n                verticalArrangement = Arrangement.spacedBy(16.dp)\r\n            ) {\r\n                items(listaHabitos) { habito ->\r\n                    Tarjetahabito(habito = habito, onClick = {\r\n                        if (habito.rutaNavigation.isNotEmpty()) {\r\n                            navController.navigate(habito.rutaNavigation)\r\n                        }\r\n                    })\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nfun DiaItem(diaSemana: String, numeroDia: String, esHoy: Boolean, esCompletado: Boolean) {\r\n    Column(\r\n        horizontalAlignment = Alignment.CenterHorizontally,\r\n        modifier = Modifier\r\n            .width(62.dp)\r\n            .background(\r\n                color = if (esHoy) Color (0xFFFFF200) else Color.Transparent,\r\n                shape = RoundedCornerShape(16.dp)\r\n            )\r\n            .padding(vertical = 8.dp)\r\n    ) {\r\n        Text(\r\n            text = diaSemana,\r\n            color = if (esHoy) Color.Black else Color.White,\r\n            fontSize = 15.sp,\r\n            fontWeight = FontWeight.Bold\r\n        )\r\n        Text (\r\n            text = numeroDia,\r\n            color = if (esHoy) Color.Black else Color.White,\r\n            fontSize = 18.sp,\r\n            fontWeight = FontWeight.Bold\r\n        )\r\n        Spacer(modifier = Modifier.height(4.dp))\r\n\r\n        if(esCompletado) {\r\n            Box(\r\n                modifier = Modifier\r\n                    .size(16.dp)\r\n                    .background(if(esHoy) Color(0xFF2E7D32) else Color(0xFFFFF200), shape = CircleShape),\r\n                contentAlignment = Alignment.Center\r\n            ) {\r\n                Icon(\r\n                    imageVector = Icons.Default.Check,\r\n                    contentDescription = null,\r\n                    tint = if (esHoy) Color.White else Color.Black,\r\n                    modifier = Modifier.size(12.dp)\r\n                )\r\n            }\r\n        } else {\r\n            //espacio para que no pierda altura\r\n            Spacer(modifier = Modifier.height(16.dp))\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nfun Tarjetahabito(habito: HabitoItem, onClick: () -> Unit) {\r\n    val colorText = if (habito.colorFondo == Color(0xFF1A237E)) Color.White else Color.Black\r\n    Card(\r\n        modifier = Modifier\r\n            .fillMaxWidth()\r\n            .height(160.dp)\r\n            .clickable{ onClick ()},\r\n        shape = RoundedCornerShape(24.dp),\r\n        colors = CardDefaults.cardColors(\r\n            containerColor = habito.colorFondo\r\n        )\r\n    ) {\r\n        Column(\r\n            modifier = Modifier\r\n                .fillMaxSize()\r\n                .padding(12.dp),\r\n            horizontalAlignment = Alignment.CenterHorizontally,\r\n            verticalArrangement = Arrangement.SpaceBetween\r\n        ) {\r\n            Text (\r\n                text = habito.titulo,\r\n                color = Color.Black,\r\n                fontSize = 18.sp,\r\n                fontWeight = FontWeight.Bold,\r\n                textAlign = TextAlign.Center,\r\n                lineHeight = 20.sp\r\n            )\r\n\r\n            Image(\r\n                painter = painterResource(id = habito.imagenRes),\r\n                contentDescription = habito.titulo,\r\n                modifier = Modifier\r\n                    .size(85.dp)\r\n                    .padding(bottom = 4.dp)\r\n            )\r\n        }\r\n    }\r\n}\r\n@Composable\r\n@Preview(showBackground = true)\r\nfun PreviewHabitos(){\r\n    val nav = rememberNavController()\r\n    HabitosScreen(navController = nav)\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/fic/dualhabit10/ui/screens/HabitosScreen.kt b/app/src/main/java/com/fic/dualhabit10/ui/screens/HabitosScreen.kt
+--- a/app/src/main/java/com/fic/dualhabit10/ui/screens/HabitosScreen.kt	(revision 2ac5f1d5a1fdf80682f8159adb2bb512e72b80a1)
++++ b/app/src/main/java/com/fic/dualhabit10/ui/screens/HabitosScreen.kt	(date 1779937185902)
+@@ -220,7 +220,7 @@
+             colorFondo = Color(0xFFD7CCC8)
+         ),
+         HabitoItem(
+-            titulo = "Resumen",
++            titulo = "Sugerencìas",
+             imagenRes = R.drawable.img_resumen,
+             rutaNavigation = "perfil", //Agregar ruta. ejmp | resumen | Cuando se cree la pantalla
+             colorFondo = Color(0xFFEE1BEE7)
+Index: app/src/main/java/com/fic/dualhabit10/ui/screens/SugerenciasScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/fic/dualhabit10/ui/screens/SugerenciasScreen.kt b/app/src/main/java/com/fic/dualhabit10/ui/screens/SugerenciasScreen.kt
+new file mode 100644
+--- /dev/null	(date 1779940481023)
++++ b/app/src/main/java/com/fic/dualhabit10/ui/screens/SugerenciasScreen.kt	(date 1779940481023)
+@@ -0,0 +1,108 @@
++package com.fic.dualhabit10.ui.screens
++
++import androidx.compose.foundation.Image
++import androidx.compose.foundation.background
++import androidx.compose.foundation.clickable
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.size
++import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.shape.RoundedCornerShape
++import androidx.compose.foundation.text.KeyboardActions
++import androidx.compose.foundation.text.KeyboardOptions
++import androidx.compose.foundation.verticalScroll
++import androidx.compose.material.icons.Icons
++import androidx.compose.material.icons.filled.Visibility
++import androidx.compose.material.icons.filled.VisibilityOff
++import androidx.compose.material3.Button
++import androidx.compose.material3.ButtonDefaults
++import androidx.compose.material3.DatePicker
++import androidx.compose.material3.DatePickerDialog
++import androidx.compose.material3.Icon
++import androidx.compose.material3.IconButton
++import androidx.compose.material3.Text
++import androidx.compose.material3.TextButton
++import androidx.compose.material3.TextField
++import androidx.compose.material3.TextFieldDefaults
++import androidx.compose.material3.rememberDatePickerState
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.layout.ContentScale
++import androidx.compose.ui.res.painterResource
++import androidx.compose.ui.res.stringResource
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import androidx.navigation.NavHostController
++import androidx.compose.runtime.setValue
++import androidx.compose.runtime.getValue
++import androidx.compose.ui.focus.FocusDirection
++import androidx.compose.ui.text.input.ImeAction
++import androidx.compose.ui.text.input.KeyboardType
++import androidx.compose.ui.text.input.PasswordVisualTransformation
++import androidx.compose.ui.text.input.VisualTransformation
++import androidx.compose.ui.text.style.TextAlign
++import com.fic.dualhabit10.R
++import java.text.SimpleDateFormat
++import java.util.Date
++import java.util.Locale
++import androidx.compose.ui.focus.FocusRequester
++import androidx.compose.ui.focus.focusRequester
++import androidx.compose.ui.platform.LocalFocusManager
++import androidx.navigation.NavController
++import com.fic.dualhabit10.ui.viewmodels.AuthViewModel
++
++@Composable
++fun SugerenciasScreen(
++    navController: NavController
++){
++    var Sugerencias by remember { mutableStateOf("") }
++    var descripcion by remember {mutableStateOf("")}
++    var error by  remember { mutableStateOf("") }
++    var camposVaciosError by remember { mutableStateOf(false)}
++
++    Box(
++        modifier = Modifier
++            .fillMaxSize()
++            .background(Color(0xFF5EDCFF))
++    ){
++        Image(
++            painter = painterResource(id = com.fic.dualhabit10.R.drawable.bg_inicio_cielo),
++            contentDescription = null,
++            modifier = Modifier.fillMaxSize(),
++            contentScale = ContentScale.Crop
++        )
++        Column(
++            modifier = Modifier
++                .align (Alignment.Center)
++                .width(360.dp)
++                .background(
++                    color = Color(0xFF58B1C2),
++                    shape = RoundedCornerShape(48.dp)
++                )
++                .padding(24.dp)
++                .verticalScroll(rememberScrollState()),
++            horizontalAlignment = Alignment.CenterHorizontally
++        ){
++            Text(
++                text = "Sugerencias",
++                fontSize = 32.sp,
++                fontWeight = FontWeight.Bold
++            )
++            Text(
++                text = "Ayudanos a mejorar"
++                fontsize
++            )
++        }
++    }
++}
+\ No newline at end of file
