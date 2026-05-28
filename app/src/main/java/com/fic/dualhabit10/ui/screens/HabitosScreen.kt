@@ -19,6 +19,8 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,14 +34,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.material3.Icon
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.AndroidViewModel
 import com.fic.dualhabit10.R
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -75,11 +80,12 @@ class HabitosViewModel (application: Application) : AndroidViewModel(application
         val diasCompletadosGuardados = prefs.getStringSet("dias_completados_set", emptySet()) ?: emptySet()
         diasCompletados = diasCompletadosGuardados
 
-        if (ultimaFechaStr == null) {
+        if (ultimaFechaStr  == null) {
             //caso de usuario nuevo
             rachaContador = 0
             rachaRegistradaHoy = false
         } else {
+
             val ultimaFecha = LocalDate.parse(ultimaFechaStr)
             // para calcular la diferencia de dias reales entre la ultima vez que pulso el boton
             val diasDeDiferencia = ChronoUnit.DAYS.between(ultimaFecha, hoy)
@@ -165,149 +171,165 @@ data class DiaData(
 data class HabitoItem(
     val titulo: String,
     val imagenRes: Int,
-    val rutaNavigation: String
+    val rutaNavigation: String,
+    val colorFondo: Color
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitosScreen(
     navController: NavController,
     viewModel: HabitosViewModel = viewModel()
 ) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scoper = rememberCoroutineScope()
+
     val listaHabitos = listOf(
         HabitoItem(
             titulo = "Hidratacion",
             imagenRes = R.drawable.img_hidratacion,
-            rutaNavigation = "hidratacion"
+            rutaNavigation = "hidratacion",
+            colorFondo = Color(0xFFB3E5FC)
         ),
         HabitoItem(
             titulo = "Sueño",
             imagenRes = R.drawable.img_sueno,
-            rutaNavigation = "" //Agregar ruta. ejmp | sueno | Cuando se cree la pantalla
+            rutaNavigation = "sueño",
+            colorFondo = Color(0xFF1A237E)
         ),
         HabitoItem(
             titulo = "Actividad\nFisica",
             imagenRes = R.drawable.img_ejercicio,
-            rutaNavigation = "" //Agregar ruta. ejmp | actividad fisica | Cuando se cree la pantalla
+            rutaNavigation = "actividad_fisica_mascota",
+            colorFondo = Color(0xFFFFCDD2)
         ),
         HabitoItem(
             titulo = "Alimentacion",
             imagenRes = R.drawable.img_alimentacion,
-            rutaNavigation = "" //Agregar ruta. ejmp | alimentacion | Cuando se cree la pantalla
+            rutaNavigation = "alimentacion",
+            colorFondo = Color(0xFFFFF9C4)
         ),
         HabitoItem(
             titulo = "mascotas",
             imagenRes = R.drawable.img_mascotas_v,
-            rutaNavigation = "mascota_menu"
+            rutaNavigation = "mascota_menu",
+            colorFondo = Color(0xFFD7CCC8)
         ),
         HabitoItem(
             titulo = "Resumen",
             imagenRes = R.drawable.img_resumen,
-            rutaNavigation = "" //Agregar ruta. ejmp | resumen | Cuando se cree la pantalla
+            rutaNavigation = "perfil", //Agregar ruta. ejmp | resumen | Cuando se cree la pantalla
+            colorFondo = Color(0xFFEE1BEE)
         )
     )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF9EFFEB))
-    ) {
+    //contenedor del menu despegable
+    BaseCustomDrawer(navController = navController, drawerState = drawerState){
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    Color(0xFFFF7A22),
-                    shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
-                )
-                .statusBarsPadding()
-                .padding(start = 12.dp, end = 12.dp, bottom = 20.dp)
+                .fillMaxSize()
+                .background(Color(0xFF9EFFEB))
         ) {
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp)
-            ) {
-                IconButton(
-                    onClick = { }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "Menu",
-                        tint = Color.Black,
-                        modifier = Modifier.size(32.dp)
+                    .background(
+                        Color(0xFFFF7A22),
+                        shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
                     )
-                }
+                    .statusBarsPadding()
+                    .padding(start = 12.dp, end = 12.dp, bottom = 20.dp)
+            ) {
                 Box(
                     modifier = Modifier
-                        .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))
-                        .clickable(enabled = !viewModel.rachaRegistradaHoy){
-                            viewModel.registrarRachasDeHoy()
-                        }
-                        .padding(horizontal = 20.dp, vertical = 6.dp)
-                        .align(Alignment.Center)
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ){
-                        if (viewModel.rachaRegistradaHoy){
-                            Icon(
-                                imageVector = Icons.Default.Check,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = "Racha de hoy Lista",
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        } else {
-                            Text (
-                                text = "Activar Racha: ${viewModel.rachaContador} dias",
-                                color = Color.Black,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold
-                            )
+                    IconButton(
+                        onClick = {
+                            scoper.launch { drawerState.open() }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = "Menu",
+                            tint = Color.Black,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))
+                            .clickable(enabled = !viewModel.rachaRegistradaHoy) {
+                                viewModel.registrarRachasDeHoy()
+                            }
+                            .padding(horizontal = 20.dp, vertical = 6.dp)
+                            .align(Alignment.Center)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            if (viewModel.rachaRegistradaHoy) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "Racha de hoy Lista",
+                                    color = Color.White,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            } else {
+                                Text(
+                                    text = "Activar Racha: ${viewModel.rachaContador} dias",
+                                    color = Color.Black,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                         }
                     }
                 }
-            }
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                viewModel.diasSemanaActual.forEach{ dia ->
-                    DiaItem(
-                        diaSemana = dia.nombre,
-                        numeroDia = dia.numero,
-                        esHoy = dia.esHoy,
-                        esCompletado = dia.estaCompletado
-                    )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    viewModel.diasSemanaActual.forEach { dia ->
+                        DiaItem(
+                            diaSemana = dia.nombre,
+                            numeroDia = dia.numero,
+                            esHoy = dia.esHoy,
+                            esCompletado = dia.estaCompletado
+                        )
+                    }
                 }
             }
-        }
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2), //para que sean nomas dos columnas
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal =  16.dp, vertical = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(listaHabitos) { habito ->
-                Tarjetahabito(habito = habito, onClick = {
-                    if (habito.rutaNavigation.isNotEmpty()) {
-                        navController.navigate(habito.rutaNavigation)
-                    }
-                })
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2), //para que sean nomas dos columnas
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(listaHabitos) { habito ->
+                    Tarjetahabito(habito = habito, onClick = {
+                        if (habito.rutaNavigation.isNotEmpty()) {
+                            navController.navigate(habito.rutaNavigation)
+                        }
+                    })
+                }
             }
         }
     }
@@ -362,6 +384,7 @@ fun DiaItem(diaSemana: String, numeroDia: String, esHoy: Boolean, esCompletado: 
 
 @Composable
 fun Tarjetahabito(habito: HabitoItem, onClick: () -> Unit) {
+    val colorText = if (habito.colorFondo == Color(0xFF1A237E)) Color.White else Color.Black
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -369,7 +392,7 @@ fun Tarjetahabito(habito: HabitoItem, onClick: () -> Unit) {
             .clickable{ onClick ()},
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFD2D2D2)
+            containerColor = habito.colorFondo
         )
     ) {
         Column(

@@ -42,13 +42,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.input.ImeAction
 import com.fic.dualhabit10.R
-
+import com.fic.dualhabit10.ui.viewmodels.AuthViewModel
 
 
 @Composable
 fun Forget_Password(navController: NavHostController,
                     authViewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
+    /*
+            Variables del Recuperado de contraseña
+    */
     var email by remember { mutableStateOf("")}
     var errorMensaje by remember { mutableStateOf("")}
     var mostrarAlertaExito by remember { mutableStateOf(false)}
@@ -70,7 +73,7 @@ fun Forget_Password(navController: NavHostController,
                     mostrarAlertaExito = true
                 },
                 onError = { mensajeError ->
-                    errorMensaje = "No encontramos nunguna cuenta registrada con este correo"
+                    errorMensaje = "No encontramos ninguna cuenta registrada con este correo"
                 }
             )
         }
@@ -113,13 +116,18 @@ fun Forget_Password(navController: NavHostController,
 
             TextField(
                 value = email,
-                onValueChange = {email = it; errorMensaje = ""; campoError = false },
+                onValueChange = {
+                    email = it
+                    errorMensaje = ""
+                    campoError = false
+                },
                 label = { Text("Correo electronico") },
                 modifier = Modifier.fillMaxWidth(),
+                singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
                 isError = campoError,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Send  // el boton enter cambia a icono de enviar
+                    imeAction = ImeAction.Send  // el botón enter cambia a icono de enviar
                 ),
                 keyboardActions = KeyboardActions(
                     onSend = {
