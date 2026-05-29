@@ -121,8 +121,10 @@ fun HidratacionScreen(
                     }
                     Image(
                         painter = painterResource(id = R.drawable.img_bol_perro),
-                        contentDescription = "Cuenco de agua",
-                        modifier = Modifier.size(150.dp),
+                        contentDescription = "Ir a Hidratacion Mascota",
+                        modifier = Modifier
+                            .size(150.dp)
+                            .clickable { navController.navigate("hidratacion_mascota") },
                         contentScale = ContentScale.Fit
                     )
                 }

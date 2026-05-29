@@ -4,13 +4,17 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.fic.dualhabit10.data.local.HidratacionDao
-import com.fic.dualhabit10.data.local.RegistroAguaEntity
 
-@Database(entities = [RegistroAguaEntity::class], version = 1, exportSchema = false)
+@Database(
+    entities = [RegistroAguaEntity::class, RegistroAguaMascotaEntity::class],
+    version = 1,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun hidratacionDao(): HidratacionDao
+    abstract fun hidratacionMascotaDao(): HidratacionMascotaDao
+
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
@@ -19,7 +23,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "dual-habit_database"
+                    "dual_habit_database"
                 )
                 .fallbackToDestructiveMigration()
                 .build()
