@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [RegistroAguaEntity::class, RegistroAguaMascotaEntity::class],
+    entities = [RegistroAguaEntity::class, RegistroAguaMascotaEntity::class, ActividadFisicaEntity::class],
     version = 1,
     exportSchema = false
 )
@@ -14,6 +14,8 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun hidratacionDao(): HidratacionDao
     abstract fun hidratacionMascotaDao(): HidratacionMascotaDao
+    abstract fun actividadFisicaDao(): ActividadFisicaDao
+
 
     companion object {
         @Volatile
