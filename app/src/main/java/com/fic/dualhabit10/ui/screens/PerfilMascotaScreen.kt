@@ -27,6 +27,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -40,54 +41,38 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import com.fic.dualhabit10.R
+import coil.compose.rememberAsyncImagePainter
+import com.fic.dualhabit10.ui.viewmodels.PerfilMascotaViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PerfilMascotaScreen(navController: NavController) {
+fun PerfilMascotaScreen(
+    navController: NavController,
+    viewModel: PerfilMascotaViewModel = viewModel()
+) {
     val scrollState = rememberScrollState()
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? -> imageUri = uri }
 
-    var nombreMascota by remember { mutableStateOf("") }
-    var tipoMascota by remember { mutableStateOf("") }
-    var razaMascota by remember { mutableStateOf("") }
-    var pesoMascota by remember { mutableStateOf("") }
-    var edadMascota by remember { mutableStateOf("") }
-
-    var fotoMasacoraUri by remember { mutableStateOf<Uri?>(null) }
-
-    var galeriaLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        if (uri != null) {
-            fotoMasacoraUri = uri
-        }
-    }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Box(
-                        modifier = Modifier
-                            .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))
-                            .padding(horizontal = 24.dp, vertical = 6.dp)
-                    ) {
-                        Text(
-                            "Perfil de Mascota",
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black,
-                            fontSize = 18.sp
-                        )
-                    }
+                    Text(
+                        "Perfil de Mascota",
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
@@ -105,112 +90,97 @@ fun PerfilMascotaScreen(navController: NavController) {
                 )
             )
         }
-    ) { innerPadding ->
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)
                 .background(Color(0xFF9EFFEB))
-                .padding(innerPadding)
                 .verticalScroll(scrollState)
-                .padding(14.dp),
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Box(contentAlignment = Alignment.BottomEnd) {
-                if (fotoMasacoraUri != null) {
-                    AsyncImage(
-                        model = fotoMasacoraUri,
-                        contentDescription = "Foto Mascota",
-                        modifier = Modifier
-                            .size(140.dp)
-                            .clip(CircleShape)
-                            .border(4.dp, Color.White, CircleShape)
-                            .clickable {
-                                galeriaLauncher.launch(
-                                    androidx.activity.result.PickVisualMediaRequest(
-                                        ActivityResultContracts.PickVisualMedia.ImageOnly
-                                    )
-                                )
-                            },
-                                contentScale = ContentScale . Crop
-                    )
-                } else {
+            //foto de la mascota
+            Box(
+                modifier = Modifier
+                    .size(130.dp)
+                    .background(Color.White, shape = CircleShape)
+                    .border(3.dp, Color(0xFFFF7A22), CircleShape)
+                    .clickable { launcher.launch("image/*") },
+                contentAlignment = Alignment.Center
+            ) {
+                if (imageUri != null) {
                     Image(
-                        painter = painterResource(id = R.drawable.img_mascotas_v),
-                        contentDescription = "Default Mascota",
-                        modifier = Modifier
-                            .size(140.dp)
-                            .clip(CircleShape)
-                            .border(4.dp, Color.White, CircleShape)
-                            .clickable {
-                                galeriaLauncher.launch(
-                                    androidx.activity.result.PickVisualMediaRequest(
-                                        ActivityResultContracts.PickVisualMedia.ImageOnly
-                                    )
-                                )
-                            },
+                        painter = rememberAsyncImagePainter(imageUri),
+                        contentDescription = "Foto Mascota",
+                        modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
+                } else {
+                    Text("Añadir Foto", color = Color.Gray, fontSize = 14.sp)
                 }
             }
-            Text(
-                "Informacion de tu Mscota",
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                color = Color.Black
-            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
             OutlinedTextField(
-                value = nombreMascota,
-                onValueChange = { nombreMascota = it },
+                value = viewModel.nombreMascota,
+                onValueChange = { viewModel.nombreMascota = it },
                 label = { Text("Nombre de la mascota") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp)
             )
 
-            OutlinedTextField(
-                value = tipoMascota,
-                onValueChange = { razaMascota = it },
-                label = { Text("Tipo de mascota (Ej: Perro, Gato, Ave") },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
-            )
+            Spacer(modifier = Modifier.height(14.dp))
 
-            OutlinedTextField(
-                value = razaMascota,
-                onValueChange = { razaMascota = it },
-                label = { Text("Raza") },
+            Text(
+                "Especie",
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
             )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                listOf("Perro", "Gato", "Ave", "Roedor/Conejo").forEach { especie ->
+                    FilterChip(
+                        selected = viewModel.especieMascota == especie,
+                        onClick = { viewModel.especieMascota = especie },
+                        label = { Text(especie) }
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(14.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedTextField(
-                    value = pesoMascota,
-                    onValueChange = { pesoMascota = it },
+                    value = viewModel.pesoMascota,
+                    onValueChange = { viewModel.pesoMascota = it },
                     label = { Text("Peso (KG)") },
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(12.dp)
                 )
                 OutlinedTextField(
-                    value = edadMascota,
-                    onValueChange = { edadMascota = it },
+                    value = viewModel.edadMascota,
+                    onValueChange = { viewModel.edadMascota = it },
                     label = { Text("Edad (Años)") },
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(12.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             Button(
                 onClick = {
-                    navController.popBackStack()
+                    viewModel.guardarDatos {
+                        navController.popBackStack()
+                    }
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(55.dp),
+                modifier = Modifier.fillMaxWidth().height(55.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7A22)),
             ) {
                 Text(

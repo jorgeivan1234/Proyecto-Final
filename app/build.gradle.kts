@@ -78,6 +78,7 @@ dependencies {
     // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.compose.material3)
     kapt(libs.androidx.room.compiler)
 
     // peticiones HTTP

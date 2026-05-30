@@ -18,7 +18,7 @@ interface WeatherApiService {
     suspend fun ObtenerClimaActual(
         @Query("latitude") latitude: Double,
         @Query("longitude") longitude: Double,
-        @Query("current_weather") currentWeather: String = "temperature_2m"
+        @Query("current") currentWeather: String = "temperature_2m"
     ): WeatherResponse
 
     companion object {

@@ -12,5 +12,5 @@ interface PerfilMascotaDao {
     suspend fun guardarPerfil(perfil: PerfilMascotaEntity)
 
     @Query("SELECT * FROM perfil_mascota WHERE id = 1 LIMIT 1")
-    suspend fun ObtenerPerfil(): Flow<PerfilMascotaEntity?>
+    fun obtenerPerfil(): Flow<PerfilMascotaEntity?>
 }
