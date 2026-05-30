@@ -9,5 +9,5 @@ data class RegistroAguaMascotaEntity(
     val fecha: String,
     val cantidadML: Int,
     val metaML: Int
-
+    val tipoMascota: String = "Perro"
 )
