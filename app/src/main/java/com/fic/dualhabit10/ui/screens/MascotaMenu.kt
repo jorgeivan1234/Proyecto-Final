@@ -9,9 +9,10 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
+import kotlinx.coroutines.launch
 
 data class MascotaMenu(
     val titulo: String,
@@ -35,8 +37,11 @@ data class MascotaMenu(
     val colorFondo: Color
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MascotasMenu(navController: NavController) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
     val colores = listOf(
         Color(0xFFFFE0B2),
@@ -92,75 +97,93 @@ fun MascotasMenu(navController: NavController) {
         )
     )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF9EFFEB))
+    BaseCustomDrawer(
+        navController = navController,
+        drawerState = drawerState
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0xFFFF7A22))
-                .padding(start = 12.dp, end = 12.dp, bottom = 20.dp)
+                .fillMaxSize()
+                .background(Color(0xFF9EFFEB))
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp)
+                    .height(110.dp)
+                    .background(
+                        color = Color (0xFFFF7A22),
+                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
+                    )
+                    .padding(horizontal  = 12.dp)
+                    .padding(top = 24.dp),
+                contentAlignment = Alignment.Center
             ) {
-                // Botón regresar (flecha atrás)
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Regresar",
-                        tint = Color.Black,
-                        modifier = Modifier.size(32.dp)
-                    )
-                }
-                // Título centrado
-                Box(
-                    modifier = Modifier
-                        .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))
-                        .padding(horizontal = 20.dp, vertical = 6.dp)
-                        .align(Alignment.Center)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.Menu_Mascota),
-                        color = Color.Black,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Tarjeta_Mascota_Grande(
-            colorFondo = Color(0xFFF5F5F5),
-            onClick = { navController.navigate("habitos_mascota_menu") }
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        //Esto es la separacion de las cards en 2 filas
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(Listacards) { item ->
-                TarjetaMenuMascota(
-                    item = item,
-                    onClick = {
-                        if (!item.enMantenimiento && item.rutaNavigation.isNotEmpty()){
-                            navController.navigate(item.rutaNavigation)
+                    //menu hamburgesa
+                    IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = "Abrir Menu Lateral",
+                            tint = Color.Black,
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                    // Título amarillo
+                    Box(
+                        modifier = Modifier
+                            .weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))
+                                .padding(horizontal = 20.dp, vertical = 6.dp)
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.Menu_Mascota),
+                                color = Color.Black,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
-                )
+                    Spacer(modifier = Modifier.size(48.dp))
+
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Tarjeta_Mascota_Grande(
+                colorFondo = Color(0xFFF5F5F5),
+                onClick = { navController.navigate("habitos_mascota_menu") }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            //Esto es la separacion de las cards en 2 filas
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(bottom = 24.dp)
+            ) {
+                items(Listacards) { item ->
+                    TarjetaMenuMascota(
+                        item = item,
+                        onClick = {
+                            if (!item.enMantenimiento && item.rutaNavigation.isNotEmpty()){
+                                navController.navigate(item.rutaNavigation)
+                            }
+                        }
+                    )
+                }
             }
         }
     }
@@ -249,9 +272,6 @@ fun TarjetaMenuMascota(item: MascotaMenu, onClick: () -> Unit) {
     }
 }
 
-// -------------------------------------------------------
-// Preview
-// -------------------------------------------------------
 @Preview
 @Composable
 fun PreviewMascotasMenu() {
