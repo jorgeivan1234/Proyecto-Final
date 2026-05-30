@@ -65,37 +65,37 @@ fun HabitosMascotaScreen(navController: NavController) {
     val listaSecciones = listOf(
         SeccionHabitoMascota(
             titulo = "Hidratacion Mascota",
-            rutaNavigation = "hidratacion_mascota",
+            rutaNavigation = "hidratacion_mascota", // Se mantiene igual
             colorFondo = Color(0xFFBBDEFB),
             imagenRes = R.drawable.img_bol_y_perro
         ),
         SeccionHabitoMascota(
             titulo = "Alimentacion y Dieta",
-            rutaNavigation = "alimentacion_mascota",
+            rutaNavigation = "alimentacion_mascota", // Se mantiene igual
             colorFondo = Color(0xFFFFF0B2),
             imagenRes = R.drawable.img_plato_perro
         ),
         SeccionHabitoMascota(
             titulo = "Registro de Paseos",
-            rutaNavigation = "paseos_mascota",
+            rutaNavigation = "mantenimiento", // Modificado a mantenimiento
             colorFondo = Color(0xFFC8E6C9),
             imagenRes = R.drawable.img_perro_saltando
         ),
         SeccionHabitoMascota(
             titulo = "Higiene y Limipieza",
-            rutaNavigation = "higiene_mascota",
+            rutaNavigation = "mantenimiento", // Modificado a mantenimiento
             colorFondo = Color(0xFFE1BEE7),
             imagenRes = R.drawable.img_perro_rascandose
         ),
         SeccionHabitoMascota(
             titulo = "Salud y Vacunas",
-            rutaNavigation = "salud_mascota",
+            rutaNavigation = "mantenimiento", // Modificado a mantenimiento
             colorFondo = Color(0xFFF8BBD0),
             imagenRes = R.drawable.img_inyeccion
         ),
         SeccionHabitoMascota(
             titulo = "Actividades y Juegos",
-            rutaNavigation = "juegos_mascota",
+            rutaNavigation = "mantenimiento", // Modificado a mantenimiento
             colorFondo = Color(0xFFFFF9C4),
             imagenRes = R.drawable.img_perro_jugando
         )
