@@ -19,9 +19,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -31,11 +32,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
@@ -44,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -57,76 +62,87 @@ fun HistorialScreen(
     var pestañaSeleccionada by remember { mutableStateOf(0) }
     val opcionesPestañas = listOf("Dia", "Semana", "Mes")
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Historial de Agua", fontWeight = FontWeight.Bold)},
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Atras")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF7A22))
-            )
-        }
-    ) {innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFF9EFFEB))
-                .padding(innerPadding)
-                .verticalScroll(scrollState)
-                .padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            Card(
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFE0F7FA)),
+    //variables para control de menu lateral
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+
+    //modificacion de Scaffold
+    BaseCustomDrawer(
+        navController = navController,
+        drawerState = drawerState
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Historial de Agua", fontWeight = FontWeight.Bold)},
+                    navigationIcon = {
+                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                            Icon(Icons.Default.Menu, contentDescription = "Menu")
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF7A22)),
+                    //redondeo de barra superior
+                    modifier = Modifier.clip(RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+                )
+            }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFF9EFFEB))
+                    .padding(innerPadding)
+                    .verticalScroll(scrollState)
+                    .padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(4.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                Card(
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFE0F7FA)),
                 ) {
-                    opcionesPestañas.forEachIndexed { indice, titulo ->
-                        val seleccionado = pestañaSeleccionada == indice
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .background(
-                                    color = if (seleccionado) Color(0xFFFF7A22) else Color.Transparent,
-                                    shape = RoundedCornerShape(8.dp)
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(4.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        opcionesPestañas.forEachIndexed { indice, titulo ->
+                            val seleccionado = pestañaSeleccionada == indice
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .background(
+                                        color = if (seleccionado) Color(0xFFFF7A22) else Color.Transparent,
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                                    .clickable { pestañaSeleccionada = indice }
+                                    .padding(vertical = 10.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = titulo,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (seleccionado) Color.Black else Color.Gray,
+                                    fontSize = 16.sp
                                 )
-                                .clickable { pestañaSeleccionada = indice }
-                                .padding(vertical = 10.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = titulo,
-                                fontWeight = FontWeight.Bold,
-                                color = if (seleccionado) Color.Black else Color.Gray,
-                                fontSize = 16.sp
-                            )
+                            }
                         }
                     }
                 }
-            }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .animateContentSize()
-            ) {
-                when (pestañaSeleccionada){
-                    0-> VistaDiariaReal(viewModel)
-                    1-> VistaSemanalReal(viewModel)
-                    2-> VistaMensualReal(viewModel)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateContentSize()
+                ) {
+                    when (pestañaSeleccionada){
+                        0-> VistaDiariaReal(viewModel)
+                        1-> VistaSemanalReal(viewModel)
+                        2-> VistaMensualReal(viewModel)
+                    }
                 }
             }
         }
     }
 }
-
 @Composable
 fun VistaDiariaReal(viewModel: HidratacionViewModel) {
     val consumo = viewModel.aguaConsumidaML
