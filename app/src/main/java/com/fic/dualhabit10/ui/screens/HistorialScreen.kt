@@ -184,11 +184,30 @@ fun VistaSemanalReal(viewModel: HidratacionViewModel) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
+                //Contenedor de barra y texto de la tabla de hidratacion semanal. (intento de corregir errores por Dulce Meza)
                 consumoSemanaPorcentaje.forEachIndexed { index, porcentaje ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.weight(1f)
                     ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth(),
+                            verticalArrangement = Arrangement.Bottom, //empuja todo abajo
+                        ){ val porcentajeTexto = (porcentaje * 100).toInt()
+                        if (porcentajeTexto > 0){
+                            Text(
+                                text ="$porcentajeTexto%",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.DarkGray
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))//separacion entre texto y barra
+                        }
+                        }
+                        //Barra original
                         Box(
                             modifier = Modifier.weight(1f).fillMaxWidth(),
                             contentAlignment = Alignment.BottomCenter
