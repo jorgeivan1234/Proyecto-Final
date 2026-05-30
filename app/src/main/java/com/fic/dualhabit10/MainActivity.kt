@@ -10,8 +10,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fic.dualhabit10.ui.screens.ActividadFisicaScreen
 import com.fic.dualhabit10.ui.screens.AlimentacionMascotaScreen
@@ -25,6 +23,7 @@ import com.fic.dualhabit10.ui.screens.HidratacionScreen
 import com.fic.dualhabit10.ui.screens.HistorialScreen
 import com.fic.dualhabit10.ui.screens.InicioScreen
 import com.fic.dualhabit10.ui.screens.LoginScreen
+import com.fic.dualhabit10.ui.screens.MantenimientoScreen
 import com.fic.dualhabit10.ui.screens.MantenimientoSuenoScreen
 import com.fic.dualhabit10.ui.screens.MascotasMenu
 import com.fic.dualhabit10.ui.screens.PerfilMascotaScreen
@@ -153,6 +152,10 @@ class MainActivity : ComponentActivity(){
 
                     composable("sueño"){
                         MantenimientoSuenoScreen(navController = navController)
+                    }
+                    //pantalla de mantenimiento general
+                    composable("mantenimiento") {
+                        MantenimientoScreen(navController = navController)
                     }
                 }
             }
