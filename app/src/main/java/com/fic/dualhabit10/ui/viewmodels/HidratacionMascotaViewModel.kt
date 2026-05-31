@@ -50,29 +50,32 @@ class HidratacionMascotaViewModel(application: Application) : AndroidViewModel(a
 
     private fun cargarDatosHoyYClima() {
         viewModelScope.launch {
+
             //lee el perfil local de room interno
             perfilDao.obtenerPerfil().collect { perfil ->
                 if (perfil != null) {
                     tipoMascota = perfil.especie
                     pesoKG = perfil.peso.toString()
+
                 }
 
-                //consulta el clima
-                try {
-                    val respuesta = weatherApi.ObtenerClimaActual(latitude = 24.8053, longitude = -107.3943)
-                    temperaturaActual = respuesta.current.temperature_2m
-                    climaCaluroso = temperaturaActual >= 30.0f
-                } catch (e: Exception) {
-                    climaCaluroso = true
-                }
-
-                //carga el progreso del agua tomada por hoy
-                val registro = mascotaDao.obtenerRegistroMascotaPorFecha(hoyStr)
-                if (registro != null) {
-                    aguaMascotaConsumidaML = registro.cantidadML
-                    metaMascotaDiariaML = registro.metaML
-                } else {
-                    calcularMetaInteligente()
+                launch {
+                    //consulta el clima
+                    try {
+                        val respuesta = weatherApi.ObtenerClimaActual(latitude = 24.8053, longitude = -107.3943)
+                        temperaturaActual = respuesta.current.temperature_2m
+                        climaCaluroso = temperaturaActual >= 30.0f
+                    } catch (e: Exception) {
+                        climaCaluroso = true
+                    }
+                    //carga el progreso del agua tomada por hoy
+                    val registro = mascotaDao.obtenerRegistroMascotaPorFecha(hoyStr)
+                    if (registro != null) {
+                        aguaMascotaConsumidaML = registro.cantidadML
+                        metaMascotaDiariaML = registro.metaML
+                    } else {
+                        calcularMetaInteligente()
+                    }
                 }
             }
         }
@@ -115,14 +118,14 @@ class HidratacionMascotaViewModel(application: Application) : AndroidViewModel(a
             mascotaDao.insertarOActualizarMascota(nuevoRegistro)
         }
     }
+    fun guardarPerfilMascota(
+        dieta: String,
+        ejercicio: Boolean,
+        climaManualCaluroso: Boolean
+    ) {
+        tipoDieta = dieta
+        hizoEjercicio = ejercicio
+        climaCaluroso = climaManualCaluroso
+        calcularMetaInteligente()
+    }
 }
-
-
-
-
-
-
-
-
-
-
