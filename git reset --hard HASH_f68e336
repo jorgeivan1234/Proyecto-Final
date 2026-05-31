@@ -1,0 +1,45 @@
+[33me57fc27[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #12 from jorgeivan1234/Hernandez-Beltran-Jesus-Antonio
+[33m467429e[m[33m ([m[1;31morigin/Hernandez-Beltran-Jesus-Antonio[m[33m, [m[1;32mHernandez-Beltran-Jesus-Antonio[m[33m)[m Adición de funciones y botón para eliminar la cuenta de un usuario de la base de datos
+[33mf68e336[m[33m ([m[1;31morigin/Develop[m[33m)[m Merge pull request #11 from jorgeivan1234/Ojeda-Cerrillo-Jorge-Ivan
+[33mf6f5cb0[m intregacion de base de datos a actividad fisica, integracion de recomendacion de lugares (mapa y ubicacion) y actualizacion de diseño
+[33m67ac82a[m Merge branch 'Meza-Quezada-Dulce-Elsa-Gloria' of https://github.com/jorgeivan1234/Proyecto-Final into Ojeda-Cerrillo-Jorge-Ivan
+[33m7d46da3[m Estructura inicial de ActividadFisica en local
+[33mfa61dac[m Merge pull request #10 from jorgeivan1234/Meza-Quezada-Dulce-Elsa-Gloria
+[33m0ec9c72[m[33m ([m[1;31morigin/Meza-Quezada-Dulce-Elsa-Gloria[m[33m)[m direccion de HidratacionScreen a HidratacionMascotaScreen e intregracion de base de datos local a HidratacionMascotaScreen
+[33m5398928[m[33m ([m[1;31morigin/Ojeda-Cerrillo-Jorge-Ivan[m[33m)[m primera v1 de base de datos local de hidratacion
+[33m2ac5f1d[m Merge pull request #8 from jorgeivan1234/Ojeda-Cerrillo-Jorge-Ivan
+[33mcefc359[m acomodo de carpetas y creacion de la pantalla sueño en mantenimiento
+[33m5199dc8[m pantalla funcional de alimentos mascota
+[33m6c0fb90[m pantalla y logica de alimentacion
+[33ma8feffb[m Merge pull request #7 from jorgeivan1234/Ojeda-Cerrillo-Jorge-Ivan
+[33mbb2499d[m creacion de ActividadFisica(Screen y ViewModel), ActividadMascota y PerfilMasctotaScreen
+[33mf9c5dfc[m Merge pull request #6 from jorgeivan1234/Ojeda-Cerrillo-Jorge-Ivan
+[33mcfa6830[m Merge branch 'main' y resolución completa de conflictos en pantallas de hidratación y perfiles
+[33mda73fa0[m creacion y usabilidad de base de datos HidratacionModel, HidratacionViewModel, hidratacion ya es 100% funcional, mejora mascota menu y creacion de HabitosMascotaScreen, HidratacionMascotaScreen y HidratacionMascotaViewModel por falta de internet
+[33me48d05e[m Merge pull request #5 from jorgeivan1234/Hernandez-Beltran-Jesus-Antonio
+[33mc049c5a[m Merge branch 'main' into Hernandez-Beltran-Jesus-Antonio
+[33m115e3b0[m Merge pull request #4 from jorgeivan1234/Meza-Quezada-Dulce-Elsa-Gloria
+[33mf16a454[m Merge branch 'main' into Meza-Quezada-Dulce-Elsa-Gloria
+[33md31a7ac[m creacion de ResultadoHidratacionScreen y HistorialScreen, actualizacion de logica de CalculadoraHidratacionScreen
+[33m8132b0c[m Creacion de CalculadoraHidratacionScreen, actualizacion HidratacionScreen y BaseCustumeDrawer
+[33mbc4626a[m Merge pull request #3 from jorgeivan1234/Lara-Herrera-Jesart-Isaac
+[33m031311a[m[33m ([m[1;31morigin/Lara-Herrera-Jesart-Isaac[m[33m)[m Cambio al comportamiento a los imputs y teclado
+[33m6af5115[m Merge pull request #2 from jorgeivan1234/Ojeda-Cerrillo-Jorge-Ivan
+[33me85e3a1[m ajustar proporciones y colores en pantalla de hidratación
+[33m1f7033d[m Merge pull request #1 from jorgeivan1234/Ojeda-Cerrillo-Jorge-Ivan
+[33m12c9e51[m creacion de BaseCustomDrawer y update del menu desplegable a ser llamado (se agrego perfil y inicio a menu)
+[33m3200ced[m update habitos y hidratacion, creacion de perfil
+[33mf4ecaa5[m agregacion de HidratacionScreen
+[33me645e33[m racha update
+[33mee41655[m Mejora completa del Login y ForgetPassword con Firebase
+[33ma8c5869[m Merge branch 'Snapshot-0.0.1' of https://github.com/jorgeivan1234/Proyecto-Final into Snapshot-0.0.1
+[33mee402ac[m Creacion MascotaMenu y coneccion | Comentarios añadidos en MainActivity y evitar dolores de cabeza
+[33mbd92c00[m base de datos update
+[33ma1f6b14[m Actualizacion de Modo Inmersivo y HabitosScreen
+[33m87ddff2[m Revision al momento
+[33mfd7a874[m Agregar seguridad password | Cambio de icono app | Agregacion de pantalla Olvidar contraseña | Funcionamiento completo de lo realizado al momento
+[33mce130d6[m RegisterExitoso creado | Conexion completado entre lo nuevo | Renombre de img
+[33m4650532[m imagenes nueva pantalla
+[33mcb506a7[m Se creo RegisterScreen | Conexion entre Register-Login
+[33m075d99d[m Pantalla de Login creada - se agrego el controller para dar interaccion al boton de Continuar(InicioScreen)
+[33m7a01ff1[m Migracion completa a Jetpack Compose
