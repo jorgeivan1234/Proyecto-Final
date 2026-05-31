@@ -24,4 +24,19 @@
     <string name="err_llenar_campos">Por favor, llenar todos los campos</string>
     <string name="desc_ocultar_pass">Ocultar contraseña</string>
     <string name="desc_mostrar_pass">Mostrar contraseña</string>
+
+    <string name="app_title">DualHabit App</string>
+    <string name="menu_home">Inicio</string>
+    <string name="menu_profile">Ver perfil</string>
+    <string name="menu_delete_account">Eliminar Cuenta</string>
+    <string name="menu_logout">Cerrar Sesión</string>
+
+    <string name="dialog_delete_title">Eliminar Cuenta</string>
+    <string name="dialog_delete_body">¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.</string>
+    <string name="dialog_btn_yes">Sí, eliminar</string>
+    <string name="dialog_btn_cancel">Cancelar</string>
+    <string name="dialog_loading">Eliminando cuenta de DualHabit…</string>
+    <string name="dialog_reauth_title">Se requiere reautenticación</string>
+    <string name="dialog_reauth_body">Por seguridad, como ha pasado tiempo desde tu último inicio de sesión, debes cerrar sesión e iniciarla nuevamente antes de poder eliminar tu cuenta.</string>
+    <string name="dialog_btn_goto_login">Ir a Iniciar Sesión</string>
 </resources>
