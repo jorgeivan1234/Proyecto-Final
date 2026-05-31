@@ -14,6 +14,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fic.dualhabit10.ui.screens.ActividadFisicaScreen
 import com.fic.dualhabit10.ui.screens.AlimentacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.AlimentacionScreen
+import com.fic.dualhabit10.ui.screens.CalculadoraHidratacionMacotaScreen
 import com.fic.dualhabit10.ui.screens.CalculadoraHidratacionScreen
 import com.fic.dualhabit10.ui.screens.Forget_Password
 import com.fic.dualhabit10.ui.screens.HabitosMascotaScreen
@@ -30,6 +31,7 @@ import com.fic.dualhabit10.ui.screens.PerfilMascotaScreen
 import com.fic.dualhabit10.ui.screens.PerfilScreen
 import com.fic.dualhabit10.ui.screens.RegisterScreen
 import com.fic.dualhabit10.ui.screens.RegisterSuccessful
+import com.fic.dualhabit10.ui.screens.ResultadoHidratacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.ResultadoHidratacionScreen
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
 
@@ -156,6 +158,14 @@ class MainActivity : ComponentActivity(){
                     //pantalla de mantenimiento general
                     composable("mantenimiento") {
                         MantenimientoScreen(navController = navController)
+                    }
+                    //HidratacionMascotaScreen -> CalculadoraHidratacionMacotaScreen
+                    composable("calculadora_hidratacion_mascota"){
+                        CalculadoraHidratacionMacotaScreen(navController = navController)
+                    }
+                    //CalculadoraHidratacionMacotaScreen -> ResultadoHidratacionMascotaScreen
+                    composable("resultado_hidratacion_mascota"){
+                        ResultadoHidratacionMascotaScreen(navController = navController)
                     }
                 }
             }
