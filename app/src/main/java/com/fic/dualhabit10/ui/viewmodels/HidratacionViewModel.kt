@@ -12,6 +12,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.fic.dualhabit10.data.local.AppDatabase
 import com.fic.dualhabit10.data.local.RegistroAguaEntity
+import com.fic.dualhabit10.data.remote.WeatherApiService
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -21,6 +22,8 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
 
     private val database = AppDatabase.getDatebase(application)
     private val dnHidratacionDao = database.hidratacionDao()
+    private val weatherApiService = WeatherApiService.crear()
+    private val hoyStr = LocalDate.now().toString()
     var aguaConsumidaML by mutableIntStateOf(0)
         private set
     var metaDiariaML by mutableIntStateOf(2000)
@@ -35,18 +38,36 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
     var experienciaNivel by mutableIntStateOf(1)
     var experienciaPuntos by mutableIntStateOf(0)
 
-    val hoyStr = LocalDate.now().toString()
-
+    // variabilidad de lectura para pintar los grados
+    var temperaturaActual by mutableFloatStateOf(30.0f)
+        private set
     //almacena el historial en la base de datos
     val historialConsumoMap = mutableStateMapOf<String, Int>()
 
     init {
         cargarDatosLocales()
-        calcularMetaHidratacionDinamica()
         cargarAguaDesdeRoom()
         cargarHistorialDesdeRoom()
+        obtenerClimaDesdeApi()
     }
 
+    private fun obtenerClimaDesdeApi(){
+        viewModelScope.launch {
+            try {
+                //la cordenada de aqui
+                val respuesta = weatherApiService.ObtenerClimaActual(
+                    latitude = 24.8053,
+                    longitude = -107.3943
+                )
+                temperaturaActual = respuesta.current.temperature_2m
+                entornoClima = if (temperaturaActual >= 30.0f) "Calido" else "Frio"
+            } catch (e: Exception) {
+                //si no hay red conserva el valor por defecto de SharedPreferences
+            } finally {
+                calcularMetaHidratacionDinamica()
+            }
+        }
+    }
     private fun cargarAguaDesdeRoom() {
         viewModelScope.launch {
             val registroHoy = dnHidratacionDao.obtenerRegistroPorFecha(hoyStr)
@@ -124,19 +145,18 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
         prefs.edit().putInt("gamificacion_xp", experienciaPuntos).apply()
     }
 
-    fun guardarPerfil(peso: Float, edad: Int, genero: String, actividad: String, entorno: String) {
+    fun guardarPerfil(peso: Float, edad: Int, genero: String, actividad: String) {
         usuarioPeso = peso
         usuarioEdad = edad
         usuarioGenero = genero
         actividadNivel = actividad
-        entornoClima = entorno
 
         prefs.edit()
             .putFloat("perfil_peso", peso)
             .putInt("perfil_edad", edad)
             .putString("perfil_genero", genero)
             .putString("perfil_actividad", actividad)
-            .putString("perfil_entorno", entorno)
+            .putString("perfil_entorno", entornoClima)
             .apply()
         calcularMetaHidratacionDinamica()
 

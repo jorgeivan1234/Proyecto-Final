@@ -145,7 +145,7 @@ fun ResultadoHidratacionScreen(
                     }
                     if(viewModel.entornoClima == "Calido" || viewModel.entornoClima == "Extremo") {
                         DesgloseItem(
-                            label="Ajuste por Clima calido${viewModel.entornoClima.lowercase()}",
+                            label="Ajuste por Clima ${viewModel.entornoClima.lowercase()}",
                             value = "+500ml",
                             color = Color(0xFFD84315)
                         )

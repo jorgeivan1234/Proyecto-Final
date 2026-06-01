@@ -51,16 +51,14 @@ fun CalculadoraHidratacionScreen(
     viewModel: HidratacionViewModel = viewModel()
 ) {
     val scrollState = rememberScrollState()
-    var peso by remember { mutableStateOf(viewModel.usuarioPeso.toString() )}
-    var clima by remember { mutableStateOf(viewModel.entornoClima)}
-    var actividad by remember  { mutableStateOf(viewModel.actividadNivel)}
-    var expClima by remember { mutableStateOf(false)}
-    var expActividad by remember { mutableStateOf(false)}
+    var peso by remember { mutableStateOf(viewModel.usuarioPeso.toString()) }
+    var actividad by remember { mutableStateOf(viewModel.actividadNivel) }
+    var expActividad by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Calcular de Agua", fontWeight = FontWeight.Bold)},
+                title = { Text("Calcular de Agua", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Atras")
@@ -106,56 +104,61 @@ fun CalculadoraHidratacionScreen(
                     value = actividad,
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text ("Nivel de actividad fisica")},
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expActividad)},
+                    label = { Text("Nivel de actividad fisica") },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expActividad) },
                     modifier = Modifier.fillMaxWidth().menuAnchor()
                 )
                 ExposedDropdownMenu(
                     expanded = expActividad,
-                    onDismissRequest = {expActividad = false}
+                    onDismissRequest = { expActividad = false }
                 ) {
-                    DropdownMenuItem(text = {Text("Sedentario (peso x 30)")}, onClick = { actividad = "Sedentario"; expActividad = false})
-                    DropdownMenuItem(text = {Text("Moderado (peso x 35)")}, onClick = { actividad = "Moderado"; expActividad = false})
-                    DropdownMenuItem(text = {Text("Intenso (peso x 40)")}, onClick = { actividad = "Intenso"; expActividad = false})
+                    DropdownMenuItem(
+                        text = { Text("Sedentario (peso x 30)") },
+                        onClick = { actividad = "Sedentario"; expActividad = false }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Moderado (peso x 35)") },
+                        onClick = { actividad = "Moderado"; expActividad = false }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Intenso (peso x 40)") },
+                        onClick = { actividad = "Intenso"; expActividad = false }
+                    )
                 }
             }
-            ExposedDropdownMenuBox(
-                expanded = expClima,
-                onExpandedChange = {expClima = !expClima }
-            ) {
-                OutlinedTextField(
-                    value = clima,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text ("Entorno Metereologico")},
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expClima) },
-                    modifier = Modifier.fillMaxWidth().menuAnchor()
-                )
-                ExposedDropdownMenu(
-                    expanded = expClima,
-                    onDismissRequest = {expClima = false}
-                ) {
-                    DropdownMenuItem(text = { Text("Frio")}, onClick = { clima = "Frio"; expClima = false})
-                    DropdownMenuItem(text = { Text("Calido / Muy Caluroso")}, onClick = { clima = "Calido"; expClima = false})
-                }
-            }
+
+            val estadoClimaTraducido =
+                if (viewModel.entornoClima == "Calido") "Calido / Muy Caluroso" else "Frio / Templado"
+            val textoclimaInformativo = "${viewModel.temperaturaActual}°C ($estadoClimaTraducido)"
+
+            OutlinedTextField(
+                value = textoclimaInformativo,
+                onValueChange = {},
+                readOnly = true,
+                enabled = false,
+                label = { Text("Entorno Metereologico") },
+                modifier = Modifier.fillMaxWidth()
+            )
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(
                 onClick = {
                     viewModel.guardarPerfil(
-                        peso.toFloatOrNull() ?: 70f,
+                        peso = peso.toFloatOrNull() ?: 70f,
                         viewModel.usuarioEdad,
                         viewModel.usuarioGenero,
-                        actividad,
-                        clima
+                        actividad = actividad
                     )
                     navController.navigate("resultado_hidratacion")
                 },
                 modifier = Modifier.fillMaxWidth().height(50.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7A22))
             ) {
-                Text("Calcular y Actualizar Requerimiento", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(
+                    "Calcular y Actualizar Requerimiento",
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
