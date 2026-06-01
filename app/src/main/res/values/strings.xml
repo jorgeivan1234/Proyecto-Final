@@ -56,4 +56,33 @@
         <item>Ave</item>
         <item>Roedor/Conejo</item>
     </string-array>
+
+    <string name="title_perfil_compartido">Perfil Compartido</string>
+    <string name="desc_foto_usuario">Foto elegida por el usuario</string>
+    <string name="desc_foto_humano">Foto Humano</string>
+    <string name="label_usuario">Usuario</string>
+    <string name="hint_cambiar_foto">Pulsame para cambiar</string>
+    <string name="label_mascota">Mascota</string>
+    <string name="hint_ver_perfil">Ver perfil</string>
+
+    <string name="label_nivel_cuenta">Nivel de Cuenta: %1$d</string>
+    <string name="label_exp_siguiente_logro">Puntos de Experiencia para el siguiente logro</string>
+    <string name="title_config_biometrica">Configuracion de parametros Biometricos</string>
+    <string name="label_peso_actual">Peso actual (Kg)</string>
+    <string name="label_genero">Genero Biologico</string>
+    <string name="label_actividad">Nivel de Actividad Fisica</string>
+    <string name="label_entorno_clima">Entorno Meteorológico Actual: </string>
+    <string name="btn_guardar_recalcular">Guardar y Recalcular Meta</string>
+
+
+    <string-array name="generos_biologicos">
+        <item>Masculino</item>
+        <item>Femenino</item>
+    </string-array>
+
+    <string-array name="niveles_actividad">
+        <item>Sedentario</item>
+        <item>Moderado</item>
+        <item>Intenso</item>
+    </string-array>
 </resources>
