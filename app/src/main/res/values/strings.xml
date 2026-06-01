@@ -39,4 +39,21 @@
     <string name="dialog_reauth_title">Se requiere reautenticación</string>
     <string name="dialog_reauth_body">Por seguridad, como ha pasado tiempo desde tu último inicio de sesión, debes cerrar sesión e iniciarla nuevamente antes de poder eliminar tu cuenta.</string>
     <string name="dialog_btn_goto_login">Ir a Iniciar Sesión</string>
+
+    <string name="title_perfil_mascota">Perfil de Mascota</string>
+    <string name="desc_atras">Atras</string>
+    <string name="btn_add_foto">Añadir Foto</string>
+    <string name="desc_foto_mascota">Foto Mascota</string>
+    <string name="label_nombre_mascota">Nombre de la mascota</string>
+    <string name="title_especie">Especie</string>
+    <string name="label_peso">Peso (KG)</string>
+    <string name="label_edad">Edad (Años)</string>
+    <string name="btn_guardar_mascota">Guardar Datos de la Mascota</string>
+
+    <string-array name="especies_mascota">
+        <item>Perro</item>
+        <item>Gato</item>
+        <item>Ave</item>
+        <item>Roedor/Conejo</item>
+    </string-array>
 </resources>
