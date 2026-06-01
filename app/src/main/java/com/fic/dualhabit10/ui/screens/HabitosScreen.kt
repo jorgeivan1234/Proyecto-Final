@@ -7,42 +7,41 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.compose.material3.Icon
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
@@ -71,59 +70,60 @@ class HabitosViewModel (application: Application) : AndroidViewModel(application
     }
 
     private fun cargarYVerificarRacha() {
-        val hoy = LocalDate.now()
-        // recupera los datos guardados en la memoria
-        val rachaGuardada = prefs.getInt("racha_contador", 0)
-        val ultimaFechaStr = prefs.getString("ultima_fecha_registro", null)
+        try{
+            val hoy = LocalDate.now()
+            // recupera los datos guardados en la memoria
+            val rachaGuardada = prefs.getInt("racha_contador", 0)
+            val ultimaFechaStr = prefs.getString("ultima_fecha_registro", null)
 
-        // recupera los dias del mes guardado que se completaron
-        val diasCompletadosGuardados = prefs.getStringSet("dias_completados_set", emptySet()) ?: emptySet()
-        diasCompletados = diasCompletadosGuardados
+            // recupera los dias del mes guardado que se completaron
+            val diasCompletadosGuardados = prefs.getStringSet("dias_completados_set", emptySet()) ?: emptySet()
+            diasCompletados = diasCompletadosGuardados
 
-        if (ultimaFechaStr  == null) {
-            //caso de usuario nuevo
-            rachaContador = 0
-            rachaRegistradaHoy = false
-        } else {
+            if (ultimaFechaStr  == null) {
+                //caso de usuario nuevo
+                rachaContador = 0
+                rachaRegistradaHoy = false
+            } else {
+                val ultimaFecha = LocalDate.parse(ultimaFechaStr)
+                // para calcular la diferencia de dias reales entre la ultima vez que pulso el boton
+                val diasDeDiferencia = ChronoUnit.DAYS.between(ultimaFecha, hoy)
+                when {
+                    diasDeDiferencia == 0L -> {
+                        //ya pulso el boton hiy
+                        rachaContador = rachaGuardada
+                        rachaRegistradaHoy = true
+                    }
 
-            val ultimaFecha = LocalDate.parse(ultimaFechaStr)
-            // para calcular la diferencia de dias reales entre la ultima vez que pulso el boton
-            val diasDeDiferencia = ChronoUnit.DAYS.between(ultimaFecha, hoy)
-            when {
-                diasDeDiferencia == 0L -> {
-                    //ya pulso el boton hiy
-                    rachaContador = rachaGuardada
-                    rachaRegistradaHoy = true
-                }
-                diasDeDiferencia == 1L -> {
-                    //dia nuevo
-                    rachaContador = rachaGuardada
-                    rachaRegistradaHoy = false
-                }
-                else -> {
-                    //pasron 2 dias o mas
-                    rachaContador = 0
-                    rachaRegistradaHoy = false
-                    diasCompletados = emptySet()
+                    diasDeDiferencia == 1L -> {
+                        //dia nuevo
+                        rachaContador = rachaGuardada
+                        rachaRegistradaHoy = false
+                    }
 
-                    //limpia la memoria
-                    prefs.edit().putInt("racha_contador", 0)
-                        .putStringSet("dias_completados_set", emptySet())
-                        .apply()
+                    else -> {
+                        //pasron 2 dias o mas
+                        rachaContador = 0
+                        rachaRegistradaHoy = false
+                        prefs.edit().putInt("racha_contador", 0).apply()
+                    }
                 }
             }
+        } catch (e: Exception) {
+            rachaContador = 0
+            rachaRegistradaHoy = false
         }
     }
 
     fun registrarRachasDeHoy() {
         if(!rachaRegistradaHoy) {
             val hoy = LocalDate.now()
-            val hoyDiaStr = hoy.dayOfMonth.toString()
+            val hoyFechaCompletaStr = hoy.toString()
 
             //incremento el numero de la racha
             rachaContador += 1
             rachaRegistradaHoy = true //bloquea el boton
-            diasCompletados = diasCompletados + hoyDiaStr //agrega el dia de hoy a la lista
+            diasCompletados = diasCompletados + hoyFechaCompletaStr //agrega el dia de hoy a la lista
 
             //guarda de forma permanente en el chip del telefono
             prefs.edit()
@@ -136,6 +136,7 @@ class HabitosViewModel (application: Application) : AndroidViewModel(application
             generarDiasDeLaSemana()
         }
     }
+
     fun generarDiasDeLaSemana() {
         val hoy = LocalDate.now()
         val lunesDeEstaSemana = hoy.with(DayOfWeek.MONDAY)
@@ -143,7 +144,8 @@ class HabitosViewModel (application: Application) : AndroidViewModel(application
 
         for (i in 0..6) {
             val fechaDia = lunesDeEstaSemana.plusDays(i.toLong())
-            val numeroDiaStr = fechaDia.dayOfMonth.toString()
+            //Buscamos coincidencia usando la fecha ISO completa para evitar duplicados en meses que sigen
+            val fechaDiaCompletaStr = fechaDia.toString()
             val nombreCorto = fechaDia.dayOfWeek.getDisplayName(
                 TextStyle.SHORT,
                 Locale("es", "MX")
@@ -154,13 +156,14 @@ class HabitosViewModel (application: Application) : AndroidViewModel(application
                     nombre = nombreCorto,
                     numero = fechaDia.dayOfMonth.toString(),
                     esHoy = fechaDia.isEqual(hoy),
-                    estaCompletado = diasCompletados.contains(numeroDiaStr)
+                    estaCompletado = diasCompletados.contains(fechaDiaCompletaStr)
                 )
             )
         }
         diasSemanaActual = lista
     }
 }
+
 data class DiaData(
     val nombre: String,
     val numero: String,
@@ -200,7 +203,7 @@ fun HabitosScreen(
         HabitoItem(
             titulo = "Actividad\nFisica",
             imagenRes = R.drawable.img_ejercicio,
-            rutaNavigation = "actividad_fisica_mascota",
+            rutaNavigation = "actividad_physica_mascota",
             colorFondo = Color(0xFFFFCDD2)
         ),
         HabitoItem(
@@ -274,13 +277,13 @@ fun HabitosScreen(
                                 Icon(
                                     imageVector = Icons.Default.Check,
                                     contentDescription = null,
-                                    tint = Color.White,
+                                    tint = Color.Black,
                                     modifier = Modifier.size(16.dp)
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(
                                     text = "Racha de hoy Lista",
-                                    color = Color.White,
+                                    color = Color.Black,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -404,7 +407,7 @@ fun Tarjetahabito(habito: HabitoItem, onClick: () -> Unit) {
         ) {
             Text (
                 text = habito.titulo,
-                color = Color.Black,
+                color = if (habito.colorFondo == Color(0xFF1A237E)) Color.White else Color.Black,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,

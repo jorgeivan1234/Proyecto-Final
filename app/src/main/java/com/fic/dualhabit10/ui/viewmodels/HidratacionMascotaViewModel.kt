@@ -23,6 +23,7 @@ data class RegistroAguaMascota(
 )
 
 class HidratacionMascotaViewModel(application: Application) : AndroidViewModel(application) {
+
     //conexion a room
     private val database = AppDatabase.getDatebase(application)
     private val mascotaDao = database.hidratacionMascotaDao()
