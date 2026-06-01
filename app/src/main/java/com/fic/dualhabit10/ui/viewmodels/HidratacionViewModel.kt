@@ -41,8 +41,10 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
     // variabilidad de lectura para pintar los grados
     var temperaturaActual by mutableFloatStateOf(30.0f)
         private set
+
     //almacena el historial en la base de datos
     val historialConsumoMap = mutableStateMapOf<String, Int>()
+    var rachaDiasConsecutivos by mutableIntStateOf(0)
 
     init {
         cargarDatosLocales()
@@ -51,7 +53,7 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
         obtenerClimaDesdeApi()
     }
 
-    private fun obtenerClimaDesdeApi(){
+    private fun obtenerClimaDesdeApi() {
         viewModelScope.launch {
             try {
                 //la cordenada de aqui
@@ -68,6 +70,7 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
             }
         }
     }
+
     private fun cargarAguaDesdeRoom() {
         viewModelScope.launch {
             val registroHoy = dnHidratacionDao.obtenerRegistroPorFecha(hoyStr)
@@ -90,6 +93,7 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
                 for (registro in listaEntiedades) {
                     historialConsumoMap[registro.fecha] = registro.cantidadML
                 }
+                verificarYCalcularRacha()
             }
         }
     }
@@ -105,6 +109,37 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
         //carga gamificacion
         experienciaNivel = prefs.getInt("gamificacion_nivel", 1)
         experienciaPuntos = prefs.getInt("gamificacion_xp", 0)
+        rachaDiasConsecutivos = prefs.getInt("racha_agua_humanos", 0)
+    }
+
+    private fun verificarYCalcularRacha() {
+        val ayerStr = LocalDate.now().minusDays(1).toString()
+        val consumoHoy = aguaConsumidaML
+        val consumoAyer = historialConsumoMap[ayerStr] ?: 0
+
+        if (consumoHoy >= metaDiariaML) {
+            var contador = 0
+            var fechaVerficar = LocalDate.now()
+            while ((historialConsumoMap[fechaVerficar.toString()] ?: 0) >= metaDiariaML || fechaVerficar.toString() == hoyStr) {
+                contador++
+                fechaVerficar = fechaVerficar.minusDays(1)
+            }
+            rachaDiasConsecutivos = contador
+        } else {
+            if (consumoAyer >= metaDiariaML && metaDiariaML > 0) {
+                var contador = 0
+                var fechaVerficar = LocalDate.now().minusDays(1)
+
+                while ((historialConsumoMap[fechaVerficar.toString()] ?: 0) >= metaDiariaML) {
+                contador++
+                fechaVerficar = fechaVerficar.minusDays(1)
+                }
+                rachaDiasConsecutivos = contador
+            } else {
+                rachaDiasConsecutivos = 0
+            }
+        }
+        prefs.edit().putInt("racha_agua_humanos", rachaDiasConsecutivos).apply()
     }
 
     //calculo automatico de meta basado en el perfil y ajuste metereologico dinamico
@@ -134,6 +169,7 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
                 metaML = metaDiariaML,
             )
             dnHidratacionDao.insertarOActualizar(nuevoRegistro)
+            verificarYCalcularRacha()
         }
         //sistema de recompensa
         experienciaPuntos += (ml / 10)
@@ -169,5 +205,6 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
                 )
             )
         }
+        verificarYCalcularRacha()
     }
 }
