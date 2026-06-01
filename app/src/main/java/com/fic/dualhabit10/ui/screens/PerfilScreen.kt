@@ -55,19 +55,18 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.ActivityNavigatorExtras
 import coil.compose.AsyncImage
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
-import kotlin.math.exp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PerfilScreen(
     navController: NavController,
     viewModel: HidratacionViewModel = viewModel(),
-){
+) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
@@ -75,11 +74,12 @@ fun PerfilScreen(
     val sharedPreferences = remember {
         context.getSharedPreferences("perfil_preferences", Context.MODE_PRIVATE)
     }
-    var peso by remember { mutableStateOf(viewModel.usuarioPeso.toString() )}
-    var edad by remember { mutableStateOf(viewModel.usuarioEdad.toString() )}
-    var clima by remember { mutableStateOf(viewModel.entornoClima)}
-    var genero by remember  { mutableStateOf(viewModel.usuarioGenero)}
-    var actividad by remember  { mutableStateOf(viewModel.actividadNivel)}
+    var peso by remember { mutableStateOf(viewModel.usuarioPeso.toString()) }
+    var edad by remember { mutableStateOf(viewModel.usuarioEdad.toString()) }
+    // Ya no usamos clima como estado editable, se muestra el de la API
+    val climaActual = viewModel.entornoClima
+    var genero by remember { mutableStateOf(viewModel.usuarioGenero) }
+    var actividad by remember { mutableStateOf(viewModel.actividadNivel) }
 
     var expGenero by remember { mutableStateOf(false)}
     var expActividad by remember { mutableStateOf(false)}
@@ -122,8 +122,7 @@ fun PerfilScreen(
                             peso.toFloatOrNull() ?: 70f,
                             edad.toIntOrNull() ?: 25,
                             genero,
-                            actividad,
-                            clima
+                            actividad
                         )
                         navController.popBackStack()
                     }) {
@@ -308,17 +307,35 @@ fun PerfilScreen(
                     expanded = expActividad,
                     onDismissRequest = { expActividad = false }
                 ) {
-                    DropdownMenuItem(text = { Text("Sedentario") }, onClick = { actividad = "Sedentario"; expActividad = false})
-                    DropdownMenuItem(text = { Text("Moderado") }, onClick = { actividad = "Moderado"; expActividad = false})
-                    DropdownMenuItem(text = { Text("Intenso") }, onClick = { actividad = "Intenso"; expActividad = false})
+                    DropdownMenuItem(text = { Text("Sedentario") }, onClick = { actividad = "Sedentario"; expActividad = false })
+                    DropdownMenuItem(text = { Text("Moderado") }, onClick = { actividad = "Moderado"; expActividad = false })
+                    DropdownMenuItem(text = { Text("Intenso") }, onClick = { actividad = "Intenso"; expActividad = false })
                 }
             }
-            OutlinedTextField(
-                value = clima,
-                onValueChange = { clima = it },
-                label = { Text("Entorno Meteorologico (Calido / Frio)") },
-                modifier = Modifier.fillMaxWidth()
-            )
+
+            // mostramos el entorno meteorologico como informacion
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.5f))
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Entorno Meteorológico Actual: ",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        text = climaActual,
+                        color = if (climaActual == "Calido") Color(0xFFFF7A22) else Color(0xFF1976D2),
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 16.sp
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
@@ -327,8 +344,7 @@ fun PerfilScreen(
                         peso.toFloatOrNull() ?: 70f,
                         edad.toIntOrNull() ?: 25,
                         genero,
-                        actividad,
-                        clima
+                        actividad
                     )
                     navController.popBackStack()
                 },
