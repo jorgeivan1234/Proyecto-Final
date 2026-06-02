@@ -11,5 +11,6 @@ data class ActividadFisicaEntity(
     val descripcion: String,
     val duracion: String,
     val intensidad: String,
-    val colorHex: String
+    val colorHex: String,
+    val imagenUrl: String
 )
