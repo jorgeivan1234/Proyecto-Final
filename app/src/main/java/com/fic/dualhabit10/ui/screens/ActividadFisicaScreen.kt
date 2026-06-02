@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.DirectionsRun
-import androidx.compose.material.icons.filled.DirectionsRun
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
@@ -29,13 +27,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.fic.dualhabit10.data.local.ActividadFisicaEntity
-import com.fic.dualhabit10.data.model.ActividadMascota
 import com.fic.dualhabit10.ui.viewmodels.ActividadFisicaViewModel
 import kotlinx.coroutines.launch
 
@@ -122,7 +121,10 @@ fun ActividadFisicaScreen(
                     contentPadding = PaddingValues(bottom = 90.dp)
                 ) {
                     items(listaActividades, key = { it.id }) { actividad ->
-                        TarjetaActividad(actividad = actividad)
+                        TarjetaActividad(
+                            actividad = actividad,
+                            onClick = {navController.navigate("actividad_detalle/${actividad.id}") }
+                        )
                     }
                 }
             }
@@ -131,7 +133,7 @@ fun ActividadFisicaScreen(
 }
 
 @Composable
-fun TarjetaActividad(actividad: ActividadFisicaEntity) {
+fun TarjetaActividad(actividad: ActividadFisicaEntity, onClick: () -> Unit ) {
     val colorFondo = try {
         Color(android.graphics.Color.parseColor(actividad.colorHex))
     } catch (e: Exception) {
@@ -148,7 +150,8 @@ fun TarjetaActividad(actividad: ActividadFisicaEntity) {
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = colorFondo),
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
+        onClick = onClick
     ) {
         Column(
             modifier = Modifier
@@ -180,20 +183,16 @@ fun TarjetaActividad(actividad: ActividadFisicaEntity) {
                     )
                 }
 
-                Box(
-                    modifier = Modifier
-                        .size(85.dp)
-                        .background(
-                            Color.White.copy(alpha = 0.7f),
-                            shape = RoundedCornerShape(16.dp),
-                        ),
-                    contentAlignment = Alignment.Center
+                Card(
+                    modifier = Modifier.size(85.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {
-                    Icon(
-                        imageVector = iconoEjercicio,
-                        contentDescription = "Guia de ${actividad.titulo}",
-                        modifier = Modifier.size(50.dp),
-                        tint = Color(0xFF2C3E50)
+                    AsyncImage(
+                        model = actividad.imagenUrl,
+                        contentDescription = "Foto de ${actividad.titulo}",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
                     )
                 }
             }
