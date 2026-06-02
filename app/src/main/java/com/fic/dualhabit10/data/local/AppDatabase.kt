@@ -4,23 +4,27 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
 @Database(
     entities = [
         RegistroAguaEntity::class,
         RegistroAguaMascotaEntity::class,
         ActividadFisicaEntity::class,
-        PerfilMascotaEntity::class
+        PerfilMascotaEntity::class,
+        AlimentacionEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun hidratacionDao(): HidratacionDao
     abstract fun hidratacionMascotaDao(): HidratacionMascotaDao
     abstract fun actividadFisicaDao(): ActividadFisicaDao
     abstract fun perfilMacotaDao(): PerfilMascotaDao
+    abstract fun alimentacionDao(): AlimentacionDao
 
 
     companion object {
