@@ -203,7 +203,7 @@ fun HabitosScreen(
         HabitoItem(
             titulo = "Actividad\nFisica",
             imagenRes = R.drawable.img_ejercicio,
-            rutaNavigation = "actividad_physica_mascota",
+            rutaNavigation = "actividad_fisica_mascota",
             colorFondo = Color(0xFFFFCDD2)
         ),
         HabitoItem(
