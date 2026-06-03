@@ -34,6 +34,7 @@ import com.fic.dualhabit10.ui.screens.RegisterSuccessful
 import com.fic.dualhabit10.ui.screens.ResultadoHidratacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.ResultadoHidratacionScreen
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
+import com.fic.dualhabit10.ui.screens.Sugerencias
 
 
 class MainActivity : ComponentActivity(){
@@ -166,6 +167,10 @@ class MainActivity : ComponentActivity(){
                     //CalculadoraHidratacionMacotaScreen -> ResultadoHidratacionMascotaScreen
                     composable("resultado_hidratacion_mascota"){
                         ResultadoHidratacionMascotaScreen(navController = navController)
+                    }
+                    //Sugerencias -> Pantalla de sugerencias
+                    composable("Sugerencias"){
+                        Sugerencias(navController = navController)
                     }
                 }
             }
