@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string name="app_name">DualHabit</string>
+        <string name="iniciar">START</string>
+        <string name="bienvenido_a_dualhabit">Welcome to DualHabit</string>
+        <string name="login">Log In</string>
+        <string name="Register">Register</string>
+        <string name="continu">Continue</string>
+        <string name="Text_Register">Get ready to keep yourself and your pet healthy</string>
+        <string name="Register_Successful">Registration was Successful!</string>
+        <string name="text_forget_password">Forgot your password?</string>
+        <string name="Send_Code">Send code</string>
+        <string name="Login_Back">Back to Login</string>
+        <string name="Menu_Mascota">Pet Menu</string>
+        <string name="Ver_Mascota">View Virtual Pet</string>
+        <string name="desc_personaje_saludo">Character waving friendly</string>
+        <string name="desc_perro_inicio">Pet walking to welcome</string>
+        <string name="hint_correo">Enter email address</string>
+        <string name="hint_password">Password</string>
+        <string name="btn_recuperar_pass">Recover Password</string>
+        <string name="chk_recordar">Remember me</string>
+        <string name="err_campos_vacios">Required: You must enter an account and password</string>
+        <string name="err_correo_invalido">Please enter a valid email address</string>
+        <string name="err_credenciales_incorrectas">Incorrect email or password</string>
+        <string name="err_llenar_campos">Please fill in all fields</string>
+        <string name="desc_ocultar_pass">Hide password</string>
+        <string name="desc_mostrar_pass">Show password</string>
+
+        <string name="app_title">DualHabit App</string>
+        <string name="menu_home">Home</string>
+        <string name="menu_profile">View Profile</string>
+        <string name="menu_delete_account">Delete Account</string>
+        <string name="menu_logout">Log Out</string>
+
+        <string name="dialog_delete_title">Delete Account</string>
+        <string name="dialog_delete_body">Are you sure you want to delete your account? This action is irreversible.</string>
+        <string name="dialog_btn_yes">Yes, delete</string>
+        <string name="dialog_btn_cancel">Cancel</string>
+        <string name="dialog_loading">Deleting DualHabit account…</string>
+        <string name="dialog_reauth_title">Reauthentication required</string>
+        <string name="dialog_reauth_body">For security reasons, since some time has passed since your last login, you must log out and log in again before you can delete your account.</string>
+        <string name="dialog_btn_goto_login">Go to Login</string>
+
+        <string name="title_perfil_mascota">Pet Profile</string>
+        <string name="desc_atras">Back</string>
+        <string name="btn_add_foto">Add Photo</string>
+        <string name="desc_foto_mascota">Pet Photo</string>
+        <string name="label_nombre_mascota">Pet Name</string>
+        <string name="title_especie">Species</string>
+        <string name="label_peso">Weight (KG)</string>
+        <string name="label_edad">Age (Years)</string>
+        <string name="btn_guardar_mascota">Save Pet Data</string>
+
+        <string-array name="especies_mascota">
+            <item>Dog</item>
+            <item>Cat</item>
+            <item>Bird</item>
+            <item>Rodent/Rabbit</item>
+        </string-array>
+
+        <string name="title_perfil_compartido">Shared Profile</string>
+        <string name="desc_foto_usuario">Photo chosen by the user</string>
+        <string name="desc_foto_humano">Human Photo</string>
+        <string name="label_usuario">User</string>
+        <string name="hint_cambiar_foto">Tap to change</string>
+        <string name="label_mascota">Pet</string>
+        <string name="hint_ver_perfil">View profile</string>
+
+        <string name="label_nivel_cuenta">Account Level: %1$d</string>
+        <string name="label_exp_siguiente_logro">Experience points for the next achievement</string>
+        <string name="title_config_biometrica">Biometric Parameters Configuration</string>
+        <string name="label_peso_actual">Current weight (Kg)</string>
+        <string name="label_genero">Biological Gender</string>
+        <string name="label_actividad">Physical Activity Level</string>
+        <string name="label_entorno_clima">Current Weather Environment: </string>
+        <string name="btn_guardar_recalcular">Save and Recalculate Goal</string>
+
+        <string-array name="generos_biologicos">
+            <item>Male</item>
+            <item>Female</item>
+        </string-array>
+
+        <string-array name="niveles_actividad">
+            <item>Sedentary</item>
+            <item>Moderate</item>
+            <item>Intense</item>
+        </string-array>
+
+    <string name="desc_menu">Menu</string>
+    <string name="title_sugerencias">Suggestions</string>
+    <string name="title_buzon_sugerencias">Suggestion Box</string>
+    <string name="hint_escribe_comentario">Write your comment here...</string>
+    <string name="btn_enviar_sugerencia">Submit suggestion</string>
+</resources>

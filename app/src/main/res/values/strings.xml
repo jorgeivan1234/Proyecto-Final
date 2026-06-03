@@ -74,7 +74,6 @@
     <string name="label_entorno_clima">Entorno Meteorológico Actual: </string>
     <string name="btn_guardar_recalcular">Guardar y Recalcular Meta</string>
 
-
     <string-array name="generos_biologicos">
         <item>Masculino</item>
         <item>Femenino</item>
@@ -85,4 +84,10 @@
         <item>Moderado</item>
         <item>Intenso</item>
     </string-array>
+
+    <string name="desc_menu">Menú</string>
+    <string name="title_sugerencias">Sugerencias</string>
+    <string name="title_buzon_sugerencias">Buzón de Sugerencias</string>
+    <string name="hint_escribe_comentario">Escribe tu comentario aquí...</string>
+    <string name="btn_enviar_sugerencia">Enviar sugerencia</string>
 </resources>
