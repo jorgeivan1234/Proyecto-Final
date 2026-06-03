@@ -66,7 +66,6 @@ fun HistorialScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    //modificacion de Scaffold
     BaseCustomDrawer(
         navController = navController,
         drawerState = drawerState
@@ -175,14 +174,16 @@ fun VistaDiariaReal(viewModel: HidratacionViewModel) {
 
 @Composable
 fun VistaSemanalReal(viewModel: HidratacionViewModel) {
-    val diasSemana = listOf("Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom")
+    val diasSemana = listOf("Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab")
     val hoy = LocalDate.now()
-    val lunesDeEstaSemana = hoy.with(DayOfWeek.MONDAY)
+
     val consumoSemanaPorcentaje = remember (viewModel.historialConsumoMap, viewModel.metaDiariaML) {
         List(7) { i ->
-            val fechaDia = lunesDeEstaSemana.plusDays(i.toLong()).toString()
-            val consumoDia = viewModel.historialConsumoMap[fechaDia] ?: 0
-            if (viewModel.metaDiariaML > 0) consumoDia.toFloat() / viewModel.metaDiariaML.toFloat() else 0f
+            val fechaDia = hoy.minusDays((6 - i).toLong())
+            val consumoDia = viewModel.historialConsumoMap[fechaDia.toString()] ?: 0
+            val nombreDia = diasSemana[fechaDia.dayOfWeek.value % 7]
+            val porcentaje = if (viewModel.metaDiariaML > 0) consumoDia.toFloat() / viewModel.metaDiariaML.toFloat() else 0f
+            Pair(nombreDia, porcentaje)
         }
     }
     Card(
@@ -192,7 +193,7 @@ fun VistaSemanalReal(viewModel: HidratacionViewModel) {
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text("Desempeño de la semana", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color.DarkGray)
+            Text("Desempeño de los ultimos 7 dias", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color.DarkGray)
             Spacer(modifier = Modifier.height(24.dp))
 
             Row(
@@ -201,7 +202,7 @@ fun VistaSemanalReal(viewModel: HidratacionViewModel) {
                 verticalAlignment = Alignment.Bottom
             ) {
                 //Contenedor de barra y texto de la tabla de hidratacion semanal. (intento de corregir errores por Dulce Meza)
-                consumoSemanaPorcentaje.forEachIndexed { index, porcentaje ->
+                consumoSemanaPorcentaje.forEach { (nombreDia, porcentaje) ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.weight(1f)
@@ -213,15 +214,15 @@ fun VistaSemanalReal(viewModel: HidratacionViewModel) {
                                 .fillMaxWidth(),
                             verticalArrangement = Arrangement.Bottom, //empuja todo abajo
                         ){ val porcentajeTexto = (porcentaje * 100).toInt()
-                        if (porcentajeTexto > 0){
-                            Text(
-                                text ="$porcentajeTexto%",
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.DarkGray
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))//separacion entre texto y barra
-                        }
+                            if (porcentajeTexto > 0){
+                                Text(
+                                    text ="$porcentajeTexto%",
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.DarkGray
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))//separacion entre texto y barra
+                            }
                         }
                         //Barra original
                         Box(
@@ -239,7 +240,7 @@ fun VistaSemanalReal(viewModel: HidratacionViewModel) {
                             )
                         }
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = diasSemana[index], fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        Text(text = nombreDia, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }

@@ -12,6 +12,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.fic.dualhabit10.data.local.AppDatabase
 import com.fic.dualhabit10.data.local.RegistroAguaEntity
+import com.fic.dualhabit10.data.remote.WeatherApiService
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -21,6 +22,8 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
 
     private val database = AppDatabase.getDatebase(application)
     private val dnHidratacionDao = database.hidratacionDao()
+    private val weatherApiService = WeatherApiService.crear()
+    private val hoyStr = LocalDate.now().toString()
     var aguaConsumidaML by mutableIntStateOf(0)
         private set
     var metaDiariaML by mutableIntStateOf(2000)
@@ -35,16 +38,37 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
     var experienciaNivel by mutableIntStateOf(1)
     var experienciaPuntos by mutableIntStateOf(0)
 
-    val hoyStr = LocalDate.now().toString()
+    // variabilidad de lectura para pintar los grados
+    var temperaturaActual by mutableFloatStateOf(30.0f)
+        private set
 
     //almacena el historial en la base de datos
     val historialConsumoMap = mutableStateMapOf<String, Int>()
+    var rachaDiasConsecutivos by mutableIntStateOf(0)
 
     init {
         cargarDatosLocales()
-        calcularMetaHidratacionDinamica()
         cargarAguaDesdeRoom()
         cargarHistorialDesdeRoom()
+        obtenerClimaDesdeApi()
+    }
+
+    private fun obtenerClimaDesdeApi() {
+        viewModelScope.launch {
+            try {
+                //la cordenada de aqui
+                val respuesta = weatherApiService.ObtenerClimaActual(
+                    latitude = 24.8053,
+                    longitude = -107.3943
+                )
+                temperaturaActual = respuesta.current.temperature_2m
+                entornoClima = if (temperaturaActual >= 30.0f) "Calido" else "Frio"
+            } catch (e: Exception) {
+                //si no hay red conserva el valor por defecto de SharedPreferences
+            } finally {
+                calcularMetaHidratacionDinamica()
+            }
+        }
     }
 
     private fun cargarAguaDesdeRoom() {
@@ -69,6 +93,7 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
                 for (registro in listaEntiedades) {
                     historialConsumoMap[registro.fecha] = registro.cantidadML
                 }
+                verificarYCalcularRacha()
             }
         }
     }
@@ -84,6 +109,37 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
         //carga gamificacion
         experienciaNivel = prefs.getInt("gamificacion_nivel", 1)
         experienciaPuntos = prefs.getInt("gamificacion_xp", 0)
+        rachaDiasConsecutivos = prefs.getInt("racha_agua_humanos", 0)
+    }
+
+    private fun verificarYCalcularRacha() {
+        val ayerStr = LocalDate.now().minusDays(1).toString()
+        val consumoHoy = aguaConsumidaML
+        val consumoAyer = historialConsumoMap[ayerStr] ?: 0
+
+        if (consumoHoy >= metaDiariaML) {
+            var contador = 0
+            var fechaVerficar = LocalDate.now()
+            while ((historialConsumoMap[fechaVerficar.toString()] ?: 0) >= metaDiariaML || fechaVerficar.toString() == hoyStr) {
+                contador++
+                fechaVerficar = fechaVerficar.minusDays(1)
+            }
+            rachaDiasConsecutivos = contador
+        } else {
+            if (consumoAyer >= metaDiariaML && metaDiariaML > 0) {
+                var contador = 0
+                var fechaVerficar = LocalDate.now().minusDays(1)
+
+                while ((historialConsumoMap[fechaVerficar.toString()] ?: 0) >= metaDiariaML) {
+                contador++
+                fechaVerficar = fechaVerficar.minusDays(1)
+                }
+                rachaDiasConsecutivos = contador
+            } else {
+                rachaDiasConsecutivos = 0
+            }
+        }
+        prefs.edit().putInt("racha_agua_humanos", rachaDiasConsecutivos).apply()
     }
 
     //calculo automatico de meta basado en el perfil y ajuste metereologico dinamico
@@ -113,6 +169,7 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
                 metaML = metaDiariaML,
             )
             dnHidratacionDao.insertarOActualizar(nuevoRegistro)
+            verificarYCalcularRacha()
         }
         //sistema de recompensa
         experienciaPuntos += (ml / 10)
@@ -124,19 +181,18 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
         prefs.edit().putInt("gamificacion_xp", experienciaPuntos).apply()
     }
 
-    fun guardarPerfil(peso: Float, edad: Int, genero: String, actividad: String, entorno: String) {
+    fun guardarPerfil(peso: Float, edad: Int, genero: String, actividad: String) {
         usuarioPeso = peso
         usuarioEdad = edad
         usuarioGenero = genero
         actividadNivel = actividad
-        entornoClima = entorno
 
         prefs.edit()
             .putFloat("perfil_peso", peso)
             .putInt("perfil_edad", edad)
             .putString("perfil_genero", genero)
             .putString("perfil_actividad", actividad)
-            .putString("perfil_entorno", entorno)
+            .putString("perfil_entorno", entornoClima)
             .apply()
         calcularMetaHidratacionDinamica()
 
@@ -149,5 +205,6 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
                 )
             )
         }
+        verificarYCalcularRacha()
     }
 }

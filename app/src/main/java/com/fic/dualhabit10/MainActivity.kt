@@ -11,6 +11,7 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.fic.dualhabit10.ui.screens.ActividadDetalleScreen
 import com.fic.dualhabit10.ui.screens.ActividadFisicaScreen
 import com.fic.dualhabit10.ui.screens.AlimentacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.AlimentacionScreen
@@ -167,6 +168,14 @@ class MainActivity : ComponentActivity(){
                     //CalculadoraHidratacionMacotaScreen -> ResultadoHidratacionMascotaScreen
                     composable("resultado_hidratacion_mascota"){
                         ResultadoHidratacionMascotaScreen(navController = navController)
+                    }
+                    //cualquier actividad -> su pantalla propia
+                    composable(
+                        "actividad_detalle/{actividadId}",
+                        arguments = listOf(navArgument("actividadId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val id = backStackEntry.arguments?.getInt("actividadId") ?: 0
+                        ActividadDetalleScreen(actividadId = id, navController = navController)
                     }
                     //Sugerencias -> Pantalla de sugerencias
                     composable("Sugerencias"){

@@ -23,6 +23,7 @@ data class RegistroAguaMascota(
 )
 
 class HidratacionMascotaViewModel(application: Application) : AndroidViewModel(application) {
+
     //conexion a room
     private val database = AppDatabase.getDatebase(application)
     private val mascotaDao = database.hidratacionMascotaDao()
@@ -62,7 +63,10 @@ class HidratacionMascotaViewModel(application: Application) : AndroidViewModel(a
                 launch {
                     //consulta el clima
                     try {
-                        val respuesta = weatherApi.ObtenerClimaActual(latitude = 24.8053, longitude = -107.3943)
+                        val respuesta = weatherApi.ObtenerClimaActual(
+                            latitude = 24.8053,
+                            longitude = -107.3943
+                        )
                         temperaturaActual = respuesta.current.temperature_2m
                         climaCaluroso = temperaturaActual >= 30.0f
                     } catch (e: Exception) {

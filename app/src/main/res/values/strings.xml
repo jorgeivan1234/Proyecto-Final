@@ -24,4 +24,65 @@
     <string name="err_llenar_campos">Por favor, llenar todos los campos</string>
     <string name="desc_ocultar_pass">Ocultar contraseña</string>
     <string name="desc_mostrar_pass">Mostrar contraseña</string>
+
+    <string name="app_title">DualHabit App</string>
+    <string name="menu_home">Inicio</string>
+    <string name="menu_profile">Ver perfil</string>
+    <string name="menu_delete_account">Eliminar Cuenta</string>
+    <string name="menu_logout">Cerrar Sesión</string>
+
+    <string name="dialog_delete_title">Eliminar Cuenta</string>
+    <string name="dialog_delete_body">¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.</string>
+    <string name="dialog_btn_yes">Sí, eliminar</string>
+    <string name="dialog_btn_cancel">Cancelar</string>
+    <string name="dialog_loading">Eliminando cuenta de DualHabit…</string>
+    <string name="dialog_reauth_title">Se requiere reautenticación</string>
+    <string name="dialog_reauth_body">Por seguridad, como ha pasado tiempo desde tu último inicio de sesión, debes cerrar sesión e iniciarla nuevamente antes de poder eliminar tu cuenta.</string>
+    <string name="dialog_btn_goto_login">Ir a Iniciar Sesión</string>
+
+    <string name="title_perfil_mascota">Perfil de Mascota</string>
+    <string name="desc_atras">Atras</string>
+    <string name="btn_add_foto">Añadir Foto</string>
+    <string name="desc_foto_mascota">Foto Mascota</string>
+    <string name="label_nombre_mascota">Nombre de la mascota</string>
+    <string name="title_especie">Especie</string>
+    <string name="label_peso">Peso (KG)</string>
+    <string name="label_edad">Edad (Años)</string>
+    <string name="btn_guardar_mascota">Guardar Datos de la Mascota</string>
+
+    <string-array name="especies_mascota">
+        <item>Perro</item>
+        <item>Gato</item>
+        <item>Ave</item>
+        <item>Roedor/Conejo</item>
+    </string-array>
+
+    <string name="title_perfil_compartido">Perfil Compartido</string>
+    <string name="desc_foto_usuario">Foto elegida por el usuario</string>
+    <string name="desc_foto_humano">Foto Humano</string>
+    <string name="label_usuario">Usuario</string>
+    <string name="hint_cambiar_foto">Pulsame para cambiar</string>
+    <string name="label_mascota">Mascota</string>
+    <string name="hint_ver_perfil">Ver perfil</string>
+
+    <string name="label_nivel_cuenta">Nivel de Cuenta: %1$d</string>
+    <string name="label_exp_siguiente_logro">Puntos de Experiencia para el siguiente logro</string>
+    <string name="title_config_biometrica">Configuracion de parametros Biometricos</string>
+    <string name="label_peso_actual">Peso actual (Kg)</string>
+    <string name="label_genero">Genero Biologico</string>
+    <string name="label_actividad">Nivel de Actividad Fisica</string>
+    <string name="label_entorno_clima">Entorno Meteorológico Actual: </string>
+    <string name="btn_guardar_recalcular">Guardar y Recalcular Meta</string>
+
+
+    <string-array name="generos_biologicos">
+        <item>Masculino</item>
+        <item>Femenino</item>
+    </string-array>
+
+    <string-array name="niveles_actividad">
+        <item>Sedentario</item>
+        <item>Moderado</item>
+        <item>Intenso</item>
+    </string-array>
 </resources>
