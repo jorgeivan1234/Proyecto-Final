@@ -35,6 +35,7 @@ import com.fic.dualhabit10.ui.screens.RegisterSuccessful
 import com.fic.dualhabit10.ui.screens.ResultadoHidratacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.ResultadoHidratacionScreen
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
+import com.fic.dualhabit10.ui.screens.Sugerencias
 
 
 class MainActivity : ComponentActivity(){
@@ -175,6 +176,10 @@ class MainActivity : ComponentActivity(){
                     ) { backStackEntry ->
                         val id = backStackEntry.arguments?.getInt("actividadId") ?: 0
                         ActividadDetalleScreen(actividadId = id, navController = navController)
+                    }
+                    //Sugerencias -> Pantalla de sugerencias
+                    composable("Sugerencias"){
+                        Sugerencias(navController = navController)
                     }
                 }
             }
