@@ -3,14 +3,32 @@ package com.fic.dualhabit10.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -56,21 +74,21 @@ fun MascotasMenu(navController: NavController) {
         MascotaMenu(
             titulo = "Noticias de mascotas",
             imagenRes = null,
-            rutaNavigation = "", //Agregar ruta. ejmp | noticia_mascota | Cuando se cree la pantalla
+            rutaNavigation = "mantenimiento", //Redirige a mantenimiento hasta proxima actualizacion.
             enMantenimiento = true,
             colorFondo = colores[0]
         ),
         MascotaMenu(
             titulo = "Juegos",
             imagenRes = null,
-            rutaNavigation = "", //Agregar ruta. ejmp | juegos | Cuando se cree la pantalla
+            rutaNavigation = "mantenimiento", //Redirige a mantenimiento hasta proxima actualizacion.
             enMantenimiento = true,
             colorFondo = colores[1]
         ),
         MascotaMenu(
             titulo = "Enciclopedia",
             imagenRes = null,
-            rutaNavigation = "", //Agregar ruta. ejmp | enciclopedia | Cuando se cree la pantalla
+            rutaNavigation = "mantenimiento", //Redirige a mantenimiento hasta proxima actualizacion.
             enMantenimiento = true,
             colorFondo = colores[2]
         ),
@@ -84,7 +102,7 @@ fun MascotasMenu(navController: NavController) {
         MascotaMenu(
             titulo = "Aprender (PetDex)",
             imagenRes = null,
-            rutaNavigation = "", //Agregar ruta. ejmp | petdex | Cuando se cree la pantalla
+            rutaNavigation = "mantenimiento", //Redirige a mantenimiento hasta proxima actualizacion.
             enMantenimiento = true,
             colorFondo = colores[4]
         ),
@@ -178,7 +196,7 @@ fun MascotasMenu(navController: NavController) {
                     TarjetaMenuMascota(
                         item = item,
                         onClick = {
-                            if (!item.enMantenimiento && item.rutaNavigation.isNotEmpty()){
+                            if (item.rutaNavigation.isNotEmpty()){
                                 navController.navigate(item.rutaNavigation)
                             }
                         }
