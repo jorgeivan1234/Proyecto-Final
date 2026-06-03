@@ -2,8 +2,8 @@ package com.fic.dualhabit10.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,12 +33,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.fic.dualhabit10.R
 import kotlinx.coroutines.launch
 
 @Composable
@@ -68,32 +70,40 @@ fun Sugerencias(navController: NavHostController) {
                         shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
                     )
                     .statusBarsPadding()
-                    .padding(start = 12.dp, end = 12.dp, bottom = 20.dp, top = 4.dp)
+                    .padding(start = 12.dp, end = 12.dp, bottom = 20.dp, top = 28.dp)
             ) {
-                Row(
+
+                // Cambiamos el Row por un Box para lograr un centrado absoluto
+                Box(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    contentAlignment = Alignment.Center
                 ) {
-                    // Botón para abrir el menú lateral
+                    // Botón para abrir el menú lateral, anclado a la izquierda
                     IconButton(
-                        onClick = { scoper.launch { drawerState.open() } }
+                        onClick = { scoper.launch { drawerState.open() } },
+                        modifier = Modifier.align(Alignment.CenterStart)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu",
+                            contentDescription = stringResource(R.string.desc_menu),
                             tint = Color.Black,
                             modifier = Modifier.size(32.dp)
                         )
                     }
 
-                    // Título de la pantalla en la barra superior
-                    Text(
-                        text = "Sugerencias",
-                        color = Color.Black,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
+                    // Título de la pantalla con fondo amarillo, anclado al centro por defecto en este Box
+                    Box(
+                        modifier = Modifier
+                            .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))
+                            .padding(horizontal = 20.dp, vertical = 6.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.title_sugerencias),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = Color.Black
+                        )
+                    }
                 }
             }
 
@@ -106,7 +116,7 @@ fun Sugerencias(navController: NavHostController) {
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Buzón de Sugerencias",
+                    text = stringResource(R.string.title_buzon_sugerencias),
                     style = MaterialTheme.typography.headlineMedium,
                     modifier = Modifier.padding(bottom = 16.dp),
                     color = Color.Black
@@ -119,7 +129,7 @@ fun Sugerencias(navController: NavHostController) {
                             sugerenciaTexto = nuevoTexto
                         }
                     },
-                    label = { Text("Escribe tu comentario aquí...") },
+                    label = { Text(stringResource(R.string.hint_escribe_comentario)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(180.dp),
@@ -149,11 +159,11 @@ fun Sugerencias(navController: NavHostController) {
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF1A237E), // Azul oscuro (puedes cambiar este código Hexadecimal)
+                        containerColor = Color(0xFF1A237E), // Azul oscuro
                         contentColor = Color.White // Color del texto dentro del botón
                     )
                 ) {
-                    Text("Enviar sugerencia", fontSize = 16.sp)
+                    Text(stringResource(R.string.btn_enviar_sugerencia), fontSize = 16.sp)
                 }
             }
         }

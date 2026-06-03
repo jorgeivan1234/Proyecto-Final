@@ -68,7 +68,7 @@ fun HidratacionScreen(
                         shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
                     )
                     .statusBarsPadding()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 20.dp),
+                    .padding(start = 12.dp, end = 12.dp, bottom = 20.dp, top = 28.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
