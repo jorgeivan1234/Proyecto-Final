@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,7 +39,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import java.util.Locale
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
 import kotlinx.coroutines.launch
@@ -48,8 +48,11 @@ fun HidratacionScreen(
     navController: NavController,
     viewModel: HidratacionViewModel = viewModel()
 ) {
+    // Conversión de ML a L para que la tarjeta de progreso sea más fácil
     val litrosConsumidos = viewModel.aguaConsumidaML / 1000f
     val litrosMeta = viewModel.metaDiariaML / 1000f
+
+    // Preparación del cajón lateral y las corrutinas para poder abrir el menú sin trabar la pantalla
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -59,7 +62,8 @@ fun HidratacionScreen(
                 .fillMaxSize()
                 .background(Color(0xFF9EFFEB))
         ) {
-            // Barra superior
+
+            // Cabecera naranja
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -71,6 +75,8 @@ fun HidratacionScreen(
                     .padding(start = 12.dp, end = 12.dp, bottom = 20.dp, top = 28.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
+                // Posicionamiento dentro de la Box para que no sé mueva el botón de menú y el título quede central
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center
@@ -81,7 +87,7 @@ fun HidratacionScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
-                            contentDescription = "Abrir Menu",
+                            contentDescription = stringResource(R.string.desc_menu),
                             tint = Color.Black,
                             modifier = Modifier.size(35.dp)
                         )
@@ -92,7 +98,7 @@ fun HidratacionScreen(
                             .padding(horizontal = 30.dp, vertical = 8.dp)
                     ) {
                         Text(
-                            text = "Hidratacion",
+                            text = stringResource(R.string.title_hidratacion),
                             color = Color.Black,
                             fontSize = 22.sp,
                             fontWeight = FontWeight.Bold
@@ -101,6 +107,7 @@ fun HidratacionScreen(
                 }
                 Spacer(modifier = Modifier.height(12.dp))
 
+                // Fila para los accesos secundarios: Historial del lado izquierdo, perrito del lado derecho
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -113,7 +120,7 @@ fun HidratacionScreen(
                             .padding(horizontal = 36.dp, vertical = 18.dp)
                     ) {
                         Text(
-                            text = "Historial",
+                            text = stringResource(R.string.btn_historial),
                             color = Color.Black,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
@@ -121,7 +128,7 @@ fun HidratacionScreen(
                     }
                     Image(
                         painter = painterResource(id = R.drawable.img_bol_perro),
-                        contentDescription = "Ir a Hidratacion Mascota",
+                        contentDescription = stringResource(R.string.desc_hidratacion_mascota),
                         modifier = Modifier
                             .size(150.dp)
                             .clickable { navController.navigate("hidratacion_mascota") },
@@ -130,7 +137,7 @@ fun HidratacionScreen(
                 }
             }
 
-            // Contenido Principal
+            // Cuerpo principal de la pantalla donde se divide en 2 columnas
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -139,7 +146,8 @@ fun HidratacionScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Top
             ) {
-                // Contenedor de Botones (Izquierda)
+
+                // Columna izquierda: Botones para registrar agua y acceso a la calculadora
                 Column(
                     modifier = Modifier.weight(1.2f),
                     horizontalAlignment = Alignment.Start
@@ -147,26 +155,26 @@ fun HidratacionScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     BotonConsumoOvalado(
-                        texto = "+250ml",
+                        texto = stringResource(R.string.btn_add_250ml),
                         imagenRes = R.drawable.img_vaso,
                         onClick = { viewModel.agregarAgua(250) }
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     BotonConsumoOvalado(
-                        texto = "+500ml",
+                        texto = stringResource(R.string.btn_add_500ml),
                         imagenRes = R.drawable.img_termo,
                         onClick = { viewModel.agregarAgua(500) }
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     BotonConsumoOvalado(
-                        texto = "+1L",
+                        texto = stringResource(R.string.btn_add_1l),
                         imagenRes = R.drawable.img_jarra,
                         onClick = { viewModel.agregarAgua(1000) }
                     )
                     Spacer(modifier = Modifier.height(36.dp))
 
                     Text(
-                        text = "Configurar parametros\nde hidratacion",
+                        text = stringResource(R.string.label_configurar_parametros),
                         color = Color.Black,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
@@ -177,7 +185,7 @@ fun HidratacionScreen(
 
                     Image(
                         painter = painterResource(id = R.drawable.img_calculadora),
-                        contentDescription = "Calculadora",
+                        contentDescription = stringResource(R.string.desc_calculadora),
                         modifier = Modifier
                             .size(130.dp)
                             .clickable { navController.navigate("calculadora_agua") },
@@ -185,7 +193,7 @@ fun HidratacionScreen(
                     )
                 }
 
-                // Botella e Indicador (Derecha)
+                // Columna derecha: Visualización de la botella grande y la etiqueta el tu progreso
                 Column(
                     modifier = Modifier.weight(1f),
                     horizontalAlignment = Alignment.End,
@@ -193,7 +201,7 @@ fun HidratacionScreen(
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.img_hidratacion),
-                        contentDescription = "Botella de agua",
+                        contentDescription = stringResource(R.string.desc_botella_agua),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(340.dp),
@@ -202,15 +210,15 @@ fun HidratacionScreen(
 
                     Spacer(modifier = Modifier.height(15.dp))
 
+                    // Tarjeta flotante de color azul que contiene el progreso
                     Box(
                         modifier = Modifier
                             .background(Color(0xFF448AFF), shape = RoundedCornerShape(12.dp))
                             .padding(horizontal = 16.dp, vertical = 16.dp)
                     ) {
                         Text(
-                            text = String.format(
-                                Locale.US,
-                                "Llevas:\n%.1f / %.1f L",
+                            text = stringResource(
+                                id = R.string.label_llevas_agua,
                                 litrosConsumidos,
                                 litrosMeta
                             ),
@@ -227,6 +235,7 @@ fun HidratacionScreen(
     }
 }
 
+// Extraemos el diseño del botón de componente reutilizable
 @Composable
 fun BotonConsumoOvalado(
     texto: String,

@@ -86,9 +86,58 @@
             <item>Intense</item>
         </string-array>
 
-    <string name="desc_menu">Menu</string>
-    <string name="title_sugerencias">Suggestions</string>
-    <string name="title_buzon_sugerencias">Suggestion Box</string>
-    <string name="hint_escribe_comentario">Write your comment here...</string>
-    <string name="btn_enviar_sugerencia">Submit suggestion</string>
+        <string name="desc_menu">Menu</string>
+        <string name="title_sugerencias">Suggestions</string>
+        <string name="title_buzon_sugerencias">Suggestion Box</string>
+        <string name="hint_escribe_comentario">Write your comment here...</string>
+        <string name="btn_enviar_sugerencia">Submit suggestion</string>
+
+        <string name="title_hidratacion">Hydration</string>
+        <string name="btn_historial">History</string>
+        <string name="desc_hidratacion_mascota">Go to Pet Hydration</string>
+        <string name="btn_add_250ml">+250ml</string>
+        <string name="btn_add_500ml">+500ml</string>
+        <string name="btn_add_1l">+1L</string>
+        <string name="label_configurar_parametros">Configure hydration\nparameters</string>
+        <string name="desc_calculadora">Calculator</string>
+        <string name="desc_botella_agua">Water bottle</string>
+        <string name="label_llevas_agua">Progress:\n%1$.1f / %2$.1f L</string>
+
+        <string name="title_historial_agua">Water History</string>
+        <string name="tab_dia">Day</string>
+        <string name="tab_semana">Week</string>
+        <string name="tab_mes">Month</string>
+
+        <string name="label_consumo_hoy">Today\'s Intake</string>
+        <string name="label_meta_alcanzada">You\'ve reached %1$d%% of your goal! Keep it up</string>
+
+        <string name="label_desempeno_semanal">Performance over the last 7 days</string>
+        <string name="dia_dom">Sun</string>
+        <string name="dia_lun">Mon</string>
+        <string name="dia_mar">Tue</string>
+        <string name="dia_mie">Wed</string>
+        <string name="dia_jue">Thu</string>
+        <string name="dia_vie">Fri</string>
+        <string name="dia_sab">Sat</string>
+
+        <string name="label_resumen_mes">%1$s %2$d Summary</string>
+        <string name="label_promedio_diario">Daily Average: </string>
+        <string name="label_dias_meta_cumplida">Goal Met Days: </string>
+        <string name="label_efectividad_mes">Monthly Effectiveness: </string>
+        <string name="format_dias_de_dias">%1$s of %2$s</string>
+
+        <string name="title_calculadora_agua">Water Calculator</string>
+        <string name="instrucciones_calculadora">Adjust your parameters to recalculate your minimum daily water requirement.</string>
+        <string name="label_nivel_actividad">Physical activity level</string>
+
+        <string name="actividad_sedentario">Sedentary</string>
+        <string name="actividad_moderado">Moderate</string>
+        <string name="actividad_intenso">Intense</string>
+
+        <string name="clima_calido">Warm / Very Hot</string>
+        <string name="clima_frio">Cold / Mild</string>
+        <string name="label_entorno_meteo">Meteorological Environment</string>
+        <string name="format_clima">%1$s°C (%2$s)</string>
+
+        <string name="btn_calcular_actualizar">Calculate and Update Requirement</string>
 </resources>

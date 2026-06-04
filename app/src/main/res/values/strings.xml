@@ -90,4 +90,53 @@
     <string name="title_buzon_sugerencias">Buzón de Sugerencias</string>
     <string name="hint_escribe_comentario">Escribe tu comentario aquí...</string>
     <string name="btn_enviar_sugerencia">Enviar sugerencia</string>
+
+    <string name="title_hidratacion">Hidratación</string>
+    <string name="btn_historial">Historial</string>
+    <string name="desc_hidratacion_mascota">Ir a Hidratación Mascota</string>
+    <string name="btn_add_250ml">+250ml</string>
+    <string name="btn_add_500ml">+500ml</string>
+    <string name="btn_add_1l">+1L</string>
+    <string name="label_configurar_parametros">Configurar parámetros\nde hidratación</string>
+    <string name="desc_calculadora">Calculadora</string>
+    <string name="desc_botella_agua">Botella de agua</string>
+    <string name="label_llevas_agua">Llevas:\n%1$.1f / %2$.1f L</string>
+
+    <string name="title_historial_agua">Historial de Agua</string>
+    <string name="tab_dia">Día</string>
+    <string name="tab_semana">Semana</string>
+    <string name="tab_mes">Mes</string>
+
+    <string name="label_consumo_hoy">Consumo de Hoy</string>
+    <string name="label_meta_alcanzada">¡Llevas el %1$d%% de tu meta! Sigue así</string>
+
+    <string name="label_desempeno_semanal">Desempeño de los últimos 7 días</string>
+    <string name="dia_dom">Dom</string>
+    <string name="dia_lun">Lun</string>
+    <string name="dia_mar">Mar</string>
+    <string name="dia_mie">Mié</string>
+    <string name="dia_jue">Jue</string>
+    <string name="dia_vie">Vie</string>
+    <string name="dia_sab">Sáb</string>
+
+    <string name="label_resumen_mes">Resumen de %1$s %2$d</string>
+    <string name="label_promedio_diario">Promedio Diario: </string>
+    <string name="label_dias_meta_cumplida">Días Meta Cumplida: </string>
+    <string name="label_efectividad_mes">Efectividad del Mes: </string>
+    <string name="format_dias_de_dias">%1$s de %2$s</string>
+
+    <string name="title_calculadora_agua">Calculadora de Agua</string>
+    <string name="instrucciones_calculadora">Ajusta tus parámetros para recalcular tu requerimiento diario mínimo de agua.</string>
+    <string name="label_nivel_actividad">Nivel de actividad física</string>
+
+    <string name="actividad_sedentario">Sedentario</string>
+    <string name="actividad_moderado">Moderado</string>
+    <string name="actividad_intenso">Intenso</string>
+
+    <string name="clima_calido">Cálido / Muy Caluroso</string>
+    <string name="clima_frio">Frío / Templado</string>
+    <string name="label_entorno_meteo">Entorno Meteorológico</string>
+    <string name="format_clima">%1$s°C (%2$s)</string>
+
+    <string name="btn_calcular_actualizar">Calcular y Actualizar Requerimiento</string>
 </resources>
