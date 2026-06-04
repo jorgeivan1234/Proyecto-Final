@@ -36,6 +36,7 @@ import com.fic.dualhabit10.ui.screens.ResultadoHidratacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.ResultadoHidratacionScreen
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
 import com.fic.dualhabit10.ui.screens.Sugerencias
+import com.fic.dualhabit10.ui.viewmodels.SugerenciasViewModel
 
 
 class MainActivity : ComponentActivity(){
@@ -179,7 +180,8 @@ class MainActivity : ComponentActivity(){
                     }
                     //Sugerencias -> Pantalla de sugerencias
                     composable("Sugerencias"){
-                        Sugerencias(navController = navController)
+                        val sugerenciasViewModel: SugerenciasViewModel = viewModel()
+                        Sugerencias(navController = navController, viewModel = sugerenciasViewModel)
                     }
                 }
             }
