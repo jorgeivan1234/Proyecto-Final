@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,16 +53,33 @@ fun CalculadoraHidratacionScreen(
 ) {
     val scrollState = rememberScrollState()
     var peso by remember { mutableStateOf(viewModel.usuarioPeso.toString()) }
+
+    // Mantenemos el estado interno de la lógica original para no romper el ViewModel
     var actividad by remember { mutableStateOf(viewModel.actividadNivel) }
     var expActividad by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Calcular de Agua", fontWeight = FontWeight.Bold) },
+            // Usamos CenterAlignedTopAppBar para centrar el contenido automáticamente
+            androidx.compose.material3.CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.title_calculadora_agua),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 28.sp,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .background(
+                                color = Color(0xFFFFE033), // Amarillo vibrante
+                                shape = androidx.compose.foundation.shape.RoundedCornerShape(percent = 50)
+                            )
+                            // Espaciado interno de la píldora para que el texto respire
+                            .padding(horizontal = 24.dp, vertical = 6.dp,)
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Atras")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.desc_atras))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF7A22))
@@ -80,31 +98,41 @@ fun CalculadoraHidratacionScreen(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.img_calculadora),
-                contentDescription = "Calculadora",
+                contentDescription = stringResource(R.string.desc_calculadora),
                 modifier = Modifier.size(120.dp)
             )
+
             Text(
-                text = "Ajusta tus parametros para recalcular tu requerimiento diario minimo de agua",
+                text = stringResource(R.string.instrucciones_calculadora),
                 fontSize = 14.sp,
                 color = Color.DarkGray,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
+
             OutlinedTextField(
                 value = peso,
                 onValueChange = { peso = it },
-                label = { Text("Peso actual (Kg)") },
+                label = { Text(stringResource(R.string.label_peso_actual)) },
                 modifier = Modifier.fillMaxWidth()
             )
+
+            // Mapeo del estado interno al String traducido para mostrarlo al usuario
+            val actividadMostrada = when (actividad) {
+                "Sedentario" -> stringResource(R.string.actividad_sedentario)
+                "Moderado" -> stringResource(R.string.actividad_moderado)
+                "Intenso" -> stringResource(R.string.actividad_intenso)
+                else -> actividad
+            }
 
             ExposedDropdownMenuBox(
                 expanded = expActividad,
                 onExpandedChange = { expActividad = !expActividad }
             ) {
                 OutlinedTextField(
-                    value = actividad,
+                    value = actividadMostrada,
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Nivel de actividad fisica") },
+                    label = { Text(stringResource(R.string.label_nivel_actividad)) },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expActividad) },
                     modifier = Modifier.fillMaxWidth().menuAnchor()
                 )
@@ -113,40 +141,47 @@ fun CalculadoraHidratacionScreen(
                     onDismissRequest = { expActividad = false }
                 ) {
                     DropdownMenuItem(
-                        text = { Text("Sedentario (peso x 30)") },
+                        text = { Text(stringResource(R.string.actividad_sedentario)) },
                         onClick = { actividad = "Sedentario"; expActividad = false }
                     )
                     DropdownMenuItem(
-                        text = { Text("Moderado (peso x 35)") },
+                        text = { Text(stringResource(R.string.actividad_moderado)) },
                         onClick = { actividad = "Moderado"; expActividad = false }
                     )
                     DropdownMenuItem(
-                        text = { Text("Intenso (peso x 40)") },
+                        text = { Text(stringResource(R.string.actividad_intenso)) },
                         onClick = { actividad = "Intenso"; expActividad = false }
                     )
                 }
             }
 
-            val estadoClimaTraducido =
-                if (viewModel.entornoClima == "Calido") "Calido / Muy Caluroso" else "Frio / Templado"
-            val textoclimaInformativo = "${viewModel.temperaturaActual}°C ($estadoClimaTraducido)"
+            // Traducción dinámica del clima
+            val estadoClimaTraducido = if (viewModel.entornoClima == "Calido") {
+                stringResource(R.string.clima_calido)
+            } else {
+                stringResource(R.string.clima_frio)
+            }
+
+            // Utilizamos la herramienta String para introducir variables
+            val textoClimaInformativo = stringResource(R.string.format_clima, viewModel.temperaturaActual.toString(), estadoClimaTraducido)
 
             OutlinedTextField(
-                value = textoclimaInformativo,
+                value = textoClimaInformativo,
                 onValueChange = {},
                 readOnly = true,
                 enabled = false,
-                label = { Text("Entorno Metereologico") },
+                label = { Text(stringResource(R.string.label_entorno_meteo)) },
                 modifier = Modifier.fillMaxWidth()
             )
+
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(
                 onClick = {
                     viewModel.guardarPerfil(
                         peso = peso.toFloatOrNull() ?: 70f,
-                        viewModel.usuarioEdad,
-                        viewModel.usuarioGenero,
+                        edad = viewModel.usuarioEdad,
+                        genero = viewModel.usuarioGenero,
                         actividad = actividad
                     )
                     navController.navigate("resultado_hidratacion")
@@ -155,7 +190,7 @@ fun CalculadoraHidratacionScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7A22))
             ) {
                 Text(
-                    "Calcular y Actualizar Requerimiento",
+                    text = stringResource(R.string.btn_calcular_actualizar),
                     color = Color.Black,
                     fontWeight = FontWeight.Bold
                 )
