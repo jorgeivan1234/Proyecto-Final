@@ -13,6 +13,7 @@ import androidx.navigation.navArgument
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fic.dualhabit10.ui.screens.ActividadDetalleScreen
 import com.fic.dualhabit10.ui.screens.ActividadFisicaScreen
+import com.fic.dualhabit10.ui.screens.AlimentacionMascotaDetalleScreen
 import com.fic.dualhabit10.ui.screens.AlimentacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.AlimentacionScreen
 import com.fic.dualhabit10.ui.screens.CalculadoraHidratacionMacotaScreen
@@ -134,9 +135,6 @@ class MainActivity : ComponentActivity(){
                     composable("habitos_mascota_menu"){
                         HabitosMascotaScreen(navController)
                     }
-                    composable("hidratacion_mascota"){
-                        HidratacionMascotaScreen(navController = navController)
-                    }
                     composable("perfil_mascota"){
                         PerfilMascotaScreen(navController = navController)
                     }
@@ -172,7 +170,7 @@ class MainActivity : ComponentActivity(){
                     }
                     //cualquier actividad -> su pantalla propia
                     composable(
-                        "actividad_detalle/{actividadId}",
+                        route = "actividad_detalle/{actividadId}",
                         arguments = listOf(navArgument("actividadId") { type = NavType.IntType })
                     ) { backStackEntry ->
                         val id = backStackEntry.arguments?.getInt("actividadId") ?: 0
@@ -182,6 +180,14 @@ class MainActivity : ComponentActivity(){
                     composable("Sugerencias"){
                         val sugerenciasViewModel: SugerenciasViewModel = viewModel()
                         Sugerencias(navController = navController, viewModel = sugerenciasViewModel)
+                    }
+                    //cualquier receta -> su pantalla propia
+                    composable(
+                        route ="receta_mascota_detalle/{recetaId}",
+                        arguments = listOf(navArgument("recetaId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val id = backStackEntry.arguments?.getInt("recetaId") ?: 0
+                        AlimentacionMascotaDetalleScreen(recetaId = id, navController = navController)
                     }
                 }
             }
