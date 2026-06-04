@@ -34,10 +34,12 @@ import com.fic.dualhabit10.ui.screens.PerfilMascotaScreen
 import com.fic.dualhabit10.ui.screens.PerfilScreen
 import com.fic.dualhabit10.ui.screens.RegisterScreen
 import com.fic.dualhabit10.ui.screens.RegisterSuccessful
+import com.fic.dualhabit10.ui.screens.RegistroPaseosScreen
 import com.fic.dualhabit10.ui.screens.ResultadoHidratacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.ResultadoHidratacionScreen
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
 import com.fic.dualhabit10.ui.screens.Sugerencias
+import com.fic.dualhabit10.ui.viewmodels.PaseosViewModel
 import com.fic.dualhabit10.ui.viewmodels.SugerenciasViewModel
 
 
@@ -47,11 +49,6 @@ class MainActivity : ComponentActivity(){
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        // comporabasion de sesion automatica offline o online
-        val sharedPreferences = getSharedPreferences("login_preferences", Context.MODE_PRIVATE)
-        val recordarActivo = sharedPreferences.getBoolean("remember_active", false)
-        val sesionIniciada = sharedPreferences.getBoolean("is_logged_in", false)
-        val destinoInicial = if(recordarActivo && sesionIniciada) "habitos" else "inicio"
 
         setContent{
             MaterialTheme{
@@ -68,7 +65,7 @@ class MainActivity : ComponentActivity(){
                 */
                 NavHost(
                     navController = navController,
-                    startDestination = destinoInicial
+                    startDestination = "inicio"
                 ) {
                     //InicioScreen -> LoginScreen
                     composable("inicio"){
@@ -139,6 +136,10 @@ class MainActivity : ComponentActivity(){
 
                     composable("habitos_mascota_menu"){
                         HabitosMascotaScreen(navController)
+                    }
+                    composable("registro_paseos"){
+                        val paseosViewModel: PaseosViewModel = viewModel()
+                        RegistroPaseosScreen(navController = navController, viewModel = paseosViewModel)
                     }
                     composable("perfil_mascota"){
                         PerfilMascotaScreen(navController = navController)

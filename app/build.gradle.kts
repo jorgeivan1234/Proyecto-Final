@@ -82,6 +82,8 @@ dependencies {
     // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.compose.ui.text)
+    implementation(libs.androidx.compose.foundation)
     kapt(libs.androidx.room.compiler)
 
     // Red
