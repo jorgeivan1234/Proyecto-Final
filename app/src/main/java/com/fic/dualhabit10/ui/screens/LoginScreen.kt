@@ -66,6 +66,7 @@ fun LoginScreen(navController: NavHostController,
     val sharedPreferences = remember {
         context.getSharedPreferences("login_preferences", Context.MODE_PRIVATE)
     }
+    val tieneCuentaLocal = sharedPreferences.getBoolean("has_local_account", false)
 
     var email by remember { mutableStateOf (sharedPreferences.getString("saved_email", "") ?: "") }
     var password by remember { mutableStateOf (sharedPreferences.getString("saved_password", "") ?: "") }
@@ -88,6 +89,7 @@ fun LoginScreen(navController: NavHostController,
             editor.putBoolean("is_logged_in", true)
         } else {
             editor.clear()
+            editor.putBoolean("has_local_account", true)
         }
         editor.apply()
     }
@@ -279,7 +281,7 @@ fun LoginScreen(navController: NavHostController,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
+            //boton principal iniciar sesion
             Button(
                 onClick = {
                     ejecutarLogin()
@@ -293,6 +295,30 @@ fun LoginScreen(navController: NavHostController,
                 Text(text = stringResource(id = R.string.login),
                     color = Color.White,
                     fontSize = 16.sp)
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Button(
+                onClick = {
+                    if (tieneCuentaLocal){
+                        navController.navigate("habitos"){
+                            popUpTo("login") { inclusive = true }
+                        }
+                    }
+                },
+                enabled = tieneCuentaLocal,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorResource(id = R.color.verde),
+                    disabledContainerColor = Color.Gray
+                ),
+                modifier = Modifier.size(width = 200.dp, height = 50.dp),
+                shape = RoundedCornerShape(50.dp)
+            ) {
+                Text(
+                    text = if (tieneCuentaLocal) "Modo sin conexion" else "Modo offline bloqueado",
+                    color = if (tieneCuentaLocal) Color.Black else Color.LightGray,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }

@@ -73,7 +73,7 @@ fun HabitosMascotaScreen(navController: NavController) {
         ),
         SeccionHabitoMascota(
             titulo = "Registro de Paseos",
-            rutaNavigation = "mantenimiento", // Modificado a mantenimiento
+            rutaNavigation = "registro_paseos",
             colorFondo = Color(0xFFC8E6C9),
             imagenRes = R.drawable.img_perro_saltando
         ),

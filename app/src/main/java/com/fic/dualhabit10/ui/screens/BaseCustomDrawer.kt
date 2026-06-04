@@ -1,5 +1,6 @@
 package com.fic.dualhabit10.ui.screens
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -177,8 +178,15 @@ fun BaseCustomDrawer(
                         contentColor = Color.White
                     ) {
                         scope.launch { drawerState.close() }
-                        navController.navigate(AppRoutes.LOGIN) {
-                            // Elimina el historial de pantallas para que el usuario no puedan volver
+
+                        // Guardamos localmente el cambio para evitar re-logueos automáticos
+                        val sharedPreferences = context.getSharedPreferences("login_preferences", Context.MODE_PRIVATE)
+                        sharedPreferences.edit().putBoolean("is_logged_in", false).apply()
+
+                        authViewModel.resetUiState()
+
+                        // Mandamos directo a la pantalla de Inicio barriendo el historial
+                        navController.navigate("inicio") {
                             popUpTo(0) { inclusive = true }
                         }
                     }
@@ -206,7 +214,12 @@ fun BaseCustomDrawer(
                             // Petición de eliminación y lógica de borrado si procede
                             authViewModel.eliminarCuenta(onSuccess = {
                                 scope.launch { drawerState.close() }
-                                navController.navigate(AppRoutes.LOGIN) {
+
+                                // Limpiamos preferencias por completo al borrar cuenta
+                                val sharedPreferences = context.getSharedPreferences("login_preferences", Context.MODE_PRIVATE)
+                                sharedPreferences.edit().clear().apply()
+
+                                navController.navigate("inicio") {
                                     popUpTo(0) { inclusive = true }
                                 }
                             })
@@ -250,8 +263,8 @@ fun BaseCustomDrawer(
                             onClick = {
                                 authViewModel.resetUiState()
                                 scope.launch { drawerState.close() }
-                                // Redirige al login para renovar la sesión
-                                navController.navigate(AppRoutes.LOGIN) {
+                                // Redirige a inicio o login para renovar la sesión
+                                navController.navigate("inicio") {
                                     popUpTo(0) { inclusive = true }
                                 }
                             }
