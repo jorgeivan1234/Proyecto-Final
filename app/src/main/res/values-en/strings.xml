@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+        <string name="title_hidratacion">Hydration</string>
+        <string name="title_sueno">Sleep</string>
+        <string name="title_actividad_fisica">Physical\nActivity</string>
+        <string name="title_alimentacion">Diet</string>
+        <string name="title_mascotas">Pets</string>
+        <string name="title_sugerencias">Suggestions</string>
+
+        <string name="racha_lista">Today\'s Streak Ready!</string>
+        <string name="activar_racha">Activate Streak: %1$d days</string>
+
         <string name="app_name">DualHabit</string>
         <string name="iniciar">START</string>
         <string name="bienvenido_a_dualhabit">Welcome to DualHabit</string>
@@ -87,12 +97,10 @@
         </string-array>
 
         <string name="desc_menu">Menu</string>
-        <string name="title_sugerencias">Suggestions</string>
         <string name="title_buzon_sugerencias">Suggestion Box</string>
         <string name="hint_escribe_comentario">Write your comment here...</string>
         <string name="btn_enviar_sugerencia">Submit suggestion</string>
 
-        <string name="title_hidratacion">Hydration</string>
         <string name="btn_historial">History</string>
         <string name="desc_hidratacion_mascota">Go to Pet Hydration</string>
         <string name="btn_add_250ml">+250ml</string>
@@ -140,4 +148,20 @@
         <string name="format_clima">%1$s°C (%2$s)</string>
 
         <string name="btn_calcular_actualizar">Calculate and Update Requirement</string>
+
+        <string name="title_plan_hidratacion">Your Hydration Plan</string>
+        <string name="label_meta_calculada">Goal Calculated!</string>
+        <string name="label_necesitas_tomar">You need to drink: </string>
+        <string name="format_litros">%1$.2f Liters</string>
+        <string name="label_al_dia">a day</string>
+        <string name="label_equivale_a">Equivalent to approximately: </string>
+        <string name="format_vasos">x %1$d glasses of 250ml</string>
+        <string name="label_como_llegamos">How did we get this number?</string>
+        <string name="format_desglose_base">Base by weight (%1$skg)</string>
+        <string name="format_ml">%1$sml</string>
+        <string name="format_desglose_actividad">Activity adjustment (%1$s)</string>
+        <string name="ajuste_600ml">+600ml</string>
+        <string name="format_desglose_clima">Weather adjustment (%1$s)</string>
+        <string name="ajuste_500ml">+500ml</string>
+        <string name="btn_aceptar_meta">Got it, accept goal!</string>
 </resources>
