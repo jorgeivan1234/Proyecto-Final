@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+        <string name="label_nombre_reg">First Name(s)</string>
+        <string name="label_apellido_reg">Last Name(s)</string>
+        <string name="label_correo_reg">Email Address</string>
+        <string name="label_password_reg">Password</string>
+        <string name="label_telefono_reg">Phone Number (9 digits)</string>
+        <string name="label_fecha_nac_reg">Date of Birth DD/MM/YYYY</string>
+        <string name="btn_aceptar_reg">Accept</string>
+        <string name="btn_cancelar_reg">Cancel</string>
+        <string name="text_ya_tengo_cuenta">Log In</string>
+
+        <string name="error_campos_vacios_reg">Please fill in all fields</string>
+        <string name="error_pass_corta_reg">Password must be at least 6 characters long</string>
+        <string name="error_email_invalido_reg">Please enter a valid email address</string>
+
+        <string name="title_registro_exitoso">Registration Successful!</string>
+        <string name="btn_continuar">Continue</string>
+        <string name="desc_fondo_cielo">Decorative sky background</string>
+        <string name="desc_perro_saltando">Happy dog jumping</string>
+
         <string name="title_hidratacion">Hydration</string>
         <string name="title_sueno">Sleep</string>
         <string name="title_actividad_fisica">Physical\nActivity</string>
@@ -164,4 +183,25 @@
         <string name="format_desglose_clima">Weather adjustment (%1$s)</string>
         <string name="ajuste_500ml">+500ml</string>
         <string name="btn_aceptar_meta">Got it, accept goal!</string>
+
+        <string-array name="tips_mascotas_sueno">
+                <item>Adult dogs sleep between 12 and 14 hours a day. Make sure their space is comfortable!</item>
+                <item>Restless sleep in your pet may indicate they need more physical activity during the day.</item>
+                <item>Puppies can sleep up to 18 hours a day to support their rapid bone growth.</item>
+                <item>Avoid letting your pet sleep in direct drafts or very cold air conditioning.</item>
+        </string-array>
+
+        <string name="title_modo_sueno">Sleep Mode</string>
+        <string name="desc_estado_sueno">Sleep status</string>
+        <string name="text_listo_descansar">Ready to rest!</string>
+        <string name="text_registrando_sueno">Recording sleep hours for you and your pet...</string>
+        <string name="text_presiona_dormir">Press the button when going to sleep.</string>
+        <string name="btn_despertar">Wake Up</string>
+        <string name="btn_iniciar_descanso">Start Resting</string>
+        <string name="title_ultimas_noches">Your recent nights</string>
+        <string name="desc_tips_mascota">Pet Tips</string>
+        <string name="title_descanso_mascota">Your Pet\'s Rest</string>
+        <string name="dialog_title_despertar">Good morning!\nHow did you rest today?</string>
+        <string name="dialog_desc_despertar">Select the emoji that best represents your energy and your pet\'s this morning.</string>
+        <string name="text_horas_dormidas">%1$s hrs</string>
 </resources>
