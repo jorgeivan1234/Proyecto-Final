@@ -1,4 +1,33 @@
 <resources>
+    <string name="label_nombre_reg">Nombre(s)</string>
+    <string name="label_apellido_reg">Apellido(s)</string>
+    <string name="label_correo_reg">Correo Electrónico</string>
+    <string name="label_password_reg">Contraseña</string>
+    <string name="label_telefono_reg">Teléfono (9 dígitos)</string>
+    <string name="label_fecha_nac_reg">Fecha de nacimiento DD/MM/AAAA</string>
+    <string name="btn_aceptar_reg">Aceptar</string>
+    <string name="btn_cancelar_reg">Cancelar</string>
+    <string name="text_ya_tengo_cuenta">Iniciar Sesión</string>
+
+    <string name="error_campos_vacios_reg">Por favor, rellena todos los campos</string>
+    <string name="error_pass_corta_reg">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="error_email_invalido_reg">Introduce un correo electrónico válido</string>
+
+    <string name="title_registro_exitoso">¡Registro Exitoso!</string>
+    <string name="btn_continuar">Continuar</string>
+    <string name="desc_fondo_cielo">Fondo decorativo de cielo</string>
+    <string name="desc_perro_saltando">Perrito saltando de felicidad</string>
+
+    <string name="title_hidratacion">Hidratación</string>
+    <string name="title_sueno">Sueño</string>
+    <string name="title_actividad_fisica">Actividad\nFísica</string>
+    <string name="title_alimentacion">Alimentación</string>
+    <string name="title_mascotas">Mascotas</string>
+    <string name="title_sugerencias">Sugerencias</string>
+
+    <string name="racha_lista">Racha de hoy Lista</string>
+    <string name="activar_racha">Activar Racha: %1$d días</string>
+
     <string name="app_name">DualHabit</string>
     <string name="iniciar">INICIAR</string>
     <string name="bienvenido_a_dualhabit">Bienvenido a DualHabit</string>
@@ -86,12 +115,10 @@
     </string-array>
 
     <string name="desc_menu">Menú</string>
-    <string name="title_sugerencias">Sugerencias</string>
     <string name="title_buzon_sugerencias">Buzón de Sugerencias</string>
     <string name="hint_escribe_comentario">Escribe tu comentario aquí...</string>
     <string name="btn_enviar_sugerencia">Enviar sugerencia</string>
 
-    <string name="title_hidratacion">Hidratación</string>
     <string name="btn_historial">Historial</string>
     <string name="desc_hidratacion_mascota">Ir a Hidratación Mascota</string>
     <string name="btn_add_250ml">+250ml</string>
@@ -139,4 +166,41 @@
     <string name="format_clima">%1$s°C (%2$s)</string>
 
     <string name="btn_calcular_actualizar">Calcular y Actualizar Requerimiento</string>
+
+    <string name="title_plan_hidratacion">Tu Plan de Hidratación</string>
+    <string name="label_meta_calculada">¡Meta Calculada!</string>
+    <string name="label_necesitas_tomar">Necesitas tomar: </string>
+    <string name="format_litros">%1$.2f Litros</string>
+    <string name="label_al_dia">al día</string>
+    <string name="label_equivale_a">Equivale a aproximadamente: </string>
+    <string name="format_vasos">x %1$d vasos de 250ml</string>
+    <string name="label_como_llegamos">¿Cómo llegamos a este número?</string>
+    <string name="format_desglose_base">Base por peso (%1$skg)</string>
+    <string name="format_ml">%1$sml</string>
+    <string name="format_desglose_actividad">Ajuste por actividad (%1$s)</string>
+    <string name="ajuste_600ml">+600ml</string>
+    <string name="format_desglose_clima">Ajuste por Clima (%1$s)</string>
+    <string name="ajuste_500ml">+500ml</string>
+    <string name="btn_aceptar_meta">¡Entendido, aceptar meta!</string>
+
+    <string-array name="tips_mascotas_sueno">
+        <item>Los perros adultos duermen entre 12 y 14 horas al día. ¡Asegúrate de que su espacio sea cómodo!</item>
+        <item>Un sueño inquieto en tu mascota puede indicar que necesita más actividad física en el día.</item>
+        <item>Los cachorros pueden dormir hasta 18 horas diarias para apoyar su rápido crecimiento óseo.</item>
+        <item>Evita que tu mascota duerma frente a corrientes directas de aire o aires acondicionados muy fríos.</item>
+    </string-array>
+
+    <string name="title_modo_sueno">Modo Sueño</string>
+    <string name="desc_estado_sueno">Estado del sueño</string>
+    <string name="text_listo_descansar">¡Listo para descansar!</string>
+    <string name="text_registrando_sueno">Registrando horas de sueño tuyas y de tu mascota...</string>
+    <string name="text_presiona_dormir">Presiona el botón al ir a dormir.</string>
+    <string name="btn_despertar">Despertar</string>
+    <string name="btn_iniciar_descanso">Iniciar Descanso</string>
+    <string name="title_ultimas_noches">Tus últimas noches</string>
+    <string name="desc_tips_mascota">Tips Mascota</string>
+    <string name="title_descanso_mascota">Descanso de tu Mascota</string>
+    <string name="dialog_title_despertar">¡Buenos días!\n¿Cómo descansaron hoy?</string>
+    <string name="dialog_desc_despertar">Selecciona el emoji que mejor represente tu energía y la de tu mascota esta mañana.</string>
+    <string name="text_horas_dormidas">%1$s hrs</string>
 </resources>

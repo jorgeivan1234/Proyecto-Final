@@ -60,42 +60,51 @@ import java.util.Date
 import java.util.Locale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import com.fic.dualhabit10.ui.viewmodels.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("RememberInComposition")
 @Composable
-fun RegisterScreen(navController: NavHostController,
-                   authViewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-){
-    /*
-            Variables del Register
-    */
-    var nombre by remember {  mutableStateOf ("") }
-    var apellido by remember { mutableStateOf ( "")}
-    var email by remember { mutableStateOf ( "")}
-    var password by remember { mutableStateOf ( "")}
-    var telefono by remember { mutableStateOf ( "")}
-    var fecha_nacimiento by remember { mutableStateOf ( "")}
-    var passwordVisible by remember { mutableStateOf (false)}
-    var errorMensaje by remember { mutableStateOf ( "")}
-    var Muestra_fecha by remember { mutableStateOf(false)}
-    var camposVaciosError by remember { mutableStateOf(false)}
-    val focusManager = LocalFocusManager.current //Contraseña
+fun RegisterScreen(
+    navController: NavHostController,
+    authViewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
+    // ---------------------------------------------------------------------------------------------
+    // Variables de Registro
+    // ---------------------------------------------------------------------------------------------
+    var nombre by remember { mutableStateOf("") }
+    var apellido by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var telefono by remember { mutableStateOf("") }
+    var fecha_nacimiento by remember { mutableStateOf("") }
 
+    // Controles visuales (mostrar contraseñas, errores, calendarios, etc.)
+    var passwordVisible by remember { mutableStateOf(false) }
+    var errorMensaje by remember { mutableStateOf("") }
+    var Muestra_fecha by remember { mutableStateOf(false) }
+    var camposVaciosError by remember { mutableStateOf(false) }
+
+    // Herramienta para movernos de un campo de texto a otro al presionar "Siguiente" en el teclado
+    val focusManager = LocalFocusManager.current
+    val telefonoFocus = FocusRequester()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF5EDCFF))
-    ){
+    ) {
+        // Imagen de fondo que cubre toda la pantalla
         Image(
             painter = painterResource(id = R.drawable.bg_fondo_login),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
+
+        // Tarjeta central donde van todos los campos de texto
         Column(
             modifier = Modifier
                 .align(Alignment.Center)
@@ -122,12 +131,21 @@ fun RegisterScreen(navController: NavHostController,
             )
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Campo: NOMBRE
+            // Filtro: Solo acepta letras y espacios, máximo 40 caracteres
             TextField(
                 value = nombre,
-                onValueChange = {nombre = it; errorMensaje = "" },
-                label = { Text("Nombre (S)") },
-                singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
-                isError = camposVaciosError, //se pone rojo si está vacío
+                onValueChange = { newValue ->
+                    val filtrado = newValue.filter { it.isLetter() || it.isWhitespace() }
+                    if (filtrado.length <= 40) {
+                        nombre = filtrado
+                        errorMensaje = ""
+                        camposVaciosError = false
+                    }
+                },
+                label = { Text(stringResource(R.string.label_nombre_reg)) },
+                singleLine = true,
+                isError = camposVaciosError,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
@@ -140,13 +158,22 @@ fun RegisterScreen(navController: NavHostController,
             )
             Spacer(modifier = Modifier.height(12.dp))
 
+            // Campo: APELLIDO
+            // Filtro: Solo acepta letras y espacios, máximo 40 caracteres
             TextField(
                 value = apellido,
-                onValueChange = { apellido = it; errorMensaje = "" },
-                label = { Text("Apellido (S)") },
+                onValueChange = { newValue ->
+                    val filtrado = newValue.filter { it.isLetter() || it.isWhitespace() }
+                    if (filtrado.length <= 40) {
+                        apellido = filtrado
+                        errorMensaje = ""
+                        camposVaciosError = false
+                    }
+                },
+                label = { Text(stringResource(R.string.label_apellido_reg)) },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
-                isError = camposVaciosError, //se pone rojo si está vacío
+                singleLine = true,
+                isError = camposVaciosError,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
@@ -158,18 +185,23 @@ fun RegisterScreen(navController: NavHostController,
             )
             Spacer(modifier = Modifier.height(12.dp))
 
+            // Campo: CORREO ELECTRÓNICO
+            // Filtro: Límite estricto de 30 caracteres
             TextField(
                 value = email,
-                onValueChange = {
-                    email = it
-                    errorMensaje = ""
+                onValueChange = { newValue ->
+                    if (newValue.length <= 30) {
+                        email = newValue
+                        errorMensaje = ""
+                        camposVaciosError = false
+                    }
                 },
-                label = { Text("Correo Electronico") },
+                label = { Text(stringResource(R.string.label_correo_reg)) },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
-                isError = camposVaciosError, //se pone rojo si está vacío
+                singleLine = true,
+                isError = camposVaciosError,
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
+                    keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
                 ),
                 colors = TextFieldDefaults.colors(
@@ -177,31 +209,35 @@ fun RegisterScreen(navController: NavHostController,
                     unfocusedContainerColor = Color.Transparent,
                 )
             )
-
             Spacer(modifier = Modifier.height(12.dp))
 
-            val telefonoFocus = FocusRequester() //Contraseña
+            // Campo: CONTRASEÑA
+            // Filtro: Límite estricto de 12 caracteres
             TextField(
                 value = password,
-                onValueChange = {
-                    password = it
-                    errorMensaje = ""
+                onValueChange = { newValue ->
+                    if (newValue.length <= 12) {
+                        password = newValue
+                        errorMensaje = ""
+                        camposVaciosError = false
+                    }
                 },
-                label = { Text("Contraseña") },
+                label = { Text(stringResource(R.string.label_password_reg)) },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
-                isError = camposVaciosError, //se pone rojo si está vacío
+                singleLine = true,
+                isError = camposVaciosError,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Next
                 ),
                 keyboardActions = KeyboardActions(
-                    onNext = { focusManager.moveFocus(FocusDirection.Down)}
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
                 ),
-                visualTransformation =  if(passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                // Oculta o muestra la contraseña dependiendo del estado del ojito
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     val icon = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-                    IconButton(onClick = {passwordVisible =!passwordVisible}) {
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(imageVector = icon, contentDescription = null)
                     }
                 },
@@ -212,18 +248,24 @@ fun RegisterScreen(navController: NavHostController,
             )
             Spacer(modifier = Modifier.height(12.dp))
 
+            // Campo: TELÉFONO
+            // Filtro: Solo números, límite estricto de 9 caracteres
             TextField(
                 value = telefono,
-                onValueChange = {
-                    telefono = it
-                    errorMensaje = ""
+                onValueChange = { newValue ->
+                    val filtrado = newValue.filter { it.isDigit() }
+                    if (filtrado.length <= 9) {
+                        telefono = filtrado
+                        errorMensaje = ""
+                        camposVaciosError = false
+                    }
                 },
-                label = { Text("Telefono") },
+                label = { Text(stringResource(R.string.label_telefono_reg)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .focusRequester(telefonoFocus),
-                singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
-                isError = camposVaciosError, //se pone rojo si está vacío
+                singleLine = true,
+                isError = camposVaciosError,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
@@ -235,19 +277,22 @@ fun RegisterScreen(navController: NavHostController,
             )
             Spacer(modifier = Modifier.height(12.dp))
 
+            // Campo: FECHA DE NACIMIENTO
+            // Este campo está bloqueado para escritura directa; al hacer clic, abre un calendario
             TextField(
                 value = fecha_nacimiento,
                 onValueChange = {
                     fecha_nacimiento = it
                     errorMensaje = ""
+                    camposVaciosError = false
                 },
-                label = { Text("Fecha de nacimiento DD/MM/AAAA") },
+                label = { Text(stringResource(R.string.label_fecha_nac_reg)) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable{ Muestra_fecha = true },
+                    .clickable { Muestra_fecha = true },
                 enabled = false,
-                singleLine = true, //que solo sea una línea y evitar saltos de línea al dar enter
-                isError = camposVaciosError, //se pone rojo si está vacío
+                singleLine = true,
+                isError = camposVaciosError,
                 colors = TextFieldDefaults.colors(
                     unfocusedContainerColor = Color.Transparent,
                     disabledContainerColor = Color.Transparent,
@@ -256,6 +301,8 @@ fun RegisterScreen(navController: NavHostController,
                     disabledIndicatorColor = Color.DarkGray
                 )
             )
+
+            // Calendario emergente
             if (Muestra_fecha) {
                 val Status_date = rememberDatePickerState()
 
@@ -268,11 +315,11 @@ fun RegisterScreen(navController: NavHostController,
                                 fecha_nacimiento = Date_formate.format(Date(millis))
                             }
                             Muestra_fecha = false
-                        }) { Text("Aceptar") }
+                        }) { Text(stringResource(R.string.btn_aceptar_reg)) }
                     },
                     dismissButton = {
                         TextButton(onClick = { Muestra_fecha = false }) {
-                            Text("Cancelar")
+                            Text(stringResource(R.string.btn_cancelar_reg))
                         }
                     }
                 ) {
@@ -280,7 +327,8 @@ fun RegisterScreen(navController: NavHostController,
                 }
             }
 
-            if (errorMensaje.isNotEmpty()){
+            // Mostrar mensajes de error en rojo si algo sale mal al intentar registrar
+            if (errorMensaje.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = errorMensaje,
@@ -293,27 +341,43 @@ fun RegisterScreen(navController: NavHostController,
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Botón en forma de texto para regresar al Login si ya tiene cuenta
             Text(
-                text = "Iniciar Sesion",
+                text = stringResource(R.string.text_ya_tengo_cuenta),
                 color = Color.White,
-                fontSize =  14.sp,
-                modifier = Modifier.clickable{
+                fontSize = 14.sp,
+                modifier = Modifier.clickable {
                     navController.navigate("login")
                 }
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            // Extraemos los strings de error usando la forma nativa de Compose
+            val msgErrorVacio = stringResource(R.string.error_campos_vacios_reg)
+            val msgErrorPass = stringResource(R.string.error_pass_corta_reg)
+            val msgErrorEmail = stringResource(R.string.error_email_invalido_reg)
+
+            // Botón principal de Registro con todas las validaciones de seguridad
             Button(
                 onClick = {
-                    if (nombre.isBlank() || apellido.isBlank() || email.isBlank()||
-                        password.isBlank() || telefono.isBlank() || fecha_nacimiento.isBlank()) {
-                        errorMensaje = "Por favor, rellenar todos los campos"
+                    // Validamos que ningún campo se haya quedado en blanco
+                    if (nombre.isBlank() || apellido.isBlank() || email.isBlank() ||
+                        password.isBlank() || telefono.isBlank() || fecha_nacimiento.isBlank()
+                    ) {
+                        camposVaciosError = true
+                        errorMensaje = msgErrorVacio
                     } else if (password.length < 6) {
-                        errorMensaje = "La contraseña debe tener al menos 6 caracteres"
+                        // Firebase exige al menos 6 caracteres
+                        camposVaciosError = false
+                        errorMensaje = msgErrorPass
                     } else if (!email.contains("@")) {
-                        errorMensaje = "Introduce un correo electronico valido"
+                        // Validación básica de estructura de correo
+                        camposVaciosError = false
+                        errorMensaje = msgErrorEmail
                     } else {
+                        // Si todo está perfecto, se lo mandamos a Firebase
+                        camposVaciosError = false
                         authViewModel.registrarUsuario(
                             nombre = nombre,
                             apellido = apellido,
@@ -322,11 +386,11 @@ fun RegisterScreen(navController: NavHostController,
                             telefono = telefono,
                             fechaNac = fecha_nacimiento,
                             onExito = {
-                                //si firebase dice ok avanza
+                                // Si Firebase dice que todo bien, avanzamos
                                 navController.navigate("register_successful")
                             },
                             onError = { mensajeErrorFirebase ->
-                                //si falla te mostrara en rojo
+                                // Si falla (ej. correo ya usado), Firebase nos avisa y lo mostramos
                                 errorMensaje = mensajeErrorFirebase
                             }
                         )
@@ -338,7 +402,8 @@ fun RegisterScreen(navController: NavHostController,
                 modifier = Modifier.size(width = 200.dp, height = 50.dp),
                 shape = RoundedCornerShape(50.dp)
             ) {
-                Text(text = stringResource(id = R.string.Register),
+                Text(
+                    text = stringResource(id = R.string.Register),
                     color = Color.White,
                     fontSize = 16.sp
                 )

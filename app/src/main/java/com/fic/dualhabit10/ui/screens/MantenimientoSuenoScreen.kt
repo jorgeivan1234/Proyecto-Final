@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -20,7 +21,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.WbSunny
@@ -29,7 +29,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -37,7 +36,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -50,6 +48,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -58,6 +58,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.fic.dualhabit10.data.local.SuenoEntity
 import com.fic.dualhabit10.ui.viewmodels.SuenoViewModel
+import com.fic.dualhabit10.R
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,26 +67,29 @@ fun MantenimientoSuenoScreen(
     navController: NavController,
     viewModel: SuenoViewModel = viewModel()
 ) {
-
+    // Leemos constantemente el ViewModel para saber si el cronómetro está activo
     val estaDurmiendo = viewModel.estaDurmiendo
     val tiempoMs = viewModel.tiempoTranscurridoMs
-    val historial by  viewModel.historialSueno.collectAsState()
-    var mostrarDialogoAnimo by remember {mutableStateOf(false)}
+    // collectAsState permite que la lista del historial se actualice automáticamente en la interfaz
+    val historial by viewModel.historialSueno.collectAsState()
+
+    // Controla si se muestra o se oculta el diálogo de evaluación de energía matutina
+    var mostrarDialogoAnimo by remember { mutableStateOf(false) }
+
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    // Matemáticas básicas para convertir los milisegundos de la base de datos en horas, minutos y segundos
     val segundos = (tiempoMs / 1000) % 60
     val minuto = (tiempoMs / (1000 * 60)) % 60
     val hora = (tiempoMs / (1000 * 60 * 60)) % 24
+    // Formato estándar de reloj digital
     val tiempoText = String.format("%02d:%02d:%02d", hora, minuto, segundos)
 
-    val tipsMascotas = remember {
-        listOf(
-            "Los perros adultos duermen entre 12 y 14 horas al dia. ¡Asegurate de que su espacio sea comodo!",
-            "Un sueño inquieto en tu mascota puede indicar que necesita mas actividad fusuca el dia .",
-            "Los cachorros pueden dormir hasta 18 horas diarias para apoyar su rapido crecimiento oseo",
-            "Evita que tu mascota duerma frente a corrientes directas de aire o aires acondicionados muy frios."
-        )
-    }
+    // Cargamos la lista de consejos desde el archivo de recursos Strings para permitir su traducción
+    val tipsMascotas = stringArrayResource(R.array.tips_mascotas_sueno)
+
+    // Seleccionamos un consejo al azar solo una vez cuando la pantalla se dibuja
     val tipAleatorio = remember { tipsMascotas.random() }
 
     BaseCustomDrawer(
@@ -94,43 +98,49 @@ fun MantenimientoSuenoScreen(
     ) {
         Scaffold(
             topBar = {
-                CenterAlignedTopAppBar(
-                    title = {
-                        Box(
-                            modifier = Modifier
-                                .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))
-                                .padding(horizontal = 20.dp, vertical = 6.dp)
-                        ) {
-                            Text(
-                                text = "Modo Sueño",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp,
-                                color = Color.Black
-                            )
-                        }
-                    },
-
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            scope.launch { drawerState.open() }
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = "Menu",
-                                tint = Color.Black
-                            )
-                        }
-                    },
+                Column(
                     modifier = Modifier
-                        .height(85.dp)
+                        .fillMaxWidth()
                         .background(
                             Color(0xFFFF7A22),
-                            shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
-                        ),
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent)
-                )
+                            shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
+                        )
+                        .statusBarsPadding()
+                        .padding(start = 12.dp, end = 12.dp, bottom = 20.dp, top = 28.dp)
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        IconButton(
+                            onClick = { scope.launch { drawerState.open() } },
+                            modifier = Modifier.align(Alignment.CenterStart)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = stringResource(R.string.desc_menu),
+                                tint = Color.Black,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+
+                        Text(
+                            text = stringResource(R.string.title_modo_sueno),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = Color.Black,
+                            modifier = Modifier
+                                .background(
+                                    color = Color(0xFFFFF200),
+                                    shape = RoundedCornerShape(50.dp)
+                                )
+                                .padding(horizontal = 20.dp, vertical = 6.dp)
+                        )
+                    }
+                }
             }
         ) { padding ->
+            // Fondo general de la pantalla
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -146,24 +156,26 @@ fun MantenimientoSuenoScreen(
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
 
+                // Indicador visual principal (Luna si está durmiendo, Sol si está despierto)
                 Box(
                     modifier = Modifier
                         .size(160.dp)
                         .background(Color.White.copy(alpha = 0.08f), shape = CircleShape),
                     contentAlignment = Alignment.Center
-                )  {
+                ) {
                     Icon(
                         imageVector = if (estaDurmiendo) Icons.Default.Bedtime else Icons.Default.WbSunny,
-                        contentDescription = "Estado",
+                        contentDescription = stringResource(R.string.desc_estado_sueno),
                         tint = if (estaDurmiendo) Color(0xFF90CAF9) else Color(0xFFFFD54F),
                         modifier = Modifier.size(80.dp)
                     )
                 }
 
-                Spacer (modifier = Modifier.height(24.dp))
-                //cronometro
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Zona de cronómetro o mensaje de bienvenida
                 Text(
-                    text = if (estaDurmiendo) tiempoText else "¡Listo para descansar!",
+                    text = if (estaDurmiendo) tiempoText else stringResource(R.string.text_listo_descansar),
                     color = Color.White,
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
@@ -171,25 +183,26 @@ fun MantenimientoSuenoScreen(
                 )
 
                 Text(
-                    text = if (estaDurmiendo) "Registrando horas de sueño tuyas y de tu mascota ..." else "Presiona el boton para al ir a dormir.",
+                    text = if (estaDurmiendo) stringResource(R.string.text_registrando_sueno) else stringResource(R.string.text_presiona_dormir),
                     color = Color.LightGray,
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier .padding(top = 8.dp)
+                    modifier = Modifier.padding(top = 8.dp)
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                //boton de control principal
+                // Botón principal que intercala entre iniciar el cronómetro o abrir el diálogo para finalizar
                 Button(
                     onClick = {
                         if (estaDurmiendo) {
-                            mostrarDialogoAnimo = true
+                            mostrarDialogoAnimo = true // Abre la ventana emergente al despertar
                         } else {
-                            viewModel.iniciarDescanso()
+                            viewModel.iniciarDescanso() // Activa el conteo en base de datos
                         }
                     },
                     colors = ButtonDefaults.buttonColors(
+                        // Rojo para detener, Naranja para arrancar
                         containerColor = if (estaDurmiendo) Color(0xFFE63946) else Color(0xFFFF7A22)
                     ),
                     shape = RoundedCornerShape(24.dp),
@@ -198,7 +211,7 @@ fun MantenimientoSuenoScreen(
                         .height(56.dp)
                 ) {
                     Text(
-                        text = if (estaDurmiendo) "Despertar" else "Iniciar Descanso",
+                        text = if (estaDurmiendo) stringResource(R.string.btn_despertar) else stringResource(R.string.btn_iniciar_descanso),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -207,16 +220,18 @@ fun MantenimientoSuenoScreen(
 
                 Spacer(modifier = Modifier.height(36.dp))
 
-                //sesion historial
+                // Sección del historial que se oculta dinámicamente si no hay registros en la base de datos
                 AnimatedVisibility(visible = historial.isNotEmpty()) {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Text(
-                            text = "Tus ultimas noches",
+                            text = stringResource(R.string.title_ultimas_noches),
                             color = Color.White,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(12.dp))
+
+                        // Lista horizontal desplazable para ver los registros anteriores
                         LazyRow(
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                             modifier = Modifier.fillMaxWidth()
@@ -229,7 +244,7 @@ fun MantenimientoSuenoScreen(
                     }
                 }
 
-                //sesion mascota
+                // Tarjeta con un consejo sobre el sueño de las mascotas
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.12f)),
@@ -254,20 +269,21 @@ fun MantenimientoSuenoScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Bedtime,
-                                    contentDescription = "Tips Mascota",
+                                    contentDescription = stringResource(R.string.desc_tips_mascota),
                                     tint = Color(0xFFFF7A22),
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
                             Spacer(modifier = Modifier.width(16.dp))
                             Text(
-                                text = "Descanso de tu Mascota",
+                                text = stringResource(R.string.title_descanso_mascota),
                                 color = Color.White,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Bold
                             )
                         }
 
+                        // Muestra el tip aleatorio que seleccionamos al principio de la vista
                         Text(
                             text = tipAleatorio,
                             color = Color.LightGray,
@@ -282,12 +298,13 @@ fun MantenimientoSuenoScreen(
         }
     }
 
+    // Diálogo flotante que captura la calidad del sueño (estado de ánimo) justo al despertar
     if (mostrarDialogoAnimo) {
         AlertDialog(
             onDismissRequest = { mostrarDialogoAnimo = false },
             title = {
                 Text(
-                    text = "¡Buenos dias!\n ¿Como descansaron hoy?",
+                    text = stringResource(R.string.dialog_title_despertar),
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     textAlign = TextAlign.Center,
@@ -296,7 +313,7 @@ fun MantenimientoSuenoScreen(
             },
             text = {
                 Text(
-                    text = "Selecciona el emoji que mejor represente tu energia y la de tu mascota esta mañana.",
+                    text = stringResource(R.string.dialog_desc_despertar),
                     textAlign = TextAlign.Center
                 )
             },
@@ -307,6 +324,7 @@ fun MantenimientoSuenoScreen(
                         .padding(horizontal = 8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
+                    // Selecciona un emoji termina el contador y guarda el registro
                     listOf("😫", "😐", "😊", "⚡").forEach { emoji ->
                         TextButton(
                             onClick = {
@@ -324,6 +342,7 @@ fun MantenimientoSuenoScreen(
     }
 }
 
+// Componentes Visuales Reutilizables
 @Composable
 fun TarjetaHistorialSueno(registro: SuenoEntity) {
     Card(
@@ -338,9 +357,11 @@ fun TarjetaHistorialSueno(registro: SuenoEntity) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
+            // Se muestra el emoji guardado para identificar rápidamente si fue una buena o mala noche
             Text(text = registro.estadoAnimo, fontSize = 28.sp)
             Text(
-                text = "${registro.horasDormidas} hrs",
+                // Inyectamos el valor numérico en el recurso de texto
+                text = stringResource(R.string.text_horas_dormidas, registro.horasDormidas),
                 fontWeight = FontWeight.Bold,
                 fontSize = 15.sp,
                 color = Color.Black

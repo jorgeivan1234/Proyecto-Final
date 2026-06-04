@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+        <string name="label_nombre_reg">First Name(s)</string>
+        <string name="label_apellido_reg">Last Name(s)</string>
+        <string name="label_correo_reg">Email Address</string>
+        <string name="label_password_reg">Password</string>
+        <string name="label_telefono_reg">Phone Number (9 digits)</string>
+        <string name="label_fecha_nac_reg">Date of Birth DD/MM/YYYY</string>
+        <string name="btn_aceptar_reg">Accept</string>
+        <string name="btn_cancelar_reg">Cancel</string>
+        <string name="text_ya_tengo_cuenta">Log In</string>
+
+        <string name="error_campos_vacios_reg">Please fill in all fields</string>
+        <string name="error_pass_corta_reg">Password must be at least 6 characters long</string>
+        <string name="error_email_invalido_reg">Please enter a valid email address</string>
+
+        <string name="title_registro_exitoso">Registration Successful!</string>
+        <string name="btn_continuar">Continue</string>
+        <string name="desc_fondo_cielo">Decorative sky background</string>
+        <string name="desc_perro_saltando">Happy dog jumping</string>
+
+        <string name="title_hidratacion">Hydration</string>
+        <string name="title_sueno">Sleep</string>
+        <string name="title_actividad_fisica">Physical\nActivity</string>
+        <string name="title_alimentacion">Diet</string>
+        <string name="title_mascotas">Pets</string>
+        <string name="title_sugerencias">Suggestions</string>
+
+        <string name="racha_lista">Today\'s Streak Ready!</string>
+        <string name="activar_racha">Activate Streak: %1$d days</string>
+
         <string name="app_name">DualHabit</string>
         <string name="iniciar">START</string>
         <string name="bienvenido_a_dualhabit">Welcome to DualHabit</string>
@@ -87,12 +116,10 @@
         </string-array>
 
         <string name="desc_menu">Menu</string>
-        <string name="title_sugerencias">Suggestions</string>
         <string name="title_buzon_sugerencias">Suggestion Box</string>
         <string name="hint_escribe_comentario">Write your comment here...</string>
         <string name="btn_enviar_sugerencia">Submit suggestion</string>
 
-        <string name="title_hidratacion">Hydration</string>
         <string name="btn_historial">History</string>
         <string name="desc_hidratacion_mascota">Go to Pet Hydration</string>
         <string name="btn_add_250ml">+250ml</string>
@@ -140,4 +167,41 @@
         <string name="format_clima">%1$s°C (%2$s)</string>
 
         <string name="btn_calcular_actualizar">Calculate and Update Requirement</string>
+
+        <string name="title_plan_hidratacion">Your Hydration Plan</string>
+        <string name="label_meta_calculada">Goal Calculated!</string>
+        <string name="label_necesitas_tomar">You need to drink: </string>
+        <string name="format_litros">%1$.2f Liters</string>
+        <string name="label_al_dia">a day</string>
+        <string name="label_equivale_a">Equivalent to approximately: </string>
+        <string name="format_vasos">x %1$d glasses of 250ml</string>
+        <string name="label_como_llegamos">How did we get this number?</string>
+        <string name="format_desglose_base">Base by weight (%1$skg)</string>
+        <string name="format_ml">%1$sml</string>
+        <string name="format_desglose_actividad">Activity adjustment (%1$s)</string>
+        <string name="ajuste_600ml">+600ml</string>
+        <string name="format_desglose_clima">Weather adjustment (%1$s)</string>
+        <string name="ajuste_500ml">+500ml</string>
+        <string name="btn_aceptar_meta">Got it, accept goal!</string>
+
+        <string-array name="tips_mascotas_sueno">
+                <item>Adult dogs sleep between 12 and 14 hours a day. Make sure their space is comfortable!</item>
+                <item>Restless sleep in your pet may indicate they need more physical activity during the day.</item>
+                <item>Puppies can sleep up to 18 hours a day to support their rapid bone growth.</item>
+                <item>Avoid letting your pet sleep in direct drafts or very cold air conditioning.</item>
+        </string-array>
+
+        <string name="title_modo_sueno">Sleep Mode</string>
+        <string name="desc_estado_sueno">Sleep status</string>
+        <string name="text_listo_descansar">Ready to rest!</string>
+        <string name="text_registrando_sueno">Recording sleep hours for you and your pet...</string>
+        <string name="text_presiona_dormir">Press the button when going to sleep.</string>
+        <string name="btn_despertar">Wake Up</string>
+        <string name="btn_iniciar_descanso">Start Resting</string>
+        <string name="title_ultimas_noches">Your recent nights</string>
+        <string name="desc_tips_mascota">Pet Tips</string>
+        <string name="title_descanso_mascota">Your Pet\'s Rest</string>
+        <string name="dialog_title_despertar">Good morning!\nHow did you rest today?</string>
+        <string name="dialog_desc_despertar">Select the emoji that best represents your energy and your pet\'s this morning.</string>
+        <string name="text_horas_dormidas">%1$s hrs</string>
 </resources>

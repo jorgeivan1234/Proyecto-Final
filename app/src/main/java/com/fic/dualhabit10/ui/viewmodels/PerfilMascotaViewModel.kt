@@ -1,6 +1,7 @@
 package com.fic.dualhabit10.ui.viewmodels
 
 import android.app.Application
+import android.content.Context
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
@@ -14,12 +15,16 @@ class PerfilMascotaViewModel(application: Application) : AndroidViewModel(applic
     private val database = AppDatabase.getDatebase(application)
     private val perfilDao = database.perfilMacotaDao()
 
+    private val sharedPreferences = application.getSharedPreferences("mascota_prefs", Context.MODE_PRIVATE)
+
     var nombreMascota by mutableStateOf("")
     var especieMascota by mutableStateOf("Perro")
     var pesoMascota by mutableStateOf("")
     var edadMascota by mutableStateOf("")
 
-    init{
+    var imagenMascota by mutableStateOf(sharedPreferences.getString("saved_mascota_uri", "") ?: "")
+
+    init {
         viewModelScope.launch {
             perfilDao.obtenerPerfil().collect { perfil ->
                 if (perfil != null) {
@@ -34,6 +39,9 @@ class PerfilMascotaViewModel(application: Application) : AndroidViewModel(applic
 
     fun guardarDatos(onSuccess: () -> Unit) {
         viewModelScope.launch {
+            // Aguarda la ruta de la imagen de perfilmascota
+            sharedPreferences.edit().putString("saved_mascota_uri", imagenMascota).apply()
+
             val perfil = PerfilMascotaEntity(
                 nombre = nombreMascota,
                 especie = especieMascota,
