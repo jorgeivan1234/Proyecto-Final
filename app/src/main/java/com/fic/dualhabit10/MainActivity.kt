@@ -1,5 +1,6 @@
 package com.fic.dualhabit10
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -46,7 +47,11 @@ class MainActivity : ComponentActivity(){
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
+        // comporabasion de sesion automatica offline o online
+        val sharedPreferences = getSharedPreferences("login_preferences", Context.MODE_PRIVATE)
+        val recordarActivo = sharedPreferences.getBoolean("remember_active", false)
+        val sesionIniciada = sharedPreferences.getBoolean("is_logged_in", false)
+        val destinoInicial = if(recordarActivo && sesionIniciada) "habitos" else "inicio"
 
         setContent{
             MaterialTheme{
@@ -63,7 +68,7 @@ class MainActivity : ComponentActivity(){
                 */
                 NavHost(
                     navController = navController,
-                    startDestination = "inicio"
+                    startDestination = destinoInicial
                 ) {
                     //InicioScreen -> LoginScreen
                     composable("inicio"){
