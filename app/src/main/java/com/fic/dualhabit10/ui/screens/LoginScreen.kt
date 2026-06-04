@@ -85,6 +85,7 @@ fun LoginScreen(navController: NavHostController,
             editor.putString("saved_email", email.trim())
             editor.putString("saved_password", password.trim())
             editor.putBoolean("remember_active", true)
+            editor.putBoolean("is_logged_in", true)
         } else {
             editor.clear()
         }
@@ -114,8 +115,22 @@ fun LoginScreen(navController: NavHostController,
                     }
                 },            //es la validación local antes de ir a internet
                 onError = { mensajeErrorFirebase ->
-                    //si esta mal o el usuario no existe firebase avisara
-                    errorMensaje = msjCredencialesIncorrectas
+                    //si el internet falla o da error, verifica localmente
+                    val localEmail = sharedPreferences.getString("saved_email", "") ?: ""
+                    val localPassword = sharedPreferences.getString("saved_password", "") ?: ""
+                    val localRemember = sharedPreferences.getBoolean("remember_active", false)
+                    if (localRemember && emailLimpio == localEmail && passwordLimpio == localPassword){
+                        val editor = sharedPreferences.edit()
+                        editor.putBoolean("is_logged_in", true)
+                        editor.apply()
+
+                        navController.navigate("habitos"){
+                            popUpTo("login") { inclusive = true }
+                        }
+                    } else {
+                        //si esta mal o el usuario no existe firebase avisara
+                        errorMensaje = msjCredencialesIncorrectas
+                    }
                 }
             )
         }
