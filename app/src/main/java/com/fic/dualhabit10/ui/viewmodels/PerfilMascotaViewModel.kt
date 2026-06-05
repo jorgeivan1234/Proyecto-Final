@@ -21,6 +21,7 @@ class PerfilMascotaViewModel(application: Application) : AndroidViewModel(applic
     var especieMascota by mutableStateOf("Perro")
     var pesoMascota by mutableStateOf("")
     var edadMascota by mutableStateOf("")
+    var sexoMascota by mutableStateOf(value="")
 
     var imagenMascota by mutableStateOf(sharedPreferences.getString("saved_mascota_uri", "") ?: "")
 
@@ -31,6 +32,7 @@ class PerfilMascotaViewModel(application: Application) : AndroidViewModel(applic
                     nombreMascota = perfil.nombre
                     especieMascota = perfil.especie
                     pesoMascota = perfil.peso.toString()
+                    sexoMascota = perfil.sexo.toString()
                     edadMascota = perfil.edad.toString()
                 }
             }
@@ -45,6 +47,7 @@ class PerfilMascotaViewModel(application: Application) : AndroidViewModel(applic
             val perfil = PerfilMascotaEntity(
                 nombre = nombreMascota,
                 especie = especieMascota,
+                sexo = sexoMascota,
                 peso = pesoMascota.toFloatOrNull() ?: 0f,
                 edad = edadMascota.toIntOrNull() ?: 0
             )

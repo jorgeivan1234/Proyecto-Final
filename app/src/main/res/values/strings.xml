@@ -79,6 +79,7 @@
     <string name="title_especie">Especie</string>
     <string name="label_peso">Peso (KG)</string>
     <string name="label_edad">Edad (Años)</string>
+    <string name="label_sexo_mascota">Sexo</string>
     <string name="btn_guardar_mascota">Guardar Datos de la Mascota</string>
 
     <string-array name="especies_mascota">
@@ -86,6 +87,10 @@
         <item>Gato</item>
         <item>Ave</item>
         <item>Roedor/Conejo</item>
+    </string-array>
+    <string-array name="sexo_mascota">
+        <item>Macho</item>
+        <item>Hembra</item>
     </string-array>
 
     <string name="title_perfil_compartido">Perfil Compartido</string>

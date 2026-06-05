@@ -8,6 +8,7 @@ data class PerfilMascotaEntity(
     @PrimaryKey val id: Int = 1,
     val nombre: String = "",
     val especie: String = "",
+    val sexo: String = "",
     val peso: Float = 10f,
     val edad: Int = 0
 )
