@@ -16,9 +16,10 @@ import androidx.room.TypeConverters
         SuenoEntity::class,
         SugerenciaEntity::class,
         AlimentacionMascotaEntity::class,
-        PaseoEntity::class
+        PaseoEntity::class,
+        HigieneMascotaEntity::class
     ],
-    version = 8,
+    version = 9,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -33,6 +34,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun sugerenciaDao(): SugerenciaDao
     abstract fun alimentacionMascotaDao(): AlimentacionMascotaDao
     abstract fun paseoDao(): PaseoDao
+    abstract fun higieneMascotaDao(): HigieneMascotaDao
 
 
 
