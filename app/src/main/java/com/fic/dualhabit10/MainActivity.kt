@@ -30,12 +30,14 @@ import com.fic.dualhabit10.ui.screens.MantenimientoSuenoScreen
 import com.fic.dualhabit10.ui.screens.MascotasMenu
 import com.fic.dualhabit10.ui.screens.PerfilMascotaScreen
 import com.fic.dualhabit10.ui.screens.PerfilScreen
+import com.fic.dualhabit10.ui.screens.RecetaDetalleScreen
 import com.fic.dualhabit10.ui.screens.RegisterScreen
 import com.fic.dualhabit10.ui.screens.RegisterSuccessful
 import com.fic.dualhabit10.ui.screens.ResultadoHidratacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.ResultadoHidratacionScreen
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
 import com.fic.dualhabit10.ui.screens.Sugerencias
+import com.fic.dualhabit10.ui.viewmodels.AlimentacionViewModel
 
 
 class MainActivity : ComponentActivity(){
@@ -144,6 +146,24 @@ class MainActivity : ComponentActivity(){
                     }
                     composable("alimentacion"){
                         AlimentacionScreen(navController = navController)
+                    }
+                    // AlimentacionScreen -> RecetaDetalleScreen
+                    composable(
+                        route = "receta_detalle/{recetaId}",
+                        arguments = listOf(navArgument("recetaId") { type = NavType.StringType }) // 1. Cambiamos a StringType
+                    ) { backStackEntry ->
+                        // 2. Extraemos el valor como String
+                        val recetaIdString = backStackEntry.arguments?.getString("recetaId") ?: "0"
+
+                        // 3. Lo convertimos a Int de forma segura
+                        val recetaId = recetaIdString.toIntOrNull() ?: 0
+
+                        val alimentacionViewModel: AlimentacionViewModel = viewModel()
+                        RecetaDetalleScreen(
+                            recetaId = recetaId,
+                            navController = navController,
+                            viewModel = alimentacionViewModel
+                        )
                     }
                     composable("alimentacion_mascota") {
                         AlimentacionMascotaScreen(navController = navController)
