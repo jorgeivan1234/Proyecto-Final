@@ -24,6 +24,8 @@ import com.fic.dualhabit10.ui.screens.HabitosMascotaScreen
 import com.fic.dualhabit10.ui.screens.HabitosScreen
 import com.fic.dualhabit10.ui.screens.HidratacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.HidratacionScreen
+import com.fic.dualhabit10.ui.screens.HigieneMascotaDetalleScreen
+import com.fic.dualhabit10.ui.screens.HigieneMascotaScreen
 import com.fic.dualhabit10.ui.screens.HistorialScreen
 import com.fic.dualhabit10.ui.screens.InicioScreen
 import com.fic.dualhabit10.ui.screens.LoginScreen
@@ -39,6 +41,7 @@ import com.fic.dualhabit10.ui.screens.ResultadoHidratacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.ResultadoHidratacionScreen
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
 import com.fic.dualhabit10.ui.screens.Sugerencias
+import com.fic.dualhabit10.ui.viewmodels.HigieneMascotaViewModel
 import com.fic.dualhabit10.ui.viewmodels.PaseosViewModel
 import com.fic.dualhabit10.ui.viewmodels.SugerenciasViewModel
 
@@ -196,6 +199,23 @@ class MainActivity : ComponentActivity(){
                     ) { backStackEntry ->
                         val id = backStackEntry.arguments?.getInt("recetaId") ?: 0
                         AlimentacionMascotaDetalleScreen(recetaId = id, navController = navController)
+                    }
+
+                    //HabitosMascotaScreen -> HigieneMascotaScreen
+                    composable("higiene_mascota") {
+                        val higieneViewModel: HigieneMascotaViewModel = viewModel()
+                        HigieneMascotaScreen(
+                            navController = navController,
+                            viewModel = higieneViewModel
+                        )
+                    }
+                    //HigieneMascotaScreen -> HigieneMascotaDetalleScreen
+                    composable("higiene_mascota_detalle") {
+                        val higieneViewModel: HigieneMascotaViewModel = viewModel()
+                        HigieneMascotaDetalleScreen(
+                            navController = navController,
+                            viewModel = higieneViewModel
+                        )
                     }
                 }
             }
