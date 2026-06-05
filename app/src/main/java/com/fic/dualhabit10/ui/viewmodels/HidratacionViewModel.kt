@@ -32,8 +32,8 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
     //estaddos del perfil compartido
     var usuarioPeso by mutableFloatStateOf(70f)
     var usuarioEdad by mutableStateOf(25)
-    var usuarioGenero by mutableStateOf("Masculino")
-    var actividadNivel by mutableStateOf("Moderado")
+    var usuarioGenero by mutableStateOf("")
+    var actividadNivel by mutableStateOf("")
     var entornoClima by mutableStateOf("Calido")
     var experienciaNivel by mutableIntStateOf(1)
     var experienciaPuntos by mutableIntStateOf(0)
@@ -102,8 +102,8 @@ class HidratacionViewModel (application: Application) : AndroidViewModel(applica
         //cargara los parametros de perfil
         usuarioPeso = prefs.getFloat("perfil_peso", 70f)
         usuarioEdad = prefs.getInt("perfil_edad", 25)
-        usuarioGenero = prefs.getString("perfil_genero", "Masculino") ?: "Masculino"
-        actividadNivel = prefs.getString("perfil_actividad", "Moderado") ?: "Moderado"
+        usuarioGenero = prefs.getString("perfil_genero", "Select") ?: "Select"
+        actividadNivel = prefs.getString("perfil_actividad", "Select") ?: "Select"
         entornoClima = prefs.getString("perfil_entorno", "Calido") ?: "Calido"
 
         //carga gamificacion
