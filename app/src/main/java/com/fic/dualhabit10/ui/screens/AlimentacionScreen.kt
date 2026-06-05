@@ -101,7 +101,7 @@ fun AlimentacionScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
                     colors = CardDefaults.cardColors(containerColor = colorFondoCard),
-                    onClick = { navController.navigate("receta_detalle/${receta.id}")}
+                    onClick = {navController.navigate("receta_detalle/${receta.id}")}
                 ) {
                     Row(
                         modifier = Modifier.padding(16.dp),
