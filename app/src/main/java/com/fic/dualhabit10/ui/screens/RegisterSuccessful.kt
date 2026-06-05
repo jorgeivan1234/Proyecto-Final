@@ -27,22 +27,24 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.fic.dualhabit10.R
 
-
-
 @Composable
 fun RegisterSuccessful(navController: NavHostController) {
 
+    // Contenedor principal que ocupa toda la pantalla con un fondo azul sólido de respaldo
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF5EDCFF))
-    ){
+    ) {
+        // Imagen de fondo (cielo/nubes) que decora la pantalla completa
         Image(
             painter = painterResource(id = R.drawable.bg_inicio_cielo),
-            contentDescription = null,
+            contentDescription = stringResource(R.string.desc_fondo_cielo),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
+
+        // Tarjeta central flotante donde mostramos el mensaje de éxito y al perro
         Column(
             modifier = Modifier
                 .align(Alignment.Center)
@@ -54,8 +56,9 @@ fun RegisterSuccessful(navController: NavHostController) {
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Título principal
             Text(
-                text = stringResource(id = R.string.Register_Successful),
+                text = stringResource(id = R.string.title_registro_exitoso),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
@@ -63,17 +66,20 @@ fun RegisterSuccessful(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(55.dp))
 
+            // Imagen ilustrativa
             Image(
                 painter = painterResource(id = R.drawable.img_perro_saltando),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.desc_perro_saltando),
                 modifier = Modifier.size(280.dp),
                 contentScale = ContentScale.Crop
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Botón final para avanzar a la pantalla de inicio de sesión (Login)
             Button(
                 onClick = {
+                    // Una vez que el usuario lee el mensaje, lo mandamos al login
                     navController.navigate("login")
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -82,9 +88,11 @@ fun RegisterSuccessful(navController: NavHostController) {
                 modifier = Modifier.size(width = 200.dp, height = 50.dp),
                 shape = RoundedCornerShape(50.dp)
             ) {
-                Text(text = stringResource(id = R.string.continu),
+                Text(
+                    text = stringResource(id = R.string.btn_continuar),
                     color = Color.White,
-                    fontSize = 16.sp)
+                    fontSize = 16.sp
+                )
             }
         }
     }

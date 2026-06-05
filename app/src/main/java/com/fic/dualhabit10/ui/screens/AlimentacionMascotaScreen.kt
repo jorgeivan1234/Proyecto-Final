@@ -1,6 +1,7 @@
 package com.fic.dualhabit10.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,13 +36,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.fic.dualhabit10.data.model.ComidaMascota
+import com.fic.dualhabit10.data.local.AlimentacionMascotaEntity
 import com.fic.dualhabit10.ui.viewmodels.AlimentacionMascotaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,6 +53,7 @@ fun AlimentacionMascotaScreen(
     viewModel: AlimentacionMascotaViewModel = viewModel()
 ) {
     val recetas by viewModel.recetas.collectAsState()
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -65,11 +68,11 @@ fun AlimentacionMascotaScreen(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = {navController.popBackStack() }) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Atras", tint = Color.Black)
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xFFFF7A22))
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF7A22))
             )
         }
     ) { padding ->
@@ -81,15 +84,28 @@ fun AlimentacionMascotaScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items (items = recetas) { receta: ComidaMascota ->
+            items(items = recetas) { receta: AlimentacionMascotaEntity ->
                 val colorString = if (receta.colorHex.startsWith("#")) receta.colorHex else "#${receta.colorHex}"
                 val colorFondoCard = try {
-                    Color(android.graphics.Color.parseColor(receta.colorHex.ifEmpty { "#FFF9C4"}))
+                    Color(android.graphics.Color.parseColor(colorString))
                 } catch (_: Exception) {
                     Color(0xFFFFF9C4)
                 }
+
+                // Buscamos si la imagen es un recurso local (drawable)
+                val imageResId = context.resources.getIdentifier(
+                    receta.imagenUrl,
+                    "drawable",
+                    context.packageName
+                )
+                val modeloImagen = if (imageResId != 0) imageResId else receta.imagenUrl
+
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate("receta_mascota_detalle/${receta.id}")
+                        },
                     shape = RoundedCornerShape(24.dp),
                     colors = CardDefaults.cardColors(containerColor = colorFondoCard),
                 ) {
@@ -98,7 +114,7 @@ fun AlimentacionMascotaScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         AsyncImage(
-                            model = receta.imagenUrl,
+                            model = modeloImagen,
                             contentDescription = receta.nombre,
                             modifier = Modifier
                                 .size(85.dp)
@@ -110,11 +126,12 @@ fun AlimentacionMascotaScreen(
                             SuggestionChip(
                                 onClick = { },
                                 label = {
-                                    val textoMascota = if (receta.tipoMascota.isNullOrEmpty()) "Mascota" else receta.tipoMascota
+                                    val textoMascota = receta.TipoMascota.ifEmpty { "Mascota" }
                                     Text(
                                         text = textoMascota,
                                         fontSize = 10.sp,
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.Black
                                     )
                                 },
                                 shape = RoundedCornerShape(50.dp)

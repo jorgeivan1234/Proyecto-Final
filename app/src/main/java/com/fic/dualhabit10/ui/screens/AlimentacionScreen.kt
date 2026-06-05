@@ -130,14 +130,14 @@ fun AlimentacionScreen(
 }
 
 fun abrirMapaRestaurantesSalusables(context: Context) {
-    val intentUri = Uri.parse("geo:0,0?q=restaurantes+salusables+comida+nutrituva")
+    val intentUri = Uri.parse("geo:0,0?q=restaurantes+saludables+comida+nutritiva")
     val mapIntent = Intent(Intent.ACTION_VIEW, intentUri).apply {
         setPackage("com.google.android.apps.maps")
     }
     if(mapIntent.resolveActivity(context.packageManager) != null) {
         context.startActivity(mapIntent)
     } else {
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/maps/q=restaurantes+saludables"))
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/maps/search/?api=1&query=restaurantes+saludables+comida+nutritivahttps://www.google.com/maps/q=restaurantes+saludables"))
         context.startActivity(browserIntent)
     }
 }

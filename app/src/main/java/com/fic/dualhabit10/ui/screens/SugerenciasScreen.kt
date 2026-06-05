@@ -41,10 +41,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.fic.dualhabit10.R
+import com.fic.dualhabit10.ui.viewmodels.SugerenciasViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun Sugerencias(navController: NavHostController) {
+fun Sugerencias(
+    navController: NavHostController,
+    viewModel: SugerenciasViewModel
+) {
     var sugerenciaTexto by remember { mutableStateOf("") }
     val limiteCaracteres = 500
 
@@ -154,6 +158,7 @@ fun Sugerencias(navController: NavHostController) {
                     onClick = {
                         if (sugerenciaTexto.isNotBlank()) {
                             val textoLimpio = sugerenciaTexto.trim()
+                            viewModel.guardarSugerencias(textoLimpio)
                             navController.popBackStack()
                         }
                     },

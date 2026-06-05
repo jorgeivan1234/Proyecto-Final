@@ -66,6 +66,7 @@ fun LoginScreen(navController: NavHostController,
     val sharedPreferences = remember {
         context.getSharedPreferences("login_preferences", Context.MODE_PRIVATE)
     }
+    val tieneCuentaLocal = sharedPreferences.getBoolean("has_local_account", false)
 
     var email by remember { mutableStateOf (sharedPreferences.getString("saved_email", "") ?: "") }
     var password by remember { mutableStateOf (sharedPreferences.getString("saved_password", "") ?: "") }
@@ -85,8 +86,10 @@ fun LoginScreen(navController: NavHostController,
             editor.putString("saved_email", email.trim())
             editor.putString("saved_password", password.trim())
             editor.putBoolean("remember_active", true)
+            editor.putBoolean("is_logged_in", true)
         } else {
             editor.clear()
+            editor.putBoolean("has_local_account", true)
         }
         editor.apply()
     }
@@ -114,8 +117,22 @@ fun LoginScreen(navController: NavHostController,
                     }
                 },            //es la validación local antes de ir a internet
                 onError = { mensajeErrorFirebase ->
-                    //si esta mal o el usuario no existe firebase avisara
-                    errorMensaje = msjCredencialesIncorrectas
+                    //si el internet falla o da error, verifica localmente
+                    val localEmail = sharedPreferences.getString("saved_email", "") ?: ""
+                    val localPassword = sharedPreferences.getString("saved_password", "") ?: ""
+                    val localRemember = sharedPreferences.getBoolean("remember_active", false)
+                    if (localRemember && emailLimpio == localEmail && passwordLimpio == localPassword){
+                        val editor = sharedPreferences.edit()
+                        editor.putBoolean("is_logged_in", true)
+                        editor.apply()
+
+                        navController.navigate("habitos"){
+                            popUpTo("login") { inclusive = true }
+                        }
+                    } else {
+                        //si esta mal o el usuario no existe firebase avisara
+                        errorMensaje = msjCredencialesIncorrectas
+                    }
                 }
             )
         }
@@ -264,7 +281,7 @@ fun LoginScreen(navController: NavHostController,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
+            //boton principal iniciar sesion
             Button(
                 onClick = {
                     ejecutarLogin()
@@ -278,6 +295,30 @@ fun LoginScreen(navController: NavHostController,
                 Text(text = stringResource(id = R.string.login),
                     color = Color.White,
                     fontSize = 16.sp)
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Button(
+                onClick = {
+                    if (tieneCuentaLocal){
+                        navController.navigate("habitos"){
+                            popUpTo("login") { inclusive = true }
+                        }
+                    }
+                },
+                enabled = tieneCuentaLocal,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorResource(id = R.color.verde),
+                    disabledContainerColor = Color.Gray
+                ),
+                modifier = Modifier.size(width = 200.dp, height = 50.dp),
+                shape = RoundedCornerShape(50.dp)
+            ) {
+                Text(
+                    text = if (tieneCuentaLocal) "Modo sin conexion" else "Modo offline bloqueado",
+                    color = if (tieneCuentaLocal) Color.Black else Color.LightGray,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
