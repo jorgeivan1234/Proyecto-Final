@@ -108,6 +108,11 @@ class MainActivity : ComponentActivity(){
                         HidratacionScreen(navController = navController, viewModel = hidratacionViewModel)
                     }
 
+                    //HidratacionScreen -> HabitosScreen
+                    composable(route = "hid_habitos"){
+                        HabitosScreen(navController = navController)
+                    }
+
                     //HidratacionScreen -> HidratacionMascotaScreen
                     composable(route = "hidratacion_mascota"){
                         HidratacionMascotaScreen(navController = navController)
@@ -155,10 +160,7 @@ class MainActivity : ComponentActivity(){
                     }
                     composable (route = "receta_mascota_detalle/{recetaId}",
                         arguments = listOf(navArgument("recetaId") { type = NavType.StringType })
-                    ){
-
-                    }
-
+                    ){}
                     composable("sueño"){
                         MantenimientoSuenoScreen(navController = navController)
                     }

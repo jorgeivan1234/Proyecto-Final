@@ -391,7 +391,13 @@ fun PerfilScreen(
                 ExposedDropdownMenu(
                     expanded = expGenero,
                     onDismissRequest = { expGenero = false }
-                ) {
+                ){
+                    DropdownMenuItem(
+                        text = {
+                            Text(stringResource(R.string.desc_select)) },
+                            onClick = { genero = "Seleccionar"; expGenero = false }
+                    )
+
                     stringArrayResource(R.array.generos_biologicos).forEach { opcion ->
                         DropdownMenuItem(
                             text = { Text(opcion) },
@@ -420,6 +426,12 @@ fun PerfilScreen(
                     expanded = expActividad,
                     onDismissRequest = { expActividad = false }
                 ) {
+                    DropdownMenuItem(
+                        text = {
+                            Text(stringResource(R.string.desc_select)) },
+                        onClick = { actividad = "Seleccionar"; expActividad = false }
+                    )
+
                     stringArrayResource(R.array.niveles_actividad).forEach { opcion ->
                         DropdownMenuItem(
                             text = { Text(opcion) },

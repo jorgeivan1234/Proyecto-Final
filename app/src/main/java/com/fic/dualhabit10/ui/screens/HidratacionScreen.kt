@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -41,6 +44,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
+import com.google.common.math.LinearTransformation.vertical
 import kotlinx.coroutines.launch
 
 @Composable
@@ -141,7 +145,7 @@ fun HidratacionScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
+                    .height(500.dp)
                     .padding(horizontal = 20.dp, vertical = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Top
@@ -231,6 +235,28 @@ fun HidratacionScreen(
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(55.dp))
+            Box(
+                modifier = Modifier
+                    .background(Color(0xFFFF7A22), shape = RoundedCornerShape(50.dp))
+                    .padding(vertical = 4.dp)
+                    .clickable { navController.navigate("hid_habitos") }
+                    .fillMaxWidth()
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 12.dp,
+                        bottom = 12.dp
+                        ),
+                contentAlignment = Alignment.Center
+            ){
+                Text(
+                    text = stringResource(R.string.desc_regresar),
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
@@ -269,10 +295,4 @@ fun BotonConsumoOvalado(
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewHidratacion(){
-    HidratacionScreen(navController = rememberNavController())
 }

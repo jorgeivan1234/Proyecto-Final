@@ -71,6 +71,8 @@
 
     <string name="title_perfil_mascota">Perfil de Mascota</string>
     <string name="desc_atras">Atras</string>
+    <string name="desc_select">Seleccionar</string>
+    <string name="desc_regresar">Regresar</string>
     <string name="btn_add_foto">Añadir Foto</string>
     <string name="desc_foto_mascota">Foto Mascota</string>
     <string name="label_nombre_mascota">Nombre de la mascota</string>
