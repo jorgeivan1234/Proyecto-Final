@@ -72,6 +72,8 @@
 
         <string name="title_perfil_mascota">Pet Profile</string>
         <string name="desc_atras">Back</string>
+        <string name="desc_select">Select</string>
+        <string name="desc_regresar">Return</string>
         <string name="btn_add_foto">Add Photo</string>
         <string name="desc_foto_mascota">Pet Photo</string>
         <string name="label_nombre_mascota">Pet Name</string>
@@ -105,12 +107,12 @@
         <string name="btn_guardar_recalcular">Save and Recalculate Goal</string>
 
         <string-array name="generos_biologicos">
-            <item>Male</item>
+                <item>Male</item>
             <item>Female</item>
         </string-array>
 
         <string-array name="niveles_actividad">
-            <item>Sedentary</item>
+                <item>Sedentary</item>
             <item>Moderate</item>
             <item>Intense</item>
         </string-array>
