@@ -61,25 +61,25 @@ fun HabitosMascotaScreen(navController: NavController) {
     val listaSecciones = listOf(
         SeccionHabitoMascota(
             titulo = "Hidratacion Mascota",
-            rutaNavigation = "hidratacion_mascota", // Se mantiene igual
+            rutaNavigation = "hidratacion_mascota",
             colorFondo = Color(0xFFBBDEFB),
             imagenRes = R.drawable.img_bol_y_perro
         ),
         SeccionHabitoMascota(
             titulo = "Alimentacion y Dieta",
-            rutaNavigation = "alimentacion_mascota", // Se mantiene igual
+            rutaNavigation = "alimentacion_mascota",
             colorFondo = Color(0xFFFFF0B2),
             imagenRes = R.drawable.img_plato_perro
         ),
         SeccionHabitoMascota(
             titulo = "Registro de Paseos",
-            rutaNavigation = "mantenimiento", // Modificado a mantenimiento
+            rutaNavigation = "registro_paseos",
             colorFondo = Color(0xFFC8E6C9),
             imagenRes = R.drawable.img_perro_saltando
         ),
         SeccionHabitoMascota(
             titulo = "Higiene y Limipieza",
-            rutaNavigation = "mantenimiento", // Modificado a mantenimiento
+            rutaNavigation = "higiene_mascota",
             colorFondo = Color(0xFFE1BEE7),
             imagenRes = R.drawable.img_perro_rascandose
         ),

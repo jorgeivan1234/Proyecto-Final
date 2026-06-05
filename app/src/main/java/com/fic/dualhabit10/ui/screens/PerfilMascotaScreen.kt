@@ -1,5 +1,6 @@
 package com.fic.dualhabit10.ui.screens
 
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,7 +28,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
@@ -34,7 +35,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -44,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,10 +58,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.viewmodels.PerfilMascotaViewModel
 
-// -------------------------------------------------------------------------------------------------
 // Constantes de diseño
-// -------------------------------------------------------------------------------------------------
-
 private object ProfileColors {
     val Primary = Color(0xFFFF7A22)
     val Background = Color(0xFF9EFFEB)
@@ -69,11 +67,7 @@ private object ProfileColors {
     val White = Color.White
 }
 
-// -------------------------------------------------------------------------------------------------
 // Vista principal del perfil para mascotas
-// -------------------------------------------------------------------------------------------------
-
-// Pantalla para registrar o editar la información de una mascota
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PerfilMascotaScreen(
@@ -81,36 +75,80 @@ fun PerfilMascotaScreen(
     viewModel: PerfilMascotaViewModel = viewModel()
 ) {
     val scrollState = rememberScrollState()
+    // Contexto requerido para la persistencia del flujo de permisos de archivos locales
+    val context = LocalContext.current
 
-    // Estados posibles a la hora de seleccionar una imagen desde la galería
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    // Carga la URI previa si existe o inicia limpia en null sin errores
+    var imageUri by remember {
+        mutableStateOf<Uri?>(
+            if (viewModel.imagenMascota.isNotEmpty()) Uri.parse(viewModel.imagenMascota) else null
+        )
+    }
+
+    // Selector multimedia moderno que solicita permisos de lectura de larga duración
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? -> imageUri = uri }
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            try {
+                // Forzamos a Android a mantener el acceso al archivo incluso tras reiniciar el dispositivo
+                context.contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+                imageUri = uri
+                viewModel.imagenMascota = uri.toString()
+            } catch (e: Exception) {
+                // Respaldo inmediato en caso de restricciones de seguridad del sistema operativo
+                imageUri = uri
+                viewModel.imagenMascota = uri.toString()
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.title_perfil_mascota),
-                        fontWeight = FontWeight.Bold,
-                        color = ProfileColors.TextMain
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        ProfileColors.Primary,
+                        shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
                     )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    .statusBarsPadding()
+                    .padding(start = 12.dp, end = 12.dp, bottom = 20.dp, top = 28.dp)
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    // Botón de salida posicionado a la izquierda del contenedor principal
+                    IconButton(
+                        onClick = { navController.popBackStack() },
+                        modifier = Modifier.align(Alignment.CenterStart)
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.desc_atras),
-                            tint = ProfileColors.TextMain
+                            tint = ProfileColors.TextMain,
+                            modifier = Modifier.size(32.dp)
                         )
                     }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = ProfileColors.Primary
-                )
-            )
+
+                    Text(
+                        text = stringResource(R.string.title_perfil_mascota),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .background(
+                                color = Color(0xFFFFF200),
+                                shape = RoundedCornerShape(50.dp)
+                            )
+                            .padding(horizontal = 20.dp, vertical = 6.dp)
+                    )
+                }
+            }
         }
     ) { paddingValues ->
         Column(
@@ -123,13 +161,20 @@ fun PerfilMascotaScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-            // Espacio para la foto de perfil
+            // Contenedor circular responsivo para la foto de la mascota
             Box(
                 modifier = Modifier
                     .size(130.dp)
                     .background(ProfileColors.White, shape = CircleShape)
                     .border(3.dp, ProfileColors.Primary, CircleShape)
-                    .clickable { launcher.launch("image/*") },
+                    .clickable {
+                        // Lanzador nativo restringido exclusivamente a imágenes de galería
+                        launcher.launch(
+                            androidx.activity.result.PickVisualMediaRequest(
+                                ActivityResultContracts.PickVisualMedia.ImageOnly
+                            )
+                        )
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 if (imageUri != null) {
@@ -150,12 +195,7 @@ fun PerfilMascotaScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Sección donde se define el nombre de la mascota, con agregados de keyboardOptions como:
-            // - singleLine: define el apartado como una sola línea de escritura (impide el salto de renglón).
-            // - Text: Para hacer que el apartado solo acepte letras, números y bloquee caracteres especiales.
-            // - Next: Acción que se encarga de saltar al siguiente apartado.
-            // - filtered: filtro que utilizamos para que el usuario solo pueda utilizar letras, números y espacios,
-            //   además de filtrar los caracteres, también delimitamos la cantidad a 40 caracteres máximos.
+            // Campo de texto controlado con filtrado alfanumérico estricto para el nombre
             OutlinedTextField(
                 value = viewModel.nombreMascota,
                 onValueChange = { newValue ->
@@ -177,7 +217,7 @@ fun PerfilMascotaScreen(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // Apartado de selección para los tipos de especies/mascotas (Utilizando string-array)
+            // Selector horizontal de chips para clasificar la especie animal
             Text(
                 text = stringResource(R.string.title_especie),
                 modifier = Modifier.fillMaxWidth(),
@@ -198,16 +238,12 @@ fun PerfilMascotaScreen(
             }
             Spacer(modifier = Modifier.height(14.dp))
 
-            // Sección de peso y edad con agregados de keyboardOptions como:
-            // - KeyboardType.Number: Obliga a que solo se permita la entrada de números.
-            // - ImeAction.Next/.Done: facilita el salto a otro registro y el retiro de teclado una
-            //   vez que se hayan llenado los datos.
-            // - filtered: Filtro que utilizamos para corregir el uso de "," o el exceso de ". y ,",
-            //   además de delimitar el espacio a solo 3 y 2 caracteres máximos.
+            // Fila de parámetros físicos de la mascota con sanitización de entradas métricas
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+                // Campo de peso con normalización automática de separadores decimales
                 OutlinedTextField(
                     value = viewModel.pesoMascota,
                     onValueChange = { newValue ->
@@ -226,10 +262,11 @@ fun PerfilMascotaScreen(
                         imeAction = ImeAction.Next
                     )
                 )
+
+                // Campo de edad con restricción física a un máximo de dos dígitos cronológicos
                 OutlinedTextField(
                     value = viewModel.edadMascota,
                     onValueChange = { newValue ->
-                        // Filtra caracteres fuera del 0-9
                         val filtered = newValue.filter { it.isDigit() }
 
                         if (filtered.length <= 2) {
@@ -248,7 +285,7 @@ fun PerfilMascotaScreen(
             }
             Spacer(modifier = Modifier.height(30.dp))
 
-            // Sección de botón de guardado de datos
+            // Botón de guardado que direcciona los datos a la base de datos local
             Button(
                 onClick = {
                     viewModel.guardarDatos {

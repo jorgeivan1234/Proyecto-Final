@@ -309,8 +309,8 @@ fun RegisterScreen(navController: NavHostController,
                     if (nombre.isBlank() || apellido.isBlank() || email.isBlank()||
                         password.isBlank() || telefono.isBlank() || fecha_nacimiento.isBlank()) {
                         errorMensaje = "Por favor, rellenar todos los campos"
-                    } else if (password.length < 6) {
-                        errorMensaje = "La contraseña debe tener al menos 6 caracteres"
+                    } else if (password.length < 8) {
+                        errorMensaje = "La contraseña debe tener al menos 8 caracteres"
                     } else if (!email.contains("@")) {
                         errorMensaje = "Introduce un correo electronico valido"
                     } else {

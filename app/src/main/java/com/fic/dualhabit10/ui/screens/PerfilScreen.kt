@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,8 +19,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -38,8 +41,6 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,12 +65,12 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
+import com.fic.dualhabit10.ui.viewmodels.PerfilMascotaViewModel
 
 // -------------------------------------------------------------------------------------------------
-// Constantes de diseño
+// Paleta de colores de la pantalla
 // -------------------------------------------------------------------------------------------------
-
-// Se renombró a UserProfileColors para evitar conflictos
+// Nuestros colores de siempre para que esta pantalla no desentone con la vibra de la app
 private object UserProfileColors {
     val Primary = Color(0xFFFF7A22)
     val Background = Color(0xFF9EFFEB)
@@ -83,41 +84,48 @@ private object UserProfileColors {
     val ClimaFrio = Color(0xFF1976D2)
 }
 
-// -------------------------------------------------------------------------------------------------
-// Vista principal del perfil del usuario
-// -------------------------------------------------------------------------------------------------
-
+// Pantalla de Perfil Compartido (Humano + Mascota)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PerfilScreen(
     navController: NavController,
+    // Nos traemos los datos del humano
     viewModel: HidratacionViewModel = viewModel(),
+    // y los datos de su mascota desde el otro ViewModel
+    mascotaViewModel: PerfilMascotaViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
-    // Para que no se pierda la foto de perfil al cerrar la app
+    // Usamos SharedPreferences para que la foto del humano sobreviva aunque cierren la app de golpe
     val sharedPreferences = remember {
         context.getSharedPreferences("perfil_preferences", Context.MODE_PRIVATE)
     }
 
-    // Estados para la entrada de parámetros biométricos
+    // Variables amarradas a lo que ya calculamos en el ViewModel
     var peso by remember { mutableStateOf(viewModel.usuarioPeso.toString()) }
     var edad by remember { mutableStateOf(viewModel.usuarioEdad.toString()) }
     val climaActual = viewModel.entornoClima
     var genero by remember { mutableStateOf(viewModel.usuarioGenero) }
     var actividad by remember { mutableStateOf(viewModel.actividadNivel) }
 
+    // Para saber si los menús de abajo están abiertos o cerrados
     var expGenero by remember { mutableStateOf(false) }
     var expActividad by remember { mutableStateOf(false) }
 
-    // Recupera la foto del usuario localmente
+    // Intentamos rascar la foto del humano desde el SharedPreferences
     var fotoUsuarioUri by remember {
         mutableStateOf<Uri?>(
             sharedPreferences.getString("saved_profile_uri", null)?.let { Uri.parse(it) }
         )
     }
 
+    // Agarramos la foto de la mascota directamente de su ViewModel de forma segura
+    // Si hay foto, la convertimos en Uri para poder pintarla, si no, le dejamos un null pacífico
+    val fotoMascotaUri = remember(mascotaViewModel.imagenMascota) {
+        if (mascotaViewModel.imagenMascota.isNotEmpty()) Uri.parse(mascotaViewModel.imagenMascota) else null
+    }
+    // takePersistableUriPermission nos ayuda a poder reutilizar la foto cuanto queramos
     var galeriaLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
@@ -138,23 +146,55 @@ fun PerfilScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.title_perfil_compartido), fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        viewModel.guardarPerfil(
-                            peso.toFloatOrNull() ?: 70f,
-                            edad.toIntOrNull() ?: 25,
-                            genero,
-                            actividad
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        UserProfileColors.Primary,
+                        shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
+                    )
+                    .statusBarsPadding()
+                    // Empujamos todo exactamente 28.dp hacia abajo para que quede perfecto
+                    .padding(start = 12.dp, end = 12.dp, bottom = 20.dp, top = 28.dp)
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    IconButton(
+                        onClick = {
+                            viewModel.guardarPerfil(
+                                peso.toFloatOrNull() ?: 70f,
+                                edad.toIntOrNull() ?: 25,
+                                genero,
+                                actividad
+                            )
+                            navController.popBackStack()
+                        },
+                        modifier = Modifier.align(Alignment.CenterStart)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.desc_atras),
+                            tint = UserProfileColors.TextMain,
+                            modifier = Modifier.size(32.dp)
                         )
-                        navController.popBackStack()
-                    }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.desc_atras))
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = UserProfileColors.Primary)
-            )
+
+                    Text(
+                        text = stringResource(R.string.title_perfil_compartido),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .background(
+                                color = Color(0xFFFFF200),
+                                shape = RoundedCornerShape(50.dp)
+                            )
+                            .padding(horizontal = 20.dp, vertical = 6.dp)
+                    )
+                }
+            }
         }
     ) { innerPadding ->
         Column(
@@ -167,13 +207,18 @@ fun PerfilScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+
+            // Fila principal donde ponemos al humano y a la mascota lado a lado
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
+                // Apartado para el humano
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     if (fotoUsuarioUri != null) {
+                        // Coil hace la chamba pesada de cargar la foto real desde el cel
                         AsyncImage(
                             model = fotoUsuarioUri,
                             contentDescription = stringResource(R.string.desc_foto_usuario),
@@ -182,6 +227,7 @@ fun PerfilScreen(
                                 .clip(CircleShape)
                                 .border(3.dp, UserProfileColors.TextMain, CircleShape)
                                 .clickable {
+                                    // Para entrar a la galería
                                     galeriaLauncher.launch(
                                         androidx.activity.result.PickVisualMediaRequest(
                                             ActivityResultContracts.PickVisualMedia.ImageOnly
@@ -191,6 +237,7 @@ fun PerfilScreen(
                             contentScale = ContentScale.Crop
                         )
                     } else {
+                        // Si no hay foto, ponemos la imagen por defecto
                         Image(
                             painter = painterResource(id = R.drawable.img_hidratacion),
                             contentDescription = stringResource(R.string.desc_foto_humano),
@@ -213,26 +260,44 @@ fun PerfilScreen(
                     Text(stringResource(R.string.hint_cambiar_foto), fontSize = 10.sp, color = UserProfileColors.TextHint)
                 }
 
+                // Apartado de mascota
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(
-                        painter = painterResource(id = R.drawable.img_mascotas_v),
-                        contentDescription = stringResource(R.string.desc_foto_mascota),
-                        modifier = Modifier
-                            .size(110.dp)
-                            .clip(CircleShape)
-                            .border(3.dp, UserProfileColors.TextMain, CircleShape)
-                            .clickable {
-                                navController.navigate("perfil_mascota")
-                            },
-                        contentScale = ContentScale.Crop
-                    )
+                    if (fotoMascotaUri != null) {
+                        AsyncImage(
+                            model = fotoMascotaUri,
+                            contentDescription = stringResource(R.string.desc_foto_mascota),
+                            modifier = Modifier
+                                .size(110.dp)
+                                .clip(CircleShape)
+                                .border(3.dp, UserProfileColors.TextMain, CircleShape)
+                                .clickable {
+                                    // Redirección a perfil de mascota
+                                    navController.navigate("perfil_mascota")
+                                },
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        // Si no hay fotos agregadas, ponemos las por defecto
+                        Image(
+                            painter = painterResource(id = R.drawable.img_mascotas_v),
+                            contentDescription = stringResource(R.string.desc_foto_mascota),
+                            modifier = Modifier
+                                .size(110.dp)
+                                .clip(CircleShape)
+                                .border(3.dp, UserProfileColors.TextMain, CircleShape)
+                                .clickable {
+                                    navController.navigate("perfil_mascota")
+                                },
+                            contentScale = ContentScale.Crop
+                        )
+                    }
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(stringResource(R.string.label_mascota), fontWeight = FontWeight.Bold, fontSize = 14.sp)
                     Text(stringResource(R.string.hint_ver_perfil), fontSize = 10.sp, color = UserProfileColors.TextHint)
                 }
             }
 
-            // Sección de nivel de experiencia de la cuenta
+            // Apartado del nivel de la cuenta
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = UserProfileColors.CardBackground)
@@ -272,11 +337,7 @@ fun PerfilScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // Sección de Peso y Edad con agregados de seguridad (ISO 25019 - Robustez):
-            // - singleLine: Bloquea saltos de renglón dañinos para la interfaz.
-            // - KeyboardType.Number / Next / Done: Configura el teclado óptimo para facilitar la usabilidad.
-            // - filtered: Reemplaza comas por puntos, limpia caracteres inválidos y delimita físicamente
-            //   los campos (máximo 5 caracteres para peso y 3 para edad).
+            // Filtros para impedir que se rompa la app y hacer más fácil la lectura de los datos
             OutlinedTextField(
                 value = peso,
                 onValueChange = { newValue ->
@@ -294,6 +355,7 @@ fun PerfilScreen(
                 )
             )
 
+            // Delimitación de caracteres la edad permitidos para mascotas
             OutlinedTextField(
                 value = edad,
                 onValueChange = { newValue ->
@@ -311,7 +373,7 @@ fun PerfilScreen(
                 )
             )
 
-            // Menú desplegable para la selección del Género Biológico desde string-array xml
+            // Apartado de menú desplegable para elegir el sexo biologico
             ExposedDropdownMenuBox(
                 expanded = expGenero,
                 onExpandedChange = { expGenero = !expGenero }
@@ -319,7 +381,7 @@ fun PerfilScreen(
                 OutlinedTextField(
                     value = genero,
                     onValueChange = {},
-                    readOnly = true,
+                    readOnly = true, // Que no escriban, ¡que seleccionen!
                     label = { Text(stringResource(R.string.label_genero)) },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expGenero) },
                     modifier = Modifier
@@ -329,7 +391,13 @@ fun PerfilScreen(
                 ExposedDropdownMenu(
                     expanded = expGenero,
                     onDismissRequest = { expGenero = false }
-                ) {
+                ){
+                    DropdownMenuItem(
+                        text = {
+                            Text(stringResource(R.string.desc_select)) },
+                            onClick = { genero = "Seleccionar"; expGenero = false }
+                    )
+
                     stringArrayResource(R.array.generos_biologicos).forEach { opcion ->
                         DropdownMenuItem(
                             text = { Text(opcion) },
@@ -339,7 +407,7 @@ fun PerfilScreen(
                 }
             }
 
-            // Menú desplegable para el nivel de actividad física desde string-array xml
+            // Lo mismo pero para el nivel de Actividad
             ExposedDropdownMenuBox(
                 expanded = expActividad,
                 onExpandedChange = { expActividad = !expActividad }
@@ -358,6 +426,12 @@ fun PerfilScreen(
                     expanded = expActividad,
                     onDismissRequest = { expActividad = false }
                 ) {
+                    DropdownMenuItem(
+                        text = {
+                            Text(stringResource(R.string.desc_select)) },
+                        onClick = { actividad = "Seleccionar"; expActividad = false }
+                    )
+
                     stringArrayResource(R.array.niveles_actividad).forEach { opcion ->
                         DropdownMenuItem(
                             text = { Text(opcion) },
@@ -367,7 +441,7 @@ fun PerfilScreen(
                 }
             }
 
-            // Despliegue informativo del entorno meteorológico actual de la API
+            // Tarjeta transparente que utiliza la API del clima
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = UserProfileColors.White.copy(alpha = 0.5f))
@@ -383,6 +457,7 @@ fun PerfilScreen(
                     )
                     Text(
                         text = climaActual,
+                        // Apartado de colores según la temperatura actual
                         color = if (climaActual == "Calido") UserProfileColors.ClimaCalido else UserProfileColors.ClimaFrio,
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 16.sp
@@ -392,7 +467,7 @@ fun PerfilScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botón de guardado y recálculo de metas
+            // Guarda los datos y nos redirige
             Button(
                 onClick = {
                     viewModel.guardarPerfil(
