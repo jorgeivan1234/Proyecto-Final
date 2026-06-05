@@ -56,6 +56,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.fic.dualhabit10.R
+import com.fic.dualhabit10.R.array.sexo_mascota
 import com.fic.dualhabit10.ui.viewmodels.PerfilMascotaViewModel
 
 // Constantes de diseño
@@ -233,6 +234,27 @@ fun PerfilMascotaScreen(
                         selected = viewModel.especieMascota == especie,
                         onClick = { viewModel.especieMascota = especie },
                         label = { Text(especie) }
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // Selector horizontal de chips para clasificar el sexo de la mascota
+            Text(
+                text = stringResource(R.string.label_sexo_mascota), // <-- Cambiado de 'id= sexo_mascota' a 'R.string.label_sexo_mascota'
+                modifier = Modifier.fillMaxWidth(),
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                stringArrayResource(sexo_mascota).forEach { sexo ->
+                    FilterChip(
+                        selected = viewModel.sexoMascota == sexo,
+                        onClick = { viewModel.sexoMascota = sexo },
+                        label = { Text(sexo) }
                     )
                 }
             }

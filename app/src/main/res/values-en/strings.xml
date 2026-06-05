@@ -77,6 +77,7 @@
         <string name="btn_add_foto">Add Photo</string>
         <string name="desc_foto_mascota">Pet Photo</string>
         <string name="label_nombre_mascota">Pet Name</string>
+        <string name="label_sexo_mascota">Pet Sex</string>
         <string name="title_especie">Species</string>
         <string name="label_peso">Weight (KG)</string>
         <string name="label_edad">Age (Years)</string>
@@ -87,6 +88,10 @@
             <item>Cat</item>
             <item>Bird</item>
             <item>Rodent/Rabbit</item>
+        </string-array>
+        <string-array name="SexoMascota">
+                <item>Male</item>
+                <item>Female</item>
         </string-array>
 
         <string name="title_perfil_compartido">Shared Profile</string>
