@@ -1,6 +1,5 @@
 package com.fic.dualhabit10
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -40,11 +39,13 @@ import com.fic.dualhabit10.ui.screens.RegisterSuccessful
 import com.fic.dualhabit10.ui.screens.RegistroPaseosScreen
 import com.fic.dualhabit10.ui.screens.ResultadoHidratacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.ResultadoHidratacionScreen
+import com.fic.dualhabit10.ui.screens.SaludMascotaScreen
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
 import com.fic.dualhabit10.ui.screens.Sugerencias
 import com.fic.dualhabit10.ui.viewmodels.AlimentacionViewModel
 import com.fic.dualhabit10.ui.viewmodels.HigieneMascotaViewModel
 import com.fic.dualhabit10.ui.viewmodels.PaseosViewModel
+import com.fic.dualhabit10.ui.viewmodels.SaludMascotaViewModel
 import com.fic.dualhabit10.ui.viewmodels.SugerenciasViewModel
 
 
@@ -235,6 +236,15 @@ class MainActivity : ComponentActivity(){
                         HigieneMascotaDetalleScreen(
                             navController = navController,
                             viewModel = higieneViewModel
+                        )
+                    }
+
+                    //HabitosMascotaScreen -> SaludMascotaScreen
+                    composable("salud_mascota"){
+                        val saludViewModel: SaludMascotaViewModel = viewModel()
+                        SaludMascotaScreen(
+                            navController = navController,
+                            viewModel = saludViewModel
                         )
                     }
                 }

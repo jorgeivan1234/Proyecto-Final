@@ -85,13 +85,13 @@ fun HabitosMascotaScreen(navController: NavController) {
         ),
         SeccionHabitoMascota(
             titulo = "Salud y Vacunas",
-            rutaNavigation = "mantenimiento", // Modificado a mantenimiento
+            rutaNavigation = "salud_mascota",
             colorFondo = Color(0xFFF8BBD0),
             imagenRes = R.drawable.img_inyeccion
         ),
         SeccionHabitoMascota(
             titulo = "Actividades y Juegos",
-            rutaNavigation = "mantenimiento", // Modificado a mantenimiento
+            rutaNavigation = "mantenimiento", // ultima pantalla faltante!!!!
             colorFondo = Color(0xFFFFF9C4),
             imagenRes = R.drawable.img_perro_jugando
         )

@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.fic.dualhabit10.data.local.AppDatabase
 import com.fic.dualhabit10.data.local.PerfilMascotaEntity
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 
 class PerfilMascotaViewModel(application: Application) : AndroidViewModel(application) {
     private val database = AppDatabase.getDatebase(application)
@@ -27,14 +28,17 @@ class PerfilMascotaViewModel(application: Application) : AndroidViewModel(applic
 
     init {
         viewModelScope.launch {
-            perfilDao.obtenerPerfil().collect { perfil ->
+            try {
+                val perfil = perfilDao.obtenerPerfil().first()
                 if (perfil != null) {
                     nombreMascota = perfil.nombre
                     especieMascota = perfil.especie
-                    pesoMascota = perfil.peso.toString()
-                    sexoMascota = perfil.sexo.toString()
-                    edadMascota = perfil.edad.toString()
+                    pesoMascota = if (perfil.peso > 0f) perfil.peso.toString() else ""
+                    sexoMascota = perfil.sexo
+                    edadMascota = if (perfil.edad > 0) perfil.edad.toString() else ""
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
@@ -45,6 +49,7 @@ class PerfilMascotaViewModel(application: Application) : AndroidViewModel(applic
             sharedPreferences.edit().putString("saved_mascota_uri", imagenMascota).apply()
 
             val perfil = PerfilMascotaEntity(
+                id = 1,
                 nombre = nombreMascota,
                 especie = especieMascota,
                 sexo = sexoMascota,

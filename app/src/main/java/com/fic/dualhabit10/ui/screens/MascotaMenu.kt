@@ -72,47 +72,50 @@ fun MascotasMenu(navController: NavController) {
     //La lista las tarjetas
     val Listacards = listOf(
         MascotaMenu(
-            titulo = "Noticias de mascotas",
+            titulo = "Ejercicios",
             imagenRes = null,
-            rutaNavigation = "mantenimiento", //Redirige a mantenimiento hasta proxima actualizacion.
-            enMantenimiento = true,
+            rutaNavigation = "actividad_fisica_mascota",
+            enMantenimiento = false,
             colorFondo = colores[0]
         ),
-        MascotaMenu(
-            titulo = "Juegos",
-            imagenRes = null,
-            rutaNavigation = "mantenimiento", //Redirige a mantenimiento hasta proxima actualizacion.
-            enMantenimiento = true,
-            colorFondo = colores[1]
-        ),
-        MascotaMenu(
-            titulo = "Enciclopedia",
-            imagenRes = null,
-            rutaNavigation = "mantenimiento", //Redirige a mantenimiento hasta proxima actualizacion.
-            enMantenimiento = true,
-            colorFondo = colores[2]
-        ),
+
         MascotaMenu(
             titulo = "Ir a mis hábitos humanos",
             imagenRes = null,
             rutaNavigation = "habitos",
             enMantenimiento = false,
+            colorFondo = colores[1]
+        ),
+        MascotaMenu(
+            titulo = "Noticias de mascotas",
+            imagenRes = null,
+            rutaNavigation = "Proxima Actualizacion", //Redirige a mantenimiento hasta proxima actualizacion.
+            enMantenimiento = true,
+            colorFondo = colores[2]
+        ),
+        MascotaMenu(
+            titulo = "Juegos",
+            imagenRes = null,
+            rutaNavigation = "Proxima Actualizacion", //Redirige a mantenimiento hasta proxima actualizacion.
+            enMantenimiento = true,
             colorFondo = colores[3]
         ),
         MascotaMenu(
-            titulo = "Aprender (PetDex)",
+            titulo = "Enciclopedia",
             imagenRes = null,
-            rutaNavigation = "mantenimiento", //Redirige a mantenimiento hasta proxima actualizacion.
+            rutaNavigation = "Proxima Actualizacion", //Redirige a mantenimiento hasta proxima actualizacion.
             enMantenimiento = true,
             colorFondo = colores[4]
         ),
+
         MascotaMenu(
-            titulo = "Ejercicios",
+            titulo = "Aprender (PetDex)",
             imagenRes = null,
-            rutaNavigation = "actividad_fisica_mascota",
-            enMantenimiento = false,
+            rutaNavigation = "Proxima Actualizacion", //Redirige a mantenimiento hasta proxima actualizacion.
+            enMantenimiento = true,
             colorFondo = colores[5]
         )
+
     )
 
     BaseCustomDrawer(
