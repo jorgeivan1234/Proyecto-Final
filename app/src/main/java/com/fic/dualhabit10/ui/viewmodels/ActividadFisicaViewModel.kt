@@ -1,10 +1,16 @@
 package com.fic.dualhabit10.ui.viewmodels
 
 import android.app.Application
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.fic.dualhabit10.data.local.ActividadFisicaEntity
 import com.fic.dualhabit10.data.local.AppDatabase
+import com.fic.dualhabit10.data.local.PaseoEntity
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,6 +21,14 @@ class ActividadFisicaViewModel(application: Application) : AndroidViewModel(appl
 
     private val database = AppDatabase.getDatebase(application)
     private val actividadDao = database.actividadFisicaDao()
+    private val paseoDao = database.paseoDao()
+
+    var tiempoRestanteKey by mutableStateOf(0)
+    var juegoEnProgreso by mutableStateOf(false)
+    var juegosCompletados by mutableStateOf(false)
+    var puntosGanados by mutableStateOf(0)
+
+    private var cronometroJob: Job? = null
 
     val actividades: StateFlow<List<ActividadFisicaEntity>> = actividadDao.obtenerActividades()
         .stateIn(
@@ -30,6 +44,42 @@ class ActividadFisicaViewModel(application: Application) : AndroidViewModel(appl
     fun buscarActividadPorId(id: Int): Flow<ActividadFisicaEntity?> {
         return actividadDao.obtenerActividadPorId(id)
     }
+
+    fun iniciarJuego(minutosIniciales: Int) {
+        cronometroJob?.cancel()
+        tiempoRestanteKey = if (minutosIniciales <= 0) 60 else minutosIniciales * 60
+        juegoEnProgreso = true
+        juegosCompletados = false
+        puntosGanados = 0
+
+        cronometroJob = viewModelScope.launch {
+            while (tiempoRestanteKey > 0) {
+                delay(1000)
+                tiempoRestanteKey--
+            }
+            terminarGuardarJuego(minutosIniciales)
+        }
+    }
+
+    fun pausarOdetenerJuego() {
+        cronometroJob?.cancel()
+        juegoEnProgreso = false
+    }
+
+    private fun terminarGuardarJuego(minutosTotales: Int) {
+        juegoEnProgreso = false
+        juegosCompletados = true
+        puntosGanados = minutosTotales * 10
+
+        viewModelScope.launch {
+            val nuevoRegistroJuego = PaseoEntity(
+                minutos = minutosTotales,
+                fecha = System.currentTimeMillis(),
+                notas = "¡Sesion de juego Fisico completado con exito! Gano $puntosGanados pts."
+            )
+            paseoDao.insertarPaseo(nuevoRegistroJuego)
+        }
+    }
     private fun verificarYPrecargarActividades() {
         viewModelScope.launch {
             //comprueba si la bd ya tiene registros
@@ -38,7 +88,7 @@ class ActividadFisicaViewModel(application: Application) : AndroidViewModel(appl
                     ActividadFisicaEntity(
                         titulo = "canicross Ligero",
                         descripcion = "Trote continuo donde tu perro va sujeto a tu cintura con un arnes elastico. Ideal para mejorar la resistencia cardiovascular de ambos.",
-                        duracion = "20-30 min",
+                        duracion = "20 min",
                         intensidad = "Media",
                         colorHex = "#FFD0E8FF",
                         imagenUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTj2atkA12pauKEuYJhfxZ1IOfKBm5eth7lnw&s"

@@ -91,7 +91,7 @@ fun HabitosMascotaScreen(navController: NavController) {
         ),
         SeccionHabitoMascota(
             titulo = "Actividades y Juegos",
-            rutaNavigation = "mantenimiento", // ultima pantalla faltante!!!!
+            rutaNavigation = "actividad_fisica_mascota", // ultima pantalla faltante!!!!
             colorFondo = Color(0xFFFFF9C4),
             imagenRes = R.drawable.img_perro_jugando
         )
