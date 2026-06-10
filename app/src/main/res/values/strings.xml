@@ -1,4 +1,27 @@
 <resources>
+    // Pantalla de inicio
+    <string name="desc_fondo_cielo_inicio">Fondo decorativo de cielo azul</string>
+    <string name="desc_personaje_saludo">Personaje saludando alegremente</string>
+    <string name="desc_perro_inicio">Perrito de mascota acompañante</string>
+    <string name="desc_globo_bienvenida">Globo de texto que dice Welcome</string>
+
+    // Pantalla de Logging
+    <string name="desc_fondo_login">Imagen decorativa de fondo para inicio de sesión</string>
+    <string name="btn_modo_offline">Modo sin conexion</string>
+    <string name="btn_offline_bloqueado">Modo offline bloqueado</string>
+
+    //Pantalla de Recuperar Contraseña
+    <string name="desc_fondo_cielo_recuperar">Fondo de cielo para recuperación de contraseña</string>
+    <string name="desc_perro_saltando">Perrito saltando alegremente</string>
+    <string name="err_correo_vacio_recuperacion">Obligatorio: Por favor ingrese su cuenta de correo</string>
+    <string name="err_correo_invalido_recuperacion">Por favor, ingresa un formato de correo valido</string>
+    <string name="err_correo_no_registrado">No encontramos ninguna cuenta registrada con este correo</string>
+    <string name="hint_correo_electronico">Correo electronico</string>
+    <string name="title_correo_enviado">Correo Enviado</string>
+    <string name="msg_correo_enviado">Hemos enviado un enlace de recuperacion a:\n%1$s\n\nRevisa tu bandeja de entrada o spam</string>
+    <string name="btn_entendido">Entendido</string>
+
+    // Contenidos de pantalla de registro
     <string name="label_nombre_reg">Nombre(s)</string>
     <string name="label_apellido_reg">Apellido(s)</string>
     <string name="label_correo_reg">Correo Electrónico</string>
@@ -9,14 +32,30 @@
     <string name="btn_cancelar_reg">Cancelar</string>
     <string name="text_ya_tengo_cuenta">Iniciar Sesión</string>
 
+    // Avisos de registros
     <string name="error_campos_vacios_reg">Por favor, rellena todos los campos</string>
     <string name="error_pass_corta_reg">La contraseña debe tener al menos 6 caracteres</string>
     <string name="error_email_invalido_reg">Introduce un correo electrónico válido</string>
 
+    // Pantalla de registro
+    <string name="desc_fondo_registro">Imagen decorativa de fondo para registro</string>
+    <string name="hint_nombre">Nombre (s)</string>
+    <string name="hint_apellido">Apellido (s)</string>
+    <string name="hint_telefono">Teléfono</string>
+    <string name="hint_fecha_nacimiento">Fecha de nacimiento DD/MM/AAAA</string>
+    <string name="btn_aceptar">Aceptar</string>
+    <string name="btn_cancelar">Cancelar</string>
+    <string name="txt_iniciar_sesion_link">Iniciar Sesión</string>
+
+    // Error de registro
+    <string name="err_campos_incompletos">Por favor, rellenar todos los campos</string>
+    <string name="err_pass_corta">La contraseña debe tener al menos 8 caracteres</string>
+    <string name="err_correo_invalido_format">Introduce un correo electrónico válido</string>
+
+    // Pantalla de Registro Exitoso
+    <string name="desc_fondo_cielo">Fondo decorativo de cielo azul con nubes</string>
     <string name="title_registro_exitoso">¡Registro Exitoso!</string>
     <string name="btn_continuar">Continuar</string>
-    <string name="desc_fondo_cielo">Fondo decorativo de cielo</string>
-    <string name="desc_perro_saltando">Perrito saltando de felicidad</string>
 
     <string name="title_hidratacion">Hidratación</string>
     <string name="title_sueno">Sueño</string>
@@ -41,8 +80,6 @@
     <string name="Login_Back">Volver al Login</string>
     <string name="Menu_Mascota">Menu de la mascota</string>
     <string name="Ver_Mascota">Ver mascotas Virtual</string>
-    <string name="desc_personaje_saludo">Personaje saludando amigablemente</string>
-    <string name="desc_perro_inicio">Mascota camina de bienvenida</string>
     <string name="hint_correo">Ingresar correo electronico</string>
     <string name="hint_password">Contraseña</string>
     <string name="btn_recuperar_pass">Recuperar Contraseña</string>
