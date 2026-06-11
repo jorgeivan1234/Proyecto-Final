@@ -38,6 +38,20 @@
         <string name="title_registro_exitoso">Registration Successful!</string>
         <string name="btn_continuar">Continue</string>
 
+        // Habits Screen (Main Menu)
+        <string name="title_hidratacion">Hydration</string>
+        <string name="title_sueno">Sleep</string>
+        <string name="title_actividad_fisica">Physical Activity</string>
+        <string name="title_alimentacion">Nutrition</string>
+        <string name="title_mascotas">Pets</string>
+        <string name="title_sugerencias">Suggestions</string>
+
+        <string name="desc_menu">Open side menu</string>
+        <string name="desc_racha_completada">Indicator for streak registered today</string>
+        <string name="desc_dia_completado">Indicator for completed day</string>
+        <string name="racha_lista">Today´s streak is ready</string>
+        <string name="activar_racha">Activate streak: %1$d days</string>
+
 
 
         <string name="desc_fondo_registro">Decorative background image for registration</string>
@@ -52,16 +66,6 @@
         <string name="err_campos_incompletos">Please fill in all fields</string>
         <string name="err_pass_corta">Password must be at least 8 characters long</string>
         <string name="err_correo_invalido_format">Please enter a valid email address</string>
-
-        <string name="title_hidratacion">Hydration</string>
-        <string name="title_sueno">Sleep</string>
-        <string name="title_actividad_fisica">Physical\nActivity</string>
-        <string name="title_alimentacion">Diet</string>
-        <string name="title_mascotas">Pets</string>
-        <string name="title_sugerencias">Suggestions</string>
-
-        <string name="racha_lista">Today\'s Streak Ready!</string>
-        <string name="activar_racha">Activate Streak: %1$d days</string>
 
         <string name="app_name">DualHabit</string>
         <string name="iniciar">START</string>
@@ -135,7 +139,7 @@
         <string name="hint_ver_perfil">View profile</string>
 
         <string name="label_nivel_cuenta">Account Level: %1$d</string>
-        <string name="label_exp_siguiente_logro">Experience points for the next achievement</string>
+        <string name="label_exp_siguiente_logro">Experience points for the next level</string>
         <string name="title_config_biometrica">Biometric Parameters Configuration</string>
         <string name="label_peso_actual">Current weight (Kg)</string>
         <string name="label_genero">Biological Gender</string>
@@ -154,7 +158,6 @@
             <item>Intense</item>
         </string-array>
 
-        <string name="desc_menu">Menu</string>
         <string name="title_buzon_sugerencias">Suggestion Box</string>
         <string name="hint_escribe_comentario">Write your comment here...</string>
         <string name="btn_enviar_sugerencia">Submit suggestion</string>
