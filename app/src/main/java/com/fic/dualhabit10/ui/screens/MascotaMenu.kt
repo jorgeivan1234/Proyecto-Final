@@ -89,21 +89,21 @@ fun MascotasMenu(navController: NavController) {
         MascotaMenu(
             titulo = "Noticias de mascotas",
             imagenRes = null,
-            rutaNavigation = "Proxima Actualizacion", //Redirige a mantenimiento hasta proxima actualizacion.
+            rutaNavigation = "mantenimiento", //Redirige a mantenimiento hasta proxima actualizacion.
             enMantenimiento = true,
             colorFondo = colores[2]
         ),
         MascotaMenu(
             titulo = "Juegos",
             imagenRes = null,
-            rutaNavigation = "Proxima Actualizacion", //Redirige a mantenimiento hasta proxima actualizacion.
+            rutaNavigation = "mantenimiento", //Redirige a mantenimiento hasta proxima actualizacion.
             enMantenimiento = true,
             colorFondo = colores[3]
         ),
         MascotaMenu(
             titulo = "Enciclopedia",
             imagenRes = null,
-            rutaNavigation = "Proxima Actualizacion", //Redirige a mantenimiento hasta proxima actualizacion.
+            rutaNavigation = "mantenimiento", //Redirige a mantenimiento hasta proxima actualizacion.
             enMantenimiento = true,
             colorFondo = colores[4]
         ),
@@ -111,7 +111,7 @@ fun MascotasMenu(navController: NavController) {
         MascotaMenu(
             titulo = "Aprender (PetDex)",
             imagenRes = null,
-            rutaNavigation = "Proxima Actualizacion", //Redirige a mantenimiento hasta proxima actualizacion.
+            rutaNavigation = "mantenimiento", //Redirige a mantenimiento hasta proxima actualizacion.
             enMantenimiento = true,
             colorFondo = colores[5]
         )
