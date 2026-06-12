@@ -52,7 +52,7 @@ fun SugerenciasSend(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = stringResource(id = R.string.title_buzon_sugerencias),
+                text = stringResource(id = R.string.Sugerencia_enviada),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
