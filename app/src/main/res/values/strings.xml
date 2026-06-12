@@ -57,15 +57,21 @@
     <string name="title_registro_exitoso">¡Registro Exitoso!</string>
     <string name="btn_continuar">Continuar</string>
 
+    // Pantalla de Hábitos (Menú Principal)
     <string name="title_hidratacion">Hidratación</string>
     <string name="title_sueno">Sueño</string>
-    <string name="title_actividad_fisica">Actividad\nFísica</string>
+    <string name="title_actividad_fisica">Actividad Física</string>
     <string name="title_alimentacion">Alimentación</string>
     <string name="title_mascotas">Mascotas</string>
     <string name="title_sugerencias">Sugerencias</string>
 
-    <string name="racha_lista">Racha de hoy Lista</string>
-    <string name="activar_racha">Activar Racha: %1$d días</string>
+    <string name="desc_menu">Abrir menú lateral</string>
+    <string name="desc_racha_completada">Indicador de racha registrada hoy</string>
+    <string name="desc_dia_completado">Indicador de día completado</string>
+    <string name="racha_lista">Racha de hoy lista</string>
+    <string name="activar_racha">Activar racha: %1$d días</string>
+
+
 
     <string name="app_name">DualHabit</string>
     <string name="iniciar">INICIAR</string>
@@ -139,7 +145,7 @@
     <string name="hint_ver_perfil">Ver perfil</string>
 
     <string name="label_nivel_cuenta">Nivel de Cuenta: %1$d</string>
-    <string name="label_exp_siguiente_logro">Puntos de Experiencia para el siguiente logro</string>
+    <string name="label_exp_siguiente_logro">Puntos de Experiencia para el siguiente nivel</string>
     <string name="title_config_biometrica">Configuracion de parametros Biometricos</string>
     <string name="label_peso_actual">Peso actual (Kg)</string>
     <string name="label_genero">Genero Biologico</string>
@@ -158,7 +164,6 @@
         <item>Intenso</item>
     </string-array>
 
-    <string name="desc_menu">Menú</string>
     <string name="title_buzon_sugerencias">Buzón de Sugerencias</string>
     <string name="hint_escribe_comentario">Escribe tu comentario aquí...</string>
     <string name="btn_enviar_sugerencia">Enviar sugerencia</string>

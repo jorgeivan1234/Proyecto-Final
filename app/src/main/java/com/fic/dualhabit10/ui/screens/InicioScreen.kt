@@ -70,14 +70,14 @@ fun InicioScreen(navController: NavController) {
             color = TextoNegro,
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .offset(y = Dimens.paddingExtraLarge * 2)
+                .offset(y = Dimens.paddingXXLarge * 2)
         )
 
         // Contenedor para alinear el botón de Iniciar
         Column(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .offset(y = Dimens.paddingExtraLarge * 4),
+                .offset(y = Dimens.paddingXXLarge * 4),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(

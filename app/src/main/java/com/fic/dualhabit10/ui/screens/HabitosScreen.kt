@@ -22,6 +22,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -37,8 +38,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -50,13 +49,33 @@ import java.time.LocalDate
 import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
 import java.util.Locale
+import com.fic.dualhabit10.ui.theme.Dimens
+import com.fic.dualhabit10.ui.theme.AzulTarjetaHidratacion
+import com.fic.dualhabit10.ui.theme.AzulOscuroSueno
+import com.fic.dualhabit10.ui.theme.RosaActividad
+import com.fic.dualhabit10.ui.theme.AmarilloAlimentacion
+import com.fic.dualhabit10.ui.theme.CafeMascotas
+import com.fic.dualhabit10.ui.theme.MagentaSugerencias
+import com.fic.dualhabit10.ui.theme.VerdeFondoHabitos
+import com.fic.dualhabit10.ui.theme.NaranjaCabecera
+import com.fic.dualhabit10.ui.theme.AmarilloFondo
+import com.fic.dualhabit10.ui.theme.VerdeCompletado
+import com.fic.dualhabit10.ui.theme.TextoNegro
+import com.fic.dualhabit10.ui.theme.TextoBlanco
 
 // Lógica de Datos (ViewModel)
 class HabitosViewModel(application: Application) : AndroidViewModel(application) {
-    // Memoria local del dispositivo para guardar el progreso sin necesidad de base de datos compleja
-    private val prefs = application.getSharedPreferences("dualhabit_prefs", Context.MODE_PRIVATE)
 
-    // Estados que la interfaz gráfica vigila que llegan a cambiar la pantalla se actualiza sola
+    // Constantes para evitar typos en las llaves de memoria
+    companion object {
+        private const val PREFS_NAME = "dualhabit_prefs"
+        private const val KEY_RACHA_CONTADOR = "racha_contador"
+        private const val KEY_ULTIMA_FECHA = "ultima_fecha_registro"
+        private const val KEY_DIAS_COMPLETADOS = "dias_completados_set"
+    }
+
+    private val prefs = application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
     var rachaContador by mutableStateOf(0)
         private set
     var diasSemanaActual by mutableStateOf<List<DiaData>>(emptyList())
@@ -67,7 +86,6 @@ class HabitosViewModel(application: Application) : AndroidViewModel(application)
         private set
 
     init {
-        // Al iniciar la pantalla, calculamos cuántos días seguidos lleva el usuario
         cargarYVerificarRacha()
         generarDiasDeLaSemana()
     }
@@ -75,43 +93,35 @@ class HabitosViewModel(application: Application) : AndroidViewModel(application)
     private fun cargarYVerificarRacha() {
         try {
             val hoy = LocalDate.now()
-
-            // Recuperamos los registros anteriores desde la memoria del dispositivo
-            val rachaGuardada = prefs.getInt("racha_contador", 0)
-            val ultimaFechaStr = prefs.getString("ultima_fecha_registro", null)
-            val diasCompletadosGuardados = prefs.getStringSet("dias_completados_set", emptySet()) ?: emptySet()
+            val rachaGuardada = prefs.getInt(KEY_RACHA_CONTADOR, 0)
+            val ultimaFechaStr = prefs.getString(KEY_ULTIMA_FECHA, null)
+            val diasCompletadosGuardados = prefs.getStringSet(KEY_DIAS_COMPLETADOS, emptySet()) ?: emptySet()
             diasCompletados = diasCompletadosGuardados
 
             if (ultimaFechaStr == null) {
-                // Es un usuario completamente nuevo que apenas instaló la aplicación
                 rachaContador = 0
                 rachaRegistradaHoy = false
             } else {
                 val ultimaFecha = LocalDate.parse(ultimaFechaStr)
-
-                // Calculamos cuántos días han pasado desde la última vez que registró su hábito
                 val diasDeDiferencia = ChronoUnit.DAYS.between(ultimaFecha, hoy)
+
                 when {
                     diasDeDiferencia == 0L -> {
-                        // El usuario ya registró su progreso el día de hoy
                         rachaContador = rachaGuardada
                         rachaRegistradaHoy = true
                     }
                     diasDeDiferencia == 1L -> {
-                        // Es un día nuevo, mantenemos el acumulado anterior pero habilitamos el botón
                         rachaContador = rachaGuardada
                         rachaRegistradaHoy = false
                     }
                     else -> {
-                        // Han pasado dos días o más, provocando que se pierda la racha
                         rachaContador = 0
                         rachaRegistradaHoy = false
-                        prefs.edit().putInt("racha_contador", 0).apply()
+                        prefs.edit().putInt(KEY_RACHA_CONTADOR, 0).apply()
                     }
                 }
             }
         } catch (e: Exception) {
-            // En caso de cualquier error con las fechas, reiniciamos el contador por seguridad
             rachaContador = 0
             rachaRegistradaHoy = false
         }
@@ -122,26 +132,22 @@ class HabitosViewModel(application: Application) : AndroidViewModel(application)
             val hoy = LocalDate.now()
             val hoyFechaCompletaStr = hoy.toString()
 
-            // Sumamos un día al acumulado y bloqueamos el botón para evitar registros dobles
             rachaContador += 1
             rachaRegistradaHoy = true
             diasCompletados = diasCompletados + hoyFechaCompletaStr
 
-            // Guardamos la información actualizada en la memoria física del teléfono
             prefs.edit()
-                .putInt("racha_contador", rachaContador)
-                .putString("ultima_fecha_registro", hoy.toString())
-                .putStringSet("dias_completados_set", diasCompletados)
+                .putInt(KEY_RACHA_CONTADOR, rachaContador)
+                .putString(KEY_ULTIMA_FECHA, hoy.toString())
+                .putStringSet(KEY_DIAS_COMPLETADOS, diasCompletados)
                 .apply()
 
-            // Refrescamos los días en pantalla para que aparezca la palomita (check) en el día actual
             generarDiasDeLaSemana()
         }
     }
 
     fun generarDiasDeLaSemana() {
         val hoy = LocalDate.now()
-        // Aseguramos que la semana siempre comience desde el día Lunes
         val lunesDeEstaSemana = hoy.with(DayOfWeek.MONDAY)
         val lista = mutableListOf<DiaData>()
 
@@ -149,10 +155,9 @@ class HabitosViewModel(application: Application) : AndroidViewModel(application)
             val fechaDia = lunesDeEstaSemana.plusDays(i.toLong())
             val fechaDiaCompletaStr = fechaDia.toString()
 
-            // Obtenemos las tres primeras letras del día
             val nombreCorto = fechaDia.dayOfWeek.getDisplayName(
                 TextStyle.SHORT,
-                Locale("es", "MX")
+                Locale.getDefault()
             ).replaceFirstChar { it.uppercase() }
 
             lista.add(
@@ -180,7 +185,8 @@ data class HabitoItem(
     val titulo: String,
     val imagenRes: Int,
     val rutaNavigation: String,
-    val colorFondo: Color
+    val colorFondo: Color,
+    val colorTexto: Color
 )
 
 // Interfaz Gráfica (UI)
@@ -193,69 +199,78 @@ fun HabitosScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scoper = rememberCoroutineScope()
 
-    // Lista de tarjetas principales que dirigen a las diferentes secciones de la aplicación
     val listaHabitos = listOf(
         HabitoItem(
-            titulo = stringResource(R.string.title_hidratacion), // Asegúrate de tener esto en strings.xml
+            titulo = stringResource(R.string.title_hidratacion),
             imagenRes = R.drawable.img_hidratacion,
             rutaNavigation = "hidratacion",
-            colorFondo = Color(0xFFB3E5FC)
+            colorFondo = AzulTarjetaHidratacion,
+            colorTexto = TextoNegro
         ),
         HabitoItem(
             titulo = stringResource(R.string.title_sueno),
             imagenRes = R.drawable.img_sueno,
             rutaNavigation = "sueño",
-            colorFondo = Color(0xFF1A237E)
+            colorFondo = AzulOscuroSueno,
+            colorTexto = TextoBlanco
         ),
         HabitoItem(
             titulo = stringResource(R.string.title_actividad_fisica),
             imagenRes = R.drawable.img_ejercicio,
             rutaNavigation = "actividad_fisica_mascota",
-            colorFondo = Color(0xFFFFCDD2)
+            colorFondo = RosaActividad,
+            colorTexto = TextoNegro
         ),
         HabitoItem(
             titulo = stringResource(R.string.title_alimentacion),
             imagenRes = R.drawable.img_alimentacion,
             rutaNavigation = "alimentacion",
-            colorFondo = Color(0xFFFFF9C4)
+            colorFondo = AmarilloAlimentacion,
+            colorTexto = TextoNegro
         ),
         HabitoItem(
             titulo = stringResource(R.string.title_mascotas),
             imagenRes = R.drawable.img_mascotas_v,
             rutaNavigation = "mascota_menu",
-            colorFondo = Color(0xFFD7CCC8)
+            colorFondo = CafeMascotas,
+            colorTexto = TextoNegro
         ),
         HabitoItem(
             titulo = stringResource(R.string.title_sugerencias),
             imagenRes = R.drawable.img_perro_comentario,
             rutaNavigation = "Sugerencias",
-            colorFondo = Color(0xFFEE1BEE)
+            colorFondo = MagentaSugerencias,
+            colorTexto = TextoBlanco
         )
     )
 
-    // Contenedor principal que permite deslizar el menú lateral
     BaseCustomDrawer(navController = navController, drawerState = drawerState) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF9EFFEB))
+                .background(VerdeFondoHabitos)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        Color(0xFFFF7A22),
-                        shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
+                        color = NaranjaCabecera,
+                        // Utilizamos shape manual porque es asimétrico
+                        shape = RoundedCornerShape(bottomStart = Dimens.paddingLarge, bottomEnd = Dimens.paddingLarge)
                     )
                     .statusBarsPadding()
-                    .padding(start = 12.dp, end = 12.dp, bottom = 20.dp, top = 28.dp)
+                    .padding(
+                        start = Dimens.paddingMedium,
+                        end = Dimens.paddingMedium,
+                        bottom = Dimens.paddingLarge,
+                        top = Dimens.paddingExtraLarge
+                    )
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp)
+                        .padding(vertical = Dimens.paddingTiny)
                 ) {
-                    // Botón para abrir el menú lateral
                     IconButton(
                         onClick = { scoper.launch { drawerState.open() } },
                         modifier = Modifier.align(Alignment.CenterStart)
@@ -263,19 +278,18 @@ fun HabitosScreen(
                         Icon(
                             imageVector = Icons.Default.Menu,
                             contentDescription = stringResource(R.string.desc_menu),
-                            tint = Color.Black,
-                            modifier = Modifier.size(32.dp)
+                            tint = TextoNegro,
+                            modifier = Modifier.size(Dimens.iconSizeLarge)
                         )
                     }
 
-                    // Botón central con forma de píldora que registra la racha del usuario
                     Box(
                         modifier = Modifier
-                            .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))
+                            .background(AmarilloFondo, shape = MaterialTheme.shapes.extraLarge)
                             .clickable(enabled = !viewModel.rachaRegistradaHoy) {
                                 viewModel.registrarRachasDeHoy()
                             }
-                            .padding(horizontal = 20.dp, vertical = 6.dp)
+                            .padding(horizontal = Dimens.paddingLarge, vertical = Dimens.paddingSmall)
                             .align(Alignment.Center)
                     ) {
                         Row(
@@ -285,22 +299,22 @@ fun HabitosScreen(
                             if (viewModel.rachaRegistradaHoy) {
                                 Icon(
                                     imageVector = Icons.Default.Check,
-                                    contentDescription = null,
-                                    tint = Color.Black,
-                                    modifier = Modifier.size(16.dp)
+                                    contentDescription = stringResource(R.string.desc_racha_completada),
+                                    tint = TextoNegro,
+                                    modifier = Modifier.size(Dimens.iconSizeSmall)
                                 )
-                                Spacer(modifier = Modifier.width(4.dp))
+                                Spacer(modifier = Modifier.width(Dimens.paddingTiny))
                                 Text(
                                     text = stringResource(R.string.racha_lista),
-                                    color = Color.Black,
-                                    fontSize = 16.sp,
+                                    color = TextoNegro,
+                                    style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold
                                 )
                             } else {
                                 Text(
                                     text = stringResource(R.string.activar_racha, viewModel.rachaContador),
-                                    color = Color.Black,
-                                    fontSize = 18.sp,
+                                    color = TextoNegro,
+                                    style = MaterialTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
@@ -308,14 +322,13 @@ fun HabitosScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(Dimens.paddingDefault))
 
-                // Fila deslizable que muestra los días de la semana en la cabecera
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .horizontalScroll(rememberScrollState()),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(Dimens.paddingMedium),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     viewModel.diasSemanaActual.forEach { dia ->
@@ -329,15 +342,14 @@ fun HabitosScreen(
                 }
             }
 
-            // Cuadrícula que organiza automáticamente las tarjetas de hábitos en dos columnas
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(horizontal = Dimens.paddingDefault, vertical = Dimens.paddingMedium),
+                horizontalArrangement = Arrangement.spacedBy(Dimens.paddingDefault),
+                verticalArrangement = Arrangement.spacedBy(Dimens.paddingDefault)
             ) {
                 items(listaHabitos) { habito ->
                     Tarjetahabito(habito = habito, onClick = {
@@ -357,60 +369,55 @@ fun DiaItem(diaSemana: String, numeroDia: String, esHoy: Boolean, esCompletado: 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .width(62.dp)
+            .width(Dimens.diaItemWidth)
             .background(
-                color = if (esHoy) Color(0xFFFFF200) else Color.Transparent,
-                shape = RoundedCornerShape(16.dp)
+                color = if (esHoy) AmarilloFondo else Color.Transparent,
+                shape = MaterialTheme.shapes.medium
             )
-            .padding(vertical = 8.dp)
+            .padding(vertical = Dimens.paddingSmall)
     ) {
         Text(
             text = diaSemana,
-            color = if (esHoy) Color.Black else Color.White,
-            fontSize = 15.sp,
+            color = if (esHoy) TextoNegro else TextoBlanco,
+            style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
         )
         Text(
             text = numeroDia,
-            color = if (esHoy) Color.Black else Color.White,
-            fontSize = 18.sp,
+            color = if (esHoy) TextoNegro else TextoBlanco,
+            style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(Dimens.paddingTiny))
 
-        // Indicador visual de éxito: Muestra una palomita si el usuario cumplió en ese día
         if (esCompletado) {
             Box(
                 modifier = Modifier
-                    .size(16.dp)
-                    .background(if (esHoy) Color(0xFF2E7D32) else Color(0xFFFFF200), shape = CircleShape),
+                    .size(Dimens.iconSizeSmall)
+                    .background(if (esHoy) VerdeCompletado else AmarilloFondo, shape = CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.Check,
-                    contentDescription = null,
-                    tint = if (esHoy) Color.White else Color.Black,
-                    modifier = Modifier.size(12.dp)
+                    contentDescription = stringResource(R.string.desc_dia_completado),
+                    tint = if (esHoy) TextoBlanco else TextoNegro,
+                    modifier = Modifier.size(Dimens.paddingMedium)
                 )
             }
         } else {
-            // Mantiene el tamaño uniforme en caso de que el día no esté completado
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(Dimens.iconSizeSmall))
         }
     }
 }
 
 @Composable
 fun Tarjetahabito(habito: HabitoItem, onClick: () -> Unit) {
-    // Determina el color del texto dependiendo del fondo de la tarjeta para garantizar visibilidad
-    val colorText = if (habito.colorFondo == Color(0xFF1A237E)) Color.White else Color.Black
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(160.dp)
+            .height(Dimens.tarjetaHabitoHeight)
             .clickable { onClick() },
-        shape = RoundedCornerShape(24.dp),
+        shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(
             containerColor = habito.colorFondo
         )
@@ -418,25 +425,24 @@ fun Tarjetahabito(habito: HabitoItem, onClick: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp),
+                .padding(Dimens.paddingMedium),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = habito.titulo,
-                color = colorText,
-                fontSize = 18.sp,
+                color = habito.colorTexto,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                lineHeight = 20.sp
+                textAlign = TextAlign.Center
             )
 
             Image(
                 painter = painterResource(id = habito.imagenRes),
                 contentDescription = habito.titulo,
                 modifier = Modifier
-                    .size(85.dp)
-                    .padding(bottom = 4.dp)
+                    .size(Dimens.imageHabitoSize)
+                    .padding(bottom = Dimens.paddingTiny)
             )
         }
     }
