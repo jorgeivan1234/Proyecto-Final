@@ -1,4 +1,78 @@
 <resources>
+    // Pantalla de inicio
+    <string name="desc_fondo_cielo_inicio">Fondo decorativo de cielo azul</string>
+    <string name="desc_personaje_saludo">Personaje saludando alegremente</string>
+    <string name="desc_perro_inicio">Perrito de mascota acompañante</string>
+    <string name="desc_globo_bienvenida">Globo de texto que dice Welcome</string>
+
+    // Pantalla de Logging
+    <string name="desc_fondo_login">Imagen decorativa de fondo para inicio de sesión</string>
+    <string name="btn_modo_offline">Modo sin conexion</string>
+    <string name="btn_offline_bloqueado">Modo offline bloqueado</string>
+
+    //Pantalla de Recuperar Contraseña
+    <string name="desc_fondo_cielo_recuperar">Fondo de cielo para recuperación de contraseña</string>
+    <string name="desc_perro_saltando">Perrito saltando alegremente</string>
+    <string name="err_correo_vacio_recuperacion">Obligatorio: Por favor ingrese su cuenta de correo</string>
+    <string name="err_correo_invalido_recuperacion">Por favor, ingresa un formato de correo valido</string>
+    <string name="err_correo_no_registrado">No encontramos ninguna cuenta registrada con este correo</string>
+    <string name="hint_correo_electronico">Correo electronico</string>
+    <string name="title_correo_enviado">Correo Enviado</string>
+    <string name="msg_correo_enviado">Hemos enviado un enlace de recuperacion a:\n%1$s\n\nRevisa tu bandeja de entrada o spam</string>
+    <string name="btn_entendido">Entendido</string>
+
+    // Contenidos de pantalla de registro
+    <string name="label_nombre_reg">Nombre(s)</string>
+    <string name="label_apellido_reg">Apellido(s)</string>
+    <string name="label_correo_reg">Correo Electrónico</string>
+    <string name="label_password_reg">Contraseña</string>
+    <string name="label_telefono_reg">Teléfono (9 dígitos)</string>
+    <string name="label_fecha_nac_reg">Fecha de nacimiento DD/MM/AAAA</string>
+    <string name="btn_aceptar_reg">Aceptar</string>
+    <string name="btn_cancelar_reg">Cancelar</string>
+    <string name="text_ya_tengo_cuenta">Iniciar Sesión</string>
+
+    // Avisos de registros
+    <string name="error_campos_vacios_reg">Por favor, rellena todos los campos</string>
+    <string name="error_pass_corta_reg">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="error_email_invalido_reg">Introduce un correo electrónico válido</string>
+
+    // Pantalla de registro
+    <string name="desc_fondo_registro">Imagen decorativa de fondo para registro</string>
+    <string name="hint_nombre">Nombre (s)</string>
+    <string name="hint_apellido">Apellido (s)</string>
+    <string name="hint_telefono">Teléfono</string>
+    <string name="hint_fecha_nacimiento">Fecha de nacimiento DD/MM/AAAA</string>
+    <string name="btn_aceptar">Aceptar</string>
+    <string name="btn_cancelar">Cancelar</string>
+    <string name="txt_iniciar_sesion_link">Iniciar Sesión</string>
+
+    // Error de registro
+    <string name="err_campos_incompletos">Por favor, rellenar todos los campos</string>
+    <string name="err_pass_corta">La contraseña debe tener al menos 8 caracteres</string>
+    <string name="err_correo_invalido_format">Introduce un correo electrónico válido</string>
+
+    // Pantalla de Registro Exitoso
+    <string name="desc_fondo_cielo">Fondo decorativo de cielo azul con nubes</string>
+    <string name="title_registro_exitoso">¡Registro Exitoso!</string>
+    <string name="btn_continuar">Continuar</string>
+
+    // Pantalla de Hábitos (Menú Principal)
+    <string name="title_hidratacion">Hidratación</string>
+    <string name="title_sueno">Sueño</string>
+    <string name="title_actividad_fisica">Actividad Física</string>
+    <string name="title_alimentacion">Alimentación</string>
+    <string name="title_mascotas">Mascotas</string>
+    <string name="title_sugerencias">Sugerencias</string>
+
+    <string name="desc_menu">Abrir menú lateral</string>
+    <string name="desc_racha_completada">Indicador de racha registrada hoy</string>
+    <string name="desc_dia_completado">Indicador de día completado</string>
+    <string name="racha_lista">Racha de hoy lista</string>
+    <string name="activar_racha">Activar racha: %1$d días</string>
+
+
+
     <string name="app_name">DualHabit</string>
     <string name="iniciar">INICIAR</string>
     <string name="bienvenido_a_dualhabit">Bienvenido a DualHabit</string>
@@ -12,5 +86,170 @@
     <string name="Login_Back">Volver al Login</string>
     <string name="Menu_Mascota">Menu de la mascota</string>
     <string name="Ver_Mascota">Ver mascotas Virtual</string>
-    <string name="Sugerencia_enviada">Sugerencia Enviada Correctamente</string>
+    <string name="hint_correo">Ingresar correo electronico</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="btn_recuperar_pass">Recuperar Contraseña</string>
+    <string name="chk_recordar">Recordar mis datos</string>
+    <string name="err_campos_vacios">Obligatorio: Tiene que ingresaar cuenta y contraseña</string>
+    <string name="err_correo_invalido">Por favor, ingresa un correo electronico valido</string>
+    <string name="err_credenciales_incorrectas">El correo electronico o la contraseña son incorrectos</string>
+    <string name="err_llenar_campos">Por favor, llenar todos los campos</string>
+    <string name="desc_ocultar_pass">Ocultar contraseña</string>
+    <string name="desc_mostrar_pass">Mostrar contraseña</string>
+
+    <string name="app_title">DualHabit App</string>
+    <string name="menu_home">Inicio</string>
+    <string name="menu_profile">Ver perfil</string>
+    <string name="menu_delete_account">Eliminar Cuenta</string>
+    <string name="menu_logout">Cerrar Sesión</string>
+
+    <string name="dialog_delete_title">Eliminar Cuenta</string>
+    <string name="dialog_delete_body">¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.</string>
+    <string name="dialog_btn_yes">Sí, eliminar</string>
+    <string name="dialog_btn_cancel">Cancelar</string>
+    <string name="dialog_loading">Eliminando cuenta de DualHabit…</string>
+    <string name="dialog_reauth_title">Se requiere reautenticación</string>
+    <string name="dialog_reauth_body">Por seguridad, como ha pasado tiempo desde tu último inicio de sesión, debes cerrar sesión e iniciarla nuevamente antes de poder eliminar tu cuenta.</string>
+    <string name="dialog_btn_goto_login">Ir a Iniciar Sesión</string>
+
+    <string name="title_perfil_mascota">Perfil de Mascota</string>
+    <string name="desc_atras">Atras</string>
+    <string name="desc_select">Seleccionar</string>
+    <string name="desc_regresar">Regresar</string>
+    <string name="btn_add_foto">Añadir Foto</string>
+    <string name="desc_foto_mascota">Foto Mascota</string>
+    <string name="label_nombre_mascota">Nombre de la mascota</string>
+    <string name="title_especie">Especie</string>
+    <string name="label_peso">Peso (KG)</string>
+    <string name="label_edad">Edad (Años)</string>
+    <string name="label_sexo_mascota">Sexo</string>
+    <string name="btn_guardar_mascota">Guardar Datos de la Mascota</string>
+
+    <string-array name="especies_mascota">
+        <item>Perro</item>
+        <item>Gato</item>
+        <item>Ave</item>
+        <item>Roedor/Conejo</item>
+    </string-array>
+    <string-array name="sexo_mascota">
+        <item>Macho</item>
+        <item>Hembra</item>
+    </string-array>
+
+    <string name="title_perfil_compartido">Perfil Compartido</string>
+    <string name="desc_foto_usuario">Foto elegida por el usuario</string>
+    <string name="desc_foto_humano">Foto Humano</string>
+    <string name="label_usuario">Usuario</string>
+    <string name="hint_cambiar_foto">Pulsame para cambiar</string>
+    <string name="label_mascota">Mascota</string>
+    <string name="hint_ver_perfil">Ver perfil</string>
+
+    <string name="label_nivel_cuenta">Nivel de Cuenta: %1$d</string>
+    <string name="label_exp_siguiente_logro">Puntos de Experiencia para el siguiente nivel</string>
+    <string name="title_config_biometrica">Configuracion de parametros Biometricos</string>
+    <string name="label_peso_actual">Peso actual (Kg)</string>
+    <string name="label_genero">Genero Biologico</string>
+    <string name="label_actividad">Nivel de Actividad Fisica</string>
+    <string name="label_entorno_clima">Entorno Meteorológico Actual: </string>
+    <string name="btn_guardar_recalcular">Guardar y Recalcular Meta</string>
+
+    <string-array name="generos_biologicos">
+        <item>Masculino</item>
+        <item>Femenino</item>
+    </string-array>
+
+    <string-array name="niveles_actividad">
+        <item>Sedentario</item>
+        <item>Moderado</item>
+        <item>Intenso</item>
+    </string-array>
+
+    <string name="title_buzon_sugerencias">Buzón de Sugerencias</string>
+    <string name="hint_escribe_comentario">Escribe tu comentario aquí...</string>
+    <string name="btn_enviar_sugerencia">Enviar sugerencia</string>
+
+    <string name="btn_historial">Historial</string>
+    <string name="desc_hidratacion_mascota">Ir a Hidratación Mascota</string>
+    <string name="btn_add_250ml">+250ml</string>
+    <string name="btn_add_500ml">+500ml</string>
+    <string name="btn_add_1l">+1L</string>
+    <string name="label_configurar_parametros">Configurar parámetros\nde hidratación</string>
+    <string name="desc_calculadora">Calculadora</string>
+    <string name="desc_botella_agua">Botella de agua</string>
+    <string name="label_llevas_agua">Llevas:\n%1$.1f / %2$.1f L</string>
+
+    <string name="title_historial_agua">Historial de Agua</string>
+    <string name="tab_dia">Día</string>
+    <string name="tab_semana">Semana</string>
+    <string name="tab_mes">Mes</string>
+
+    <string name="label_consumo_hoy">Consumo de Hoy</string>
+    <string name="label_meta_alcanzada">¡Llevas el %1$d%% de tu meta! Sigue así</string>
+
+    <string name="label_desempeno_semanal">Desempeño de los últimos 7 días</string>
+    <string name="dia_dom">Dom</string>
+    <string name="dia_lun">Lun</string>
+    <string name="dia_mar">Mar</string>
+    <string name="dia_mie">Mié</string>
+    <string name="dia_jue">Jue</string>
+    <string name="dia_vie">Vie</string>
+    <string name="dia_sab">Sáb</string>
+
+    <string name="label_resumen_mes">Resumen de %1$s %2$d</string>
+    <string name="label_promedio_diario">Promedio Diario: </string>
+    <string name="label_dias_meta_cumplida">Días Meta Cumplida: </string>
+    <string name="label_efectividad_mes">Efectividad del Mes: </string>
+    <string name="format_dias_de_dias">%1$s de %2$s</string>
+
+    <string name="title_calculadora_agua">Calculadora de Agua</string>
+    <string name="instrucciones_calculadora">Ajusta tus parámetros para recalcular tu requerimiento diario mínimo de agua.</string>
+    <string name="label_nivel_actividad">Nivel de actividad física</string>
+
+    <string name="actividad_sedentario">Sedentario</string>
+    <string name="actividad_moderado">Moderado</string>
+    <string name="actividad_intenso">Intenso</string>
+
+    <string name="clima_calido">Cálido / Muy Caluroso</string>
+    <string name="clima_frio">Frío / Templado</string>
+    <string name="label_entorno_meteo">Entorno Meteorológico</string>
+    <string name="format_clima">%1$s°C (%2$s)</string>
+
+    <string name="btn_calcular_actualizar">Calcular y Actualizar Requerimiento</string>
+
+    <string name="title_plan_hidratacion">Tu Plan de Hidratación</string>
+    <string name="label_meta_calculada">¡Meta Calculada!</string>
+    <string name="label_necesitas_tomar">Necesitas tomar: </string>
+    <string name="format_litros">%1$.2f Litros</string>
+    <string name="label_al_dia">al día</string>
+    <string name="label_equivale_a">Equivale a aproximadamente: </string>
+    <string name="format_vasos">x %1$d vasos de 250ml</string>
+    <string name="label_como_llegamos">¿Cómo llegamos a este número?</string>
+    <string name="format_desglose_base">Base por peso (%1$skg)</string>
+    <string name="format_ml">%1$sml</string>
+    <string name="format_desglose_actividad">Ajuste por actividad (%1$s)</string>
+    <string name="ajuste_600ml">+600ml</string>
+    <string name="format_desglose_clima">Ajuste por Clima (%1$s)</string>
+    <string name="ajuste_500ml">+500ml</string>
+    <string name="btn_aceptar_meta">¡Entendido, aceptar meta!</string>
+
+    <string-array name="tips_mascotas_sueno">
+        <item>Los perros adultos duermen entre 12 y 14 horas al día. ¡Asegúrate de que su espacio sea cómodo!</item>
+        <item>Un sueño inquieto en tu mascota puede indicar que necesita más actividad física en el día.</item>
+        <item>Los cachorros pueden dormir hasta 18 horas diarias para apoyar su rápido crecimiento óseo.</item>
+        <item>Evita que tu mascota duerma frente a corrientes directas de aire o aires acondicionados muy fríos.</item>
+    </string-array>
+
+    <string name="title_modo_sueno">Modo Sueño</string>
+    <string name="desc_estado_sueno">Estado del sueño</string>
+    <string name="text_listo_descansar">¡Listo para descansar!</string>
+    <string name="text_registrando_sueno">Registrando horas de sueño tuyas y de tu mascota...</string>
+    <string name="text_presiona_dormir">Presiona el botón al ir a dormir.</string>
+    <string name="btn_despertar">Despertar</string>
+    <string name="btn_iniciar_descanso">Iniciar Descanso</string>
+    <string name="title_ultimas_noches">Tus últimas noches</string>
+    <string name="desc_tips_mascota">Tips Mascota</string>
+    <string name="title_descanso_mascota">Descanso de tu Mascota</string>
+    <string name="dialog_title_despertar">¡Buenos días!\n¿Cómo descansaron hoy?</string>
+    <string name="dialog_desc_despertar">Selecciona el emoji que mejor represente tu energía y la de tu mascota esta mañana.</string>
+    <string name="text_horas_dormidas">%1$s hrs</string>
 </resources>
