@@ -161,6 +161,7 @@
         <string name="title_buzon_sugerencias">Suggestion Box</string>
         <string name="hint_escribe_comentario">Write your comment here...</string>
         <string name="btn_enviar_sugerencia">Submit suggestion</string>
+        <string name="Sugerencia_enviada">Suggestion sent!</string>
 
         <string name="btn_historial">History</string>
         <string name="desc_hidratacion_mascota">Go to Pet Hydration</string>
