@@ -50,7 +50,6 @@ import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
 import java.util.Locale
 import com.fic.dualhabit10.ui.theme.Dimens
-import com.fic.dualhabit10.ui.theme.AzulTarjetaHidratacion
 import com.fic.dualhabit10.ui.theme.AzulOscuroSueno
 import com.fic.dualhabit10.ui.theme.RosaActividad
 import com.fic.dualhabit10.ui.theme.AmarilloAlimentacion
@@ -59,6 +58,7 @@ import com.fic.dualhabit10.ui.theme.MagentaSugerencias
 import com.fic.dualhabit10.ui.theme.VerdeFondoHabitos
 import com.fic.dualhabit10.ui.theme.NaranjaCabecera
 import com.fic.dualhabit10.ui.theme.AmarilloFondo
+import com.fic.dualhabit10.ui.theme.AzulHidratacion
 import com.fic.dualhabit10.ui.theme.VerdeCompletado
 import com.fic.dualhabit10.ui.theme.TextoNegro
 import com.fic.dualhabit10.ui.theme.TextoBlanco
@@ -204,7 +204,7 @@ fun HabitosScreen(
             titulo = stringResource(R.string.title_hidratacion),
             imagenRes = R.drawable.img_hidratacion,
             rutaNavigation = "hidratacion",
-            colorFondo = AzulTarjetaHidratacion,
+            colorFondo = AzulHidratacion,
             colorTexto = TextoNegro
         ),
         HabitoItem(

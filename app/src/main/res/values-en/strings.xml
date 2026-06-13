@@ -52,7 +52,20 @@
         <string name="racha_lista">Today´s streak is ready</string>
         <string name="activar_racha">Activate streak: %1$d days</string>
 
-
+        <!-- Pet Hydration -->
+        <string name="title_hidratacion_mascota">Pet Hydration</string>
+        <string name="label_clima_api">Culiacan Weather (API)</string>
+        <string name="format_temperatura">%1$s°C</string>
+        <string name="label_calor_detectado">Heat detected</string>
+        <string name="label_clima_estable">Stable weather</string>
+        <string name="label_progreso_hoy">Today\'s Progress</string>
+        <string name="format_progreso_ml">%1$s / %2$s ml</string>
+        <string name="label_mascota_activa">Active pet in Room</string>
+        <string name="format_mascota_peso">%1$s weighing %2$s KG</string>
+        <string name="label_hizo_ejercicio">Did they exercise today?</string>
+        <string name="label_si">Yes</string>
+        <string name="label_no">No</string>
+        <string name="btn_reiniciar_progreso">Reset Progress</string>
 
         <string name="desc_fondo_registro">Decorative background image for registration</string>
         <string name="hint_nombre">First Name (s)</string>
