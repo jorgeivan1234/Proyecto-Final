@@ -71,7 +71,20 @@
     <string name="racha_lista">Racha de hoy lista</string>
     <string name="activar_racha">Activar racha: %1$d días</string>
 
-
+    // Hidratación Mascota
+    <string name="title_hidratacion_mascota">Hidratación Mascota</string>
+    <string name="label_clima_api">Clima Culiacán (API)</string>
+    <string name="format_temperatura">%1$s°C</string>
+    <string name="label_calor_detectado">Calor detectado</string>
+    <string name="label_clima_estable">Clima estable</string>
+    <string name="label_progreso_hoy">Progreso de Hoy</string>
+    <string name="format_progreso_ml">%1$s / %2$s ml</string>
+    <string name="label_mascota_activa">Mascota activa en Room</string>
+    <string name="format_mascota_peso">%1$s con %2$s KG</string>
+    <string name="label_hizo_ejercicio">¿Hizo ejercicio hoy?</string>
+    <string name="label_si">Sí</string>
+    <string name="label_no">No</string>
+    <string name="btn_reiniciar_progreso">Reiniciar Progreso</string>
 
     <string name="app_name">DualHabit</string>
     <string name="iniciar">INICIAR</string>

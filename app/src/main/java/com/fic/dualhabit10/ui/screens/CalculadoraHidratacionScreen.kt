@@ -11,21 +11,24 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,16 +37,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
+import com.fic.dualhabit10.ui.theme.Dimens
+import com.fic.dualhabit10.ui.theme.NaranjaCabecera
+import com.fic.dualhabit10.ui.theme.AmarilloFondo
+import com.fic.dualhabit10.ui.theme.VerdeFondoHabitos
+import com.fic.dualhabit10.ui.theme.TextoNegro
+import com.fic.dualhabit10.ui.theme.GrisTextoHint
+
+// Constantes de navegación
+private object CalculadoraRoutes {
+    const val RESULTADO = "resultado_hidratacion"
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,69 +68,101 @@ fun CalculadoraHidratacionScreen(
     val scrollState = rememberScrollState()
     var peso by remember { mutableStateOf(viewModel.usuarioPeso.toString()) }
 
-    // Mantenemos el estado interno de la lógica original para no romper el ViewModel
     var actividad by remember { mutableStateOf(viewModel.actividadNivel) }
     var expActividad by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
-            // Usamos CenterAlignedTopAppBar para centrar el contenido automáticamente
-            androidx.compose.material3.CenterAlignedTopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     Text(
                         text = stringResource(R.string.title_calculadora_agua),
                         fontWeight = FontWeight.Bold,
-                        fontSize = 28.sp,
-                        color = Color.Black,
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = TextoNegro,
                         modifier = Modifier
                             .background(
-                                color = Color(0xFFFFE033), // Amarillo vibrante
-                                shape = androidx.compose.foundation.shape.RoundedCornerShape(percent = 50)
+                                color = AmarilloFondo,
+                                shape = RoundedCornerShape(percent = 50)
                             )
-                            // Espaciado interno de la píldora para que el texto respire
-                            .padding(horizontal = 24.dp, vertical = 6.dp,)
+                            .padding(
+                                horizontal = Dimens.paddingLarge,
+                                vertical = Dimens.paddingTiny
+                            )
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.desc_atras))
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.desc_atras),
+                            tint = TextoNegro
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF7A22))
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = NaranjaCabecera
+                )
             )
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF9EFFEB))
+                .background(VerdeFondoHabitos)
                 .padding(innerPadding)
                 .verticalScroll(scrollState)
-                .padding(24.dp),
+                .padding(Dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.img_calculadora),
                 contentDescription = stringResource(R.string.desc_calculadora),
-                modifier = Modifier.size(120.dp)
+                modifier = Modifier.size(Dimens.imageCalculadoraSize)
             )
 
             Text(
                 text = stringResource(R.string.instrucciones_calculadora),
-                fontSize = 14.sp,
-                color = Color.DarkGray,
-                modifier = Modifier.padding(bottom = 8.dp)
+                style = MaterialTheme.typography.bodyMedium,
+                color = GrisTextoHint,
+                modifier = Modifier.padding(bottom = Dimens.paddingSmall)
             )
 
+            // Campo de Peso Actual
             OutlinedTextField(
                 value = peso,
-                onValueChange = { peso = it },
+                onValueChange = { input ->
+                    // Convierte comas en puntos y permite solo números y puntos
+                    var filtrado = input.replace(',', '.').filter { it.isDigit() || it == '.' }
+
+                    // Ignora la acción de un segundo punto decimal
+                    if (filtrado.count { it == '.' } > 1) {
+                        filtrado = filtrado.substring(0, filtrado.lastIndexOf('.'))
+                    }
+
+                    // Fuerza un punto automáticamente al escribir el 4to carácter (si no hay punto ya)
+                    if (filtrado.length == 4 && !filtrado.contains('.')) {
+                        filtrado = "${filtrado.substring(0, 3)}.${filtrado.substring(3)}"
+                    }
+
+                    // Limita a un máximo de 4 dígitos numéricos
+                    val cantDigitos = filtrado.count { it.isDigit() }
+                    if (cantDigitos <= 4) {
+                        peso = filtrado
+                    }
+                },
                 label = { Text(stringResource(R.string.label_peso_actual)) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(Dimens.cornerRadiusSmall),
+                singleLine = true,
+                // Forzamos el teclado numérico
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                )
             )
 
-            // Mapeo del estado interno al String traducido para mostrarlo al usuario
             val actividadMostrada = when (actividad) {
                 "Sedentario" -> stringResource(R.string.actividad_sedentario)
                 "Moderado" -> stringResource(R.string.actividad_moderado)
@@ -134,7 +180,10 @@ fun CalculadoraHidratacionScreen(
                     readOnly = true,
                     label = { Text(stringResource(R.string.label_nivel_actividad)) },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expActividad) },
-                    modifier = Modifier.fillMaxWidth().menuAnchor()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor(),
+                    shape = RoundedCornerShape(Dimens.cornerRadiusSmall)
                 )
                 ExposedDropdownMenu(
                     expanded = expActividad,
@@ -155,15 +204,17 @@ fun CalculadoraHidratacionScreen(
                 }
             }
 
-            // Traducción dinámica del clima
             val estadoClimaTraducido = if (viewModel.entornoClima == "Calido") {
                 stringResource(R.string.clima_calido)
             } else {
                 stringResource(R.string.clima_frio)
             }
 
-            // Utilizamos la herramienta String para introducir variables
-            val textoClimaInformativo = stringResource(R.string.format_clima, viewModel.temperaturaActual.toString(), estadoClimaTraducido)
+            val textoClimaInformativo = stringResource(
+                R.string.format_clima,
+                viewModel.temperaturaActual.toString(),
+                estadoClimaTraducido
+            )
 
             OutlinedTextField(
                 value = textoClimaInformativo,
@@ -171,10 +222,11 @@ fun CalculadoraHidratacionScreen(
                 readOnly = true,
                 enabled = false,
                 label = { Text(stringResource(R.string.label_entorno_meteo)) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(Dimens.cornerRadiusSmall)
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
             Button(
                 onClick = {
@@ -184,15 +236,20 @@ fun CalculadoraHidratacionScreen(
                         genero = viewModel.usuarioGenero,
                         actividad = actividad
                     )
-                    navController.navigate("resultado_hidratacion")
+                    navController.navigate(CalculadoraRoutes.RESULTADO)
                 },
-                modifier = Modifier.fillMaxWidth().height(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7A22))
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(Dimens.buttonHeight),
+                colors = ButtonDefaults.buttonColors(containerColor = NaranjaCabecera),
+                shape = RoundedCornerShape(Dimens.cornerRadiusLarge)
             ) {
                 Text(
                     text = stringResource(R.string.btn_calcular_actualizar),
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold
+                    color = TextoNegro,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.labelLarge,
+                    textAlign = TextAlign.Center
                 )
             }
         }

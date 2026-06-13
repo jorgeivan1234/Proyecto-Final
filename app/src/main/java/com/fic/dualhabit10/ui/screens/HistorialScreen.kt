@@ -26,6 +26,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -44,14 +45,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import com.fic.dualhabit10.ui.theme.Dimens
+import com.fic.dualhabit10.ui.theme.NaranjaCabecera
+import com.fic.dualhabit10.ui.theme.VerdeFondoHabitos
+import com.fic.dualhabit10.ui.theme.AzulFondoDesglose
+import com.fic.dualhabit10.ui.theme.TextoNegro
+import com.fic.dualhabit10.ui.theme.GrisTextoHint
+import com.fic.dualhabit10.ui.theme.GrisOscuro
+import com.fic.dualhabit10.ui.theme.GrisFondoProgreso
+import com.fic.dualhabit10.ui.theme.AzulTarjetaProgreso
+import com.fic.dualhabit10.ui.theme.VerdeCompletado
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,10 +70,8 @@ fun HistorialScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    // Controlamos la pestaña activa utilizando mutableIntStateOf para optimizar el consumo de memoria
     var pestanaSeleccionada by remember { mutableIntStateOf(0) }
 
-    // Lista de pestañas localizada desde el archivo de recursos independientes
     val opcionesPestanas = listOf(
         stringResource(R.string.tab_dia),
         stringResource(R.string.tab_semana),
@@ -81,34 +88,42 @@ fun HistorialScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(stringResource(R.string.title_historial_agua), fontWeight = FontWeight.Bold)},
+                    title = {
+                        Text(
+                            text = stringResource(R.string.title_historial_agua),
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    },
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.desc_menu))
                         }
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF7A22)),
-                    modifier = Modifier.clip(RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = NaranjaCabecera),
+                    modifier = Modifier.clip(RoundedCornerShape(bottomStart = Dimens.cornerRadiusExtraLarge, bottomEnd = Dimens.cornerRadiusExtraLarge))
                 )
             }
         ) { innerPadding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFF9EFFEB))
+                    .background(VerdeFondoHabitos)
                     .padding(innerPadding)
                     .verticalScroll(scrollState)
-                    .padding(20.dp),
+                    .padding(Dimens.paddingLarge),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(20.dp)
+                verticalArrangement = Arrangement.spacedBy(Dimens.paddingLarge)
             ) {
 
                 Card(
-                    shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFE0F7FA)),
+                    shape = RoundedCornerShape(Dimens.cornerRadiusSmall),
+                    colors = CardDefaults.cardColors(containerColor = AzulFondoDesglose),
                 ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(4.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(Dimens.paddingTiny),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         opcionesPestanas.forEachIndexed { indice, titulo ->
@@ -117,18 +132,18 @@ fun HistorialScreen(
                                 modifier = Modifier
                                     .weight(1f)
                                     .background(
-                                        color = if (seleccionado) Color(0xFFFF7A22) else Color.Transparent,
-                                        shape = RoundedCornerShape(8.dp)
+                                        color = if (seleccionado) NaranjaCabecera else Color.Transparent,
+                                        shape = RoundedCornerShape(Dimens.cornerRadiusSmall)
                                     )
                                     .clickable { pestanaSeleccionada = indice }
-                                    .padding(vertical = 10.dp),
+                                    .padding(vertical = Dimens.paddingSmall),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     text = titulo,
                                     fontWeight = FontWeight.Bold,
-                                    color = if (seleccionado) Color.Black else Color.Gray,
-                                    fontSize = 16.sp
+                                    color = if (seleccionado) TextoNegro else GrisTextoHint,
+                                    style = MaterialTheme.typography.titleMedium
                                 )
                             }
                         }
@@ -162,22 +177,37 @@ fun VistaDiariaReal(viewModel: HidratacionViewModel) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+        shape = RoundedCornerShape(Dimens.cornerRadiusSmall),
+        elevation = CardDefaults.cardElevation(Dimens.elevationSmall)
     ) {
-        Column(modifier = Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(stringResource(R.string.label_consumo_hoy), fontSize = 16.sp, color = Color.Gray)
-            Text("$consumo ml / $meta ml", fontSize = 26.sp, fontWeight = FontWeight.Black, color = Color(0xFF448AFF))
-            Spacer(modifier = Modifier.height(16.dp))
+        Column(modifier = Modifier.padding(Dimens.paddingLarge), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(stringResource(R.string.label_consumo_hoy), style = MaterialTheme.typography.titleMedium, color = GrisTextoHint)
+
+            Text(
+                text = "$consumo ml / $meta ml",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Black,
+                color = AzulTarjetaProgreso
+            )
+
+            Spacer(modifier = Modifier.height(Dimens.paddingDefault))
+
             LinearProgressIndicator(
                 progress = { porcentaje },
-                modifier = Modifier.fillMaxWidth().height(14.dp),
-                color = Color(0xFF448AFF),
-                trackColor = Color(0xFFE0E0E0),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(Dimens.progressBarHeight),
+                color = AzulTarjetaProgreso,
+                trackColor = GrisFondoProgreso,
                 strokeCap = StrokeCap.Round
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(stringResource(R.string.label_meta_alcanzada, textoPorcentaje), fontSize = 14.sp, fontWeight = FontWeight.Medium)
+
+            Spacer(modifier = Modifier.height(Dimens.paddingSmall))
+            Text(
+                text = stringResource(R.string.label_meta_alcanzada, textoPorcentaje),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium
+            )
         }
     }
 }
@@ -204,15 +234,22 @@ fun VistaSemanalReal(viewModel: HidratacionViewModel) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+        shape = RoundedCornerShape(Dimens.cornerRadiusSmall),
+        elevation = CardDefaults.cardElevation(Dimens.elevationSmall)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(stringResource(R.string.label_desempeno_semanal), fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color.DarkGray)
-            Spacer(modifier = Modifier.height(24.dp))
+        Column(modifier = Modifier.padding(Dimens.paddingDefault)) {
+            Text(
+                text = stringResource(R.string.label_desempeno_semanal),
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleLarge,
+                color = GrisOscuro
+            )
+            Spacer(modifier = Modifier.height(Dimens.paddingLarge))
 
             Row(
-                modifier = Modifier.fillMaxWidth().height(180.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(Dimens.chartHeight),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
@@ -232,16 +269,18 @@ fun VistaSemanalReal(viewModel: HidratacionViewModel) {
                             if (porcentajeTexto > 0){
                                 Text(
                                     text ="$porcentajeTexto%",
-                                    fontSize = 10.sp,
+                                    style = MaterialTheme.typography.labelSmall,
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.DarkGray
+                                    color = GrisOscuro
                                 )
-                                Spacer(modifier = Modifier.height(4.dp))
+                                Spacer(modifier = Modifier.height(Dimens.paddingTiny))
                             }
                         }
 
                         Box(
-                            modifier = Modifier.weight(1f).fillMaxWidth(),
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth(),
                             contentAlignment = Alignment.BottomCenter
                         ) {
                             Box(
@@ -249,13 +288,13 @@ fun VistaSemanalReal(viewModel: HidratacionViewModel) {
                                     .fillMaxWidth(0.6f)
                                     .fillMaxHeight(porcentaje.coerceIn(0.01f, 1f))
                                     .background(
-                                        color = if (porcentaje >= 1.0f) Color(0xFF2E7D32) else Color(0xFF448AFF),
-                                        shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp)
+                                        color = if (porcentaje >= 1.0f) VerdeCompletado else AzulTarjetaProgreso,
+                                        shape = RoundedCornerShape(topStart = Dimens.cornerRadiusTiny, topEnd = Dimens.cornerRadiusTiny)
                                     )
                             )
                         }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = nombreDia, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        Spacer(modifier = Modifier.height(Dimens.paddingSmall))
+                        Text(text = nombreDia, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -266,15 +305,12 @@ fun VistaSemanalReal(viewModel: HidratacionViewModel) {
 @Composable
 fun VistaMensualReal(viewModel: HidratacionViewModel) {
     val hoy = LocalDate.now()
-
-    // Obtenemos el locale actual mediante el sistema observable de Compose
     val composeLocale = androidx.compose.ui.text.intl.Locale.current
     val javaLocale = java.util.Locale.forLanguageTag(composeLocale.toLanguageTag())
 
     val nombreMes = hoy.month.getDisplayName(java.time.format.TextStyle.FULL, javaLocale)
         .replaceFirstChar { if (it.isLowerCase()) it.titlecase(javaLocale) else it.toString() }
 
-    // Agrupamos cálculos internos
     val estadisticasMes = remember(viewModel.historialConsumoMap, viewModel.metaDiariaML){
         val prefijoMes = hoy.toString().substring(0, 7)
         val registrosDelMes = viewModel.historialConsumoMap.filter { it.key.startsWith(prefijoMes) }
@@ -291,37 +327,53 @@ fun VistaMensualReal(viewModel: HidratacionViewModel) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+        shape = RoundedCornerShape(Dimens.cornerRadiusSmall),
+        elevation = CardDefaults.cardElevation(Dimens.elevationSmall)
     ) {
-        Column(modifier = Modifier.padding(20.dp)){
-            Text(stringResource(R.string.label_resumen_mes, nombreMes, hoy.year), fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color.DarkGray)
-            Spacer(modifier = Modifier.height(12.dp))
+        Column(modifier = Modifier.padding(Dimens.paddingLarge)){
+            Text(
+                text = stringResource(R.string.label_resumen_mes, nombreMes, hoy.year),
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleLarge,
+                color = GrisOscuro
+            )
+            Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(stringResource(R.string.label_promedio_diario))
-                Text("${estadisticasMes.first} ml", fontWeight = FontWeight.Bold, color = Color(0xFF448AFF))
+                Text(stringResource(R.string.label_promedio_diario), style = MaterialTheme.typography.bodyLarge)
+                Text("${estadisticasMes.first} ml", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold, color = AzulTarjetaProgreso)
             }
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = Dimens.paddingSmall))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(stringResource(R.string.label_dias_meta_cumplida))
-                Text(stringResource(R.string.format_dias_de_dias, estadisticasMes.second.first, estadisticasMes.second.second), fontWeight = FontWeight.Bold, color = Color(0xFF2E7D32))
+                Text(stringResource(R.string.label_dias_meta_cumplida), style = MaterialTheme.typography.bodyLarge)
+                Text(
+                    text = stringResource(R.string.format_dias_de_dias, estadisticasMes.second.first, estadisticasMes.second.second),
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = VerdeCompletado
+                )
             }
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = Dimens.paddingSmall))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(stringResource(R.string.label_efectividad_mes))
-                Text(estadisticasMes.third, fontWeight = FontWeight.Black, fontSize = 18.sp, color = Color(0xFFFF7A22))
+                Text(stringResource(R.string.label_efectividad_mes), style = MaterialTheme.typography.bodyLarge)
+                Text(
+                    text = estadisticasMes.third,
+                    fontWeight = FontWeight.Black,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = NaranjaCabecera
+                )
             }
         }
     }
