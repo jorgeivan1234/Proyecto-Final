@@ -52,13 +52,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import com.fic.dualhabit10.R
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
+import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.viewmodels.AuthViewModel
 import com.fic.dualhabit10.ui.theme.Dimens
 import com.fic.dualhabit10.ui.theme.AzulCielo
@@ -68,12 +71,13 @@ import com.fic.dualhabit10.ui.theme.RojoError
 import com.fic.dualhabit10.ui.theme.TextoNegro
 import com.fic.dualhabit10.ui.theme.TextoBlanco
 
+// Pantalla para la captura de datos de identidad de nuevos usuarios en el sistema local y la nube
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("RememberInComposition")
 @Composable
 fun RegisterScreen(
     navController: NavHostController,
-    authViewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    authViewModel: AuthViewModel = viewModel()
 ) {
     var nombre by remember { mutableStateOf("") }
     var apellido by remember { mutableStateOf("") }
@@ -89,7 +93,7 @@ fun RegisterScreen(
     val focusManager = LocalFocusManager.current
     val telefonoFocus = FocusRequester()
 
-    // Importar mensajes de error para mantenibilidad
+    // Carga de referencias de cadenas de texto localizadas para el control de validaciones
     val errCamposIncompletos = stringResource(id = R.string.err_campos_incompletos)
     val errPassCorta = stringResource(id = R.string.err_pass_corta)
     val errCorreoInvalido = stringResource(id = R.string.err_correo_invalido_format)
@@ -97,8 +101,9 @@ fun RegisterScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(AzulCielo) // Uso de Color.kt
+            .background(AzulCielo)
     ) {
+        // Lienzo de fondo decorativo texturizado para el flujo de autenticación
         Image(
             painter = painterResource(id = R.drawable.bg_fondo_login),
             contentDescription = stringResource(id = R.string.desc_fondo_registro),
@@ -131,6 +136,7 @@ fun RegisterScreen(
             )
             Spacer(modifier = Modifier.height(Dimens.paddingDefault))
 
+            // Captura secuencial alfanumérica para el nombre del solicitante
             TextField(
                 value = nombre,
                 onValueChange = {
@@ -156,6 +162,7 @@ fun RegisterScreen(
             )
             Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
+            // Captura secuencial alfanumérica para el apellido paterno/materno
             TextField(
                 value = apellido,
                 onValueChange = {
@@ -181,6 +188,7 @@ fun RegisterScreen(
             )
             Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
+            // Campo con formato restrictivo para direcciones de correo electrónico
             TextField(
                 value = email,
                 onValueChange = {
@@ -206,6 +214,7 @@ fun RegisterScreen(
             )
             Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
+            // Campo de seguridad para contraseña con máscara de caracteres conmutable
             TextField(
                 value = password,
                 onValueChange = {
@@ -241,6 +250,7 @@ fun RegisterScreen(
             )
             Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
+            // Captura restrictiva de caracteres de tipo telefónico estándar
             TextField(
                 value = telefono,
                 onValueChange = {
@@ -268,6 +278,7 @@ fun RegisterScreen(
             )
             Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
+            // Campo táctil protegido que invoca el selector de calendario nativo
             TextField(
                 value = fecha_nacimiento,
                 onValueChange = {
@@ -291,6 +302,7 @@ fun RegisterScreen(
                 )
             )
 
+            // Selector modal de fecha nativo del sistema
             if (Muestra_fecha) {
                 val Status_date = rememberDatePickerState()
 
@@ -318,6 +330,7 @@ fun RegisterScreen(
                 }
             }
 
+            // Despliegue condicional de alertas de error en la validación de reglas de negocio
             if (errorMensaje.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(Dimens.paddingSmall))
                 Text(
@@ -331,6 +344,7 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(Dimens.paddingDefault))
 
+            // Enlace de retorno directo hacia la vista de inicio de sesión
             Text(
                 text = stringResource(id = R.string.txt_iniciar_sesion_link),
                 color = TextoBlanco,
@@ -342,6 +356,7 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
+            // Botón ejecutor que valida la integridad de los datos y procesa el alta en el ViewModel
             Button(
                 onClick = {
                     if (nombre.isBlank() || apellido.isBlank() || email.isBlank() ||
@@ -386,4 +401,11 @@ fun RegisterScreen(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewRegisterScreen() {
+    val nav = rememberNavController()
+    RegisterScreen(navController = nav)
 }

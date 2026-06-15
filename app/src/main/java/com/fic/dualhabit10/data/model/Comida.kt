@@ -1,7 +1,5 @@
 package com.fic.dualhabit10.data.model
 
-import androidx.compose.ui.graphics.Color
-
 data class Comida(
     val id: Int = 0,
     val nombre: String = "",

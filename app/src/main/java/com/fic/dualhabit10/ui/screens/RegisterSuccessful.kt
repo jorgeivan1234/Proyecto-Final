@@ -21,6 +21,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavHostController
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.theme.Dimens
@@ -30,10 +32,10 @@ import com.fic.dualhabit10.ui.theme.AzulFuerte
 import com.fic.dualhabit10.ui.theme.TextoNegro
 import com.fic.dualhabit10.ui.theme.TextoBlanco
 
+// Pantalla de confirmación de la creación correcta de una nueva cuenta de usuario
 @Composable
 fun RegisterSuccessful(navController: NavHostController) {
 
-    // Contenedor principal
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -59,7 +61,6 @@ fun RegisterSuccessful(navController: NavHostController) {
                 .padding(Dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Título principal
             Text(
                 text = stringResource(id = R.string.title_registro_exitoso),
                 style = MaterialTheme.typography.headlineMedium,
@@ -69,22 +70,20 @@ fun RegisterSuccessful(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(Dimens.spacerExtraLarge))
 
-            // Imagen ilustrativa
+            // Ilustración lúdica de la mascota virtual celebrando el hito de alta
             Image(
                 painter = painterResource(id = R.drawable.img_perro_saltando),
                 contentDescription = stringResource(R.string.desc_perro_saltando),
-                modifier = Modifier.size(Dimens.imageDogLarge), // Nuevo valor (280.dp)
+                modifier = Modifier.size(Dimens.imageDogLarge),
                 contentScale = ContentScale.Crop
             )
 
             Spacer(modifier = Modifier.height(Dimens.paddingSmall))
 
-            // Botón final para avanzar a la pantalla de inicio de sesión
+            // Botón ejecutor que redirige al inicio de sesión y purga el historial de navegación preventivamente
             Button(
                 onClick = {
-                    // Una vez que el usuario lee el mensaje, lo mandamos al login
                     navController.navigate("login") {
-                        // Limpiamos el backstack para que no puedan "volver" al registro exitoso
                         popUpTo("register_successful") { inclusive = true }
                     }
                 },
@@ -102,4 +101,11 @@ fun RegisterSuccessful(navController: NavHostController) {
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewRegisterSuccessful() {
+    val nav = rememberNavController()
+    RegisterSuccessful(navController = nav)
 }

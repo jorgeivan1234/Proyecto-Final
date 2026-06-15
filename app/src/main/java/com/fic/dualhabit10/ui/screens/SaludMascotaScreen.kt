@@ -23,21 +23,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.navigation.NavController
+import com.fic.dualhabit10.R
 import com.fic.dualhabit10.data.local.SaludMascotaEntity
 import com.fic.dualhabit10.ui.viewmodels.SaludMascotaViewModel
-
-private object SaludColors {
-    val StrawberryDreams = Color(0xFFFF85A2)
-    val mistyrose = Color(0xFFFFF0F3)
-    val hotPink = Color(0xFFFF477E)
-    val midnight = Color(0xFF2B2D42)
-    val lightSilver = Color(0xFFE0E0E0)
-}
+import com.fic.dualhabit10.ui.theme.Dimens
+import com.fic.dualhabit10.ui.theme.RosaSaludOscuro
+import com.fic.dualhabit10.ui.theme.RosaSaludMedio
+import com.fic.dualhabit10.ui.theme.RosaSaludClaro
+import com.fic.dualhabit10.ui.theme.AzulMedianoche
+import com.fic.dualhabit10.ui.theme.GrisPlata
+import com.fic.dualhabit10.ui.theme.GrisOscuro
+import com.fic.dualhabit10.ui.theme.BlancoFondo
+import com.fic.dualhabit10.ui.theme.TextoNegro
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,14 +57,18 @@ fun SaludMascotaScreen(
     var selected by remember { mutableStateOf(0) }
     var mostrarFormulario by remember { mutableStateOf(false) }
 
-    val tabs = listOf("Vacunas", "Tratamientos", "Historial")
+    val tabs = listOf(
+        stringResource(R.string.tab_vacunas),
+        stringResource(R.string.tab_tratamientos),
+        stringResource(R.string.tab_historial)
+    )
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Salud y Vacunas",
+                        text = stringResource(R.string.title_salud_vacunas),
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
@@ -66,14 +76,14 @@ fun SaludMascotaScreen(
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Atras",
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.desc_volver),
                             tint = Color.White
                         )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = SaludColors.StrawberryDreams
+                    containerColor = RosaSaludMedio
                 )
             )
         },
@@ -81,12 +91,12 @@ fun SaludMascotaScreen(
             if (selected == 2) {
                 FloatingActionButton(
                     onClick = { mostrarFormulario = !mostrarFormulario },
-                    containerColor = SaludColors.hotPink,
+                    containerColor = RosaSaludOscuro,
                     contentColor = Color.White
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = "Añadir registro"
+                        contentDescription = stringResource(R.string.btn_add_registro)
                     )
                 }
             } else {
@@ -98,12 +108,12 @@ fun SaludMascotaScreen(
                         }
                         context.startActivity(mapIntent)
                     },
-                    containerColor = SaludColors.hotPink,
+                    containerColor = RosaSaludOscuro,
                     contentColor = Color.White
                 ) {
                     Icon(Icons.Default.LocationOn, contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Buscar Veterinarias")
+                    Spacer(modifier = Modifier.width(Dimens.paddingSmall))
+                    Text(stringResource(R.string.btn_buscar_vet))
                 }
             }
         }
@@ -111,19 +121,25 @@ fun SaludMascotaScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(SaludColors.mistyrose)
+                .background(RosaSaludClaro)
                 .padding(innerPadding)
         ) {
             TabRow(
                 selectedTabIndex = selected,
-                containerColor = SaludColors.StrawberryDreams.copy(alpha = 0.2f),
-                contentColor = SaludColors.hotPink
+                containerColor = RosaSaludMedio.copy(alpha = 0.2f),
+                contentColor = RosaSaludOscuro
             ) {
                 tabs.forEachIndexed { index, title ->
                     Tab(
                         selected = selected == index,
                         onClick = { selected = index },
-                        text = { Text(title, fontWeight = FontWeight.Bold, fontSize = 13.sp) }
+                        text = {
+                            Text(
+                                text = title,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = Dimens.textSizeSmall
+                            )
+                        }
                     )
                 }
             }
@@ -144,38 +160,57 @@ fun SaludMascotaScreen(
 
 @Composable
 fun InfoVacunasSeccion() {
+    val vacunasRecomendadas = listOf(
+        stringResource(R.string.vacuna_rabia_titulo) to stringResource(R.string.vacuna_rabia_desc),
+        stringResource(R.string.vacuna_quintuple_titulo) to stringResource(R.string.vacuna_quintuple_desc),
+        stringResource(R.string.vacuna_giardiasis_titulo) to stringResource(R.string.vacuna_giardiasis_desc)
+    )
+
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(Dimens.paddingDefault),
+        verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium)
     ) {
         item {
-            Text("Guia Esencial de Vacunacion", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = SaludColors.midnight)
-            Text("Asegurate de mantener al dia el calendario de tu mascota.", fontSize = 14.sp, color = Color.Gray)
-            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.vacunas_guia_titulo),
+                fontWeight = FontWeight.Bold,
+                fontSize = Dimens.textSizeBodyLarge,
+                color = AzulMedianoche
+            )
+            Text(
+                text = stringResource(R.string.vacunas_guia_desc),
+                fontSize = Dimens.textSizeMedium,
+                color = GrisOscuro
+            )
+            Spacer(modifier = Modifier.height(Dimens.paddingSmall))
         }
-        val vacunasRecomendadas = listOf(
-            "Vacuna Antirrábica 🦠" to "Obligatoria por ley. Se aplica por primera vez a los 3-4 meses de edad y requiere un refuerzo anual obligatorio.",
-            "Vacuna Quíntuple / Triple Felina 🐕🐈" to "Protege contra enfermedades mortales como el Parvovirus, Moquillo, Hepatitis y Leptospirosis. Refuerzo cada año.",
-            "Vacuna contra la Giardiasis 🧼" to "Opcional pero altamente recomendada si tu mascota suele frecuentar parques públicos o convivir con otros animales."
-        )
+
         items(vacunasRecomendadas) { (titulo, desc) ->
             Card(
-                modifier = Modifier.fillMaxWidth().border(
-                    1.dp,
-                    SaludColors.StrawberryDreams.copy(alpha = 0.3f),
-                    RoundedCornerShape(12.dp)
-                ),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        Dimens.dividerThickness,
+                        RosaSaludMedio.copy(alpha = 0.3f),
+                        RoundedCornerShape(Dimens.cornerRadiusSmall)
+                    ),
+                colors = CardDefaults.cardColors(containerColor = BlancoFondo)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(Dimens.paddingDefault)) {
                     Text(
-                        titulo,
+                        text = titulo,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp,
-                        color = SaludColors.hotPink
+                        fontSize = Dimens.textSizeBody,
+                        color = RosaSaludOscuro
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(desc, fontSize = 13.sp, color = Color.DarkGray)
+                    Spacer(modifier = Modifier.height(Dimens.paddingTiny))
+                    Text(
+                        text = desc,
+                        fontSize = Dimens.textSizeSmall,
+                        color = Color.DarkGray
+                    )
                 }
             }
         }
@@ -184,33 +219,57 @@ fun InfoVacunasSeccion() {
 
 @Composable
 fun InfoTratamientosSeccion() {
+    val tipsSalud = listOf(
+        stringResource(R.string.tratamiento_desparasitacion_titulo) to stringResource(R.string.tratamiento_desparasitacion_desc),
+        stringResource(R.string.tratamiento_antipulgas_titulo) to stringResource(R.string.tratamiento_antipulgas_desc),
+        stringResource(R.string.tratamiento_med_titulo) to stringResource(R.string.tratamiento_med_desc)
+    )
+
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(Dimens.paddingDefault),
+        verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium)
     ) {
         item {
-            Text("Control de Parásitos y Medicación", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = SaludColors.midnight)
-            Text("Información clave para la salud preventiva del día a día.", fontSize = 14.sp, color = Color.Gray)
-            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.tratamientos_titulo),
+                fontWeight = FontWeight.Bold,
+                fontSize = Dimens.textSizeBodyLarge,
+                color = AzulMedianoche
+            )
+            Text(
+                text = stringResource(R.string.tratamientos_desc),
+                fontSize = Dimens.textSizeMedium,
+                color = GrisOscuro
+            )
+            Spacer(modifier = Modifier.height(Dimens.paddingSmall))
         }
-        val tipsSalud = listOf(
-            "Desparasitación Interna 💊" to "Se debe realizar de forma ideal cada 3 o 4 meses utilizando la dosis exacta según el peso actual de tu mascota.",
-            "Antipulgas y Garrapatas 🛡️" to "Ya sea mediante pipetas mensuales, collares o pastillas masticables. Vital para evitar la transmisión de enfermedades.",
-            "Uso Responsable de Medicamentos ⚠️" to "Nunca automediques a tu consentido. El uso incorrecto de dosis puede dañar severamente sus órganos internos."
-        )
+
         items(tipsSalud) { (titulo, desc) ->
             Card(
-                modifier = Modifier.fillMaxWidth().border(
-                    1.dp,
-                    SaludColors.StrawberryDreams.copy(alpha = 0.3f),
-                    RoundedCornerShape(12.dp)
-                ),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        Dimens.dividerThickness,
+                        RosaSaludMedio.copy(alpha = 0.3f),
+                        RoundedCornerShape(Dimens.cornerRadiusSmall)
+                    ),
+                colors = CardDefaults.cardColors(containerColor = BlancoFondo)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(titulo, fontWeight = FontWeight.Bold, fontSize = 15.sp, color = SaludColors.hotPink)
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(desc, fontSize = 13.sp, color = Color.DarkGray)
+                Column(modifier = Modifier.padding(Dimens.paddingDefault)) {
+                    Text(
+                        text = titulo,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = Dimens.textSizeBody,
+                        color = RosaSaludOscuro
+                    )
+                    Spacer(modifier = Modifier.height(Dimens.paddingTiny))
+                    Text(
+                        text = desc,
+                        fontSize = Dimens.textSizeSmall,
+                        color = Color.DarkGray
+                    )
                 }
             }
         }
@@ -224,41 +283,50 @@ fun HistorialCompletoSeccion(
     viewModel: SaludMascotaViewModel,
     onCerrarFormulario: () -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    val tiposRegistros = listOf(
+        stringResource(R.string.chip_vacuna),
+        stringResource(R.string.chip_desparasitante),
+        stringResource(R.string.chip_nota)
+    )
+
+    Column(modifier = Modifier.fillMaxSize().padding(Dimens.paddingDefault)) {
         AnimatedVisibility(visible = mostrarFormulario) {
             Card(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp).border(2.dp, SaludColors.hotPink, RoundedCornerShape(16.dp)),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = Dimens.paddingDefault)
+                    .border(Dimens.paddingMicro, RosaSaludOscuro, RoundedCornerShape(Dimens.cornerRadiusDefault)),
+                colors = CardDefaults.cardColors(containerColor = BlancoFondo)
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                    modifier = Modifier.padding(Dimens.paddingDefault),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium)
                 ) {
                     Text(
-                        "Nuevo Registro Sanitario",
+                        text = stringResource(R.string.form_nuevo_registro),
                         fontWeight = FontWeight.Bold,
-                        color = SaludColors.hotPink
+                        color = RosaSaludOscuro
                     )
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(Dimens.paddingSmall)
                     ) {
-                        listOf("Vacuna", "Desparasitante", "Nota").forEach { tipo ->
+                        tiposRegistros.forEach { tipo ->
                             val seleccionado = viewModel.tipoRegistro == tipo
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(if (seleccionado) SaludColors.hotPink else SaludColors.lightSilver)
+                                    .clip(RoundedCornerShape(Dimens.paddingSmall))
+                                    .background(if (seleccionado) RosaSaludOscuro else GrisPlata)
                                     .clickable { viewModel.tipoRegistro = tipo }
-                                    .padding(vertical = 8.dp),
+                                    .padding(vertical = Dimens.paddingSmall),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     text = tipo,
-                                    color = if (seleccionado) Color.White else Color.Black,
-                                    fontSize = 12.sp,
+                                    color = if (seleccionado) Color.White else TextoNegro,
+                                    fontSize = Dimens.textSizeExtraSmall,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
@@ -267,25 +335,38 @@ fun HistorialCompletoSeccion(
 
                     OutlinedTextField(
                         value = viewModel.nombreRegistro,
-                        onValueChange = { viewModel.nombreRegistro = it },
-                        label = { Text("Nombre (Ej: Triple Felina, Control Pulgas)") },
+                        onValueChange = {
+                            if (it.length <= 40) viewModel.nombreRegistro = it
+                        },
+                        label = { Text(stringResource(R.string.hint_nombre_registro)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true
                     )
 
                     OutlinedTextField(
                         value = viewModel.fechaRegistro,
-                        onValueChange = { viewModel.fechaRegistro = it },
-                        label = { Text("Fecha (DD/MM/AAAA)") },
+                        onValueChange = { input ->
+                            // Ahora SOLAMENTE guardamos los números limpios, máximo 8 dígitos
+                            val digitos = input.filter { it.isDigit() }.take(8)
+                            viewModel.fechaRegistro = digitos
+                        },
+                        label = { Text(stringResource(R.string.hint_fecha_registro)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Next
+                        ),
+                        // Usamos la transformación visual para que se "dibujen" las / sin afectar el cursor
+                        visualTransformation = DateTransformation()
                     )
 
                     OutlinedTextField(
                         value = viewModel.notasRegistro,
-                        onValueChange = { viewModel.notasRegistro = it },
-                        label = { Text("Notas u observaciones adicionales") },
+                        onValueChange = {
+                            if (it.length <= 100) viewModel.notasRegistro = it
+                        },
+                        label = { Text(stringResource(R.string.hint_notas_registro)) },
                         modifier = Modifier.fillMaxWidth(),
                         maxLines = 2
                     )
@@ -293,10 +374,10 @@ fun HistorialCompletoSeccion(
                     Button(
                         onClick = { viewModel.agregarRegistro { onCerrarFormulario() } },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = SaludColors.hotPink)
+                        colors = ButtonDefaults.buttonColors(containerColor = RosaSaludOscuro)
                     ) {
                         Text(
-                            "Guardar en Bitacora",
+                            text = stringResource(R.string.btn_guardar_bitacora),
                             color = Color.White,
                             fontWeight = FontWeight.Bold
                         )
@@ -307,47 +388,113 @@ fun HistorialCompletoSeccion(
 
         if (historial.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("No hay Vacunas ni notas registradas aun.\nUsa el boton '+' para añadir.", color = Color.Gray, fontSize = 14.sp)
+                Text(
+                    text = stringResource(R.string.empty_state_historial),
+                    color = GrisOscuro,
+                    fontSize = Dimens.textSizeMedium
+                )
             }
         } else {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium)) {
                 items(historial) { registro ->
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = Color.White)
+                        colors = CardDefaults.cardColors(containerColor = BlancoFondo)
                     ) {
-                        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Row(
+                            modifier = Modifier.padding(Dimens.paddingDefault),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Box(
                                         modifier = Modifier
-                                            .clip(RoundedCornerShape(6.dp))
-                                            .background(SaludColors.StrawberryDreams.copy(alpha = 0.2f))
-                                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                                            .clip(RoundedCornerShape(Dimens.paddingSmallMedium))
+                                            .background(RosaSaludMedio.copy(alpha = 0.2f))
+                                            .padding(
+                                                horizontal = Dimens.paddingSmallMedium,
+                                                vertical = Dimens.paddingMicro
+                                            )
                                     ) {
                                         Text(
                                             text = registro.tipo,
-                                            color = SaludColors.hotPink,
-                                            fontSize = 10.sp,
+                                            color = RosaSaludOscuro,
+                                            fontSize = Dimens.textSizeMicro,
                                             fontWeight = FontWeight.Bold
                                         )
                                     }
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(registro.fecha, fontSize = 12.sp, color = Color.Gray)
+                                    Spacer(modifier = Modifier.width(Dimens.paddingSmall))
+
+                                    // Formateamos la fecha para la vista en caso de que esté guardada solo como números
+                                    val digitosFecha = registro.fecha.filter { it.isDigit() }
+                                    val fechaMostrar = if (digitosFecha.length == 8) {
+                                        "${digitosFecha.substring(0, 2)}/${digitosFecha.substring(2, 4)}/${digitosFecha.substring(4, 8)}"
+                                    } else {
+                                        registro.fecha // Por si hay registros antiguos guardados con otro formato
+                                    }
+
+                                    Text(
+                                        text = fechaMostrar,
+                                        fontSize = Dimens.textSizeExtraSmall,
+                                        color = GrisOscuro
+                                    )
                                 }
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(registro.nombre, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = SaludColors.midnight)
+                                Spacer(modifier = Modifier.height(Dimens.paddingTiny))
+                                Text(
+                                    text = registro.nombre,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = Dimens.textSizeBody,
+                                    color = AzulMedianoche
+                                )
                                 if(registro.notas.isNotBlank()) {
-                                    Text(registro.notas, fontSize = 13.sp, color = Color.DarkGray)
+                                    Text(
+                                        text = registro.notas,
+                                        fontSize = Dimens.textSizeSmall,
+                                        color = Color.DarkGray
+                                    )
                                 }
                             }
                             IconButton(onClick = { viewModel.eliminarRegistro(registro) }) {
-                                Icon(Icons.Default.Delete, contentDescription = "Eliminar", tint = Color.LightGray)
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = stringResource(R.string.desc_eliminar),
+                                    tint = Color.LightGray
+                                )
                             }
                         }
                     }
                 }
             }
         }
+    }
+}
+
+// Transformación visual para fechas dd/mm/aaaa
+class DateTransformation : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText {
+        // Obtenemos solo los números
+        val trimmed = if (text.text.length >= 8) text.text.substring(0..7) else text.text
+        var out = ""
+        for (i in trimmed.indices) {
+            out += trimmed[i]
+            if (i == 1 || i == 3) out += "/"
+        }
+
+        // Mapeamos las posiciones del cursor para que no salte
+        val offsetMapping = object : OffsetMapping {
+            override fun originalToTransformed(offset: Int): Int {
+                if (offset <= 1) return offset
+                if (offset <= 3) return offset + 1
+                if (offset <= 8) return offset + 2
+                return 10
+            }
+            override fun transformedToOriginal(offset: Int): Int {
+                if (offset <= 2) return offset
+                if (offset <= 5) return offset - 1
+                if (offset <= 10) return offset - 2
+                return 8
+            }
+        }
+        return TransformedText(AnnotatedString(out), offsetMapping)
     }
 }

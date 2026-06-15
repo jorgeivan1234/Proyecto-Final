@@ -48,7 +48,7 @@ import com.fic.dualhabit10.ui.theme.AzulBotonClaro
 import com.fic.dualhabit10.ui.theme.AzulHidratacion
 import com.fic.dualhabit10.ui.theme.AzulTarjetaProgreso
 
-// Constantes
+// Rutas de navegación internas para la sección de hidratación del usuario
 private object HidratacionRoutes {
     const val HISTORIAL = "historial"
     const val MASCOTA = "hidratacion_mascota"
@@ -56,12 +56,13 @@ private object HidratacionRoutes {
     const val REGRESO_HABITOS = "hid_habitos"
 }
 
+// Pantalla principal de hidratación que permite al usuario registrar y monitorear su consumo de agua diario
 @Composable
 fun HidratacionScreen(
     navController: NavController,
     viewModel: HidratacionViewModel = viewModel()
 ) {
-    // Conversión de ML a L para que la tarjeta de progreso sea más fácil
+    // Conversión de mililitros a litros para simplificar la visualización en la tarjeta de progreso
     val litrosConsumidos = viewModel.aguaConsumidaML / 1000f
     val litrosMeta = viewModel.metaDiariaML / 1000f
 
@@ -75,7 +76,7 @@ fun HidratacionScreen(
                 .background(VerdeFondoHabitos)
         ) {
 
-            // Cabecera naranja
+            // Cabecera superior con el menú de navegación, título y accesos directos secundarios
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -96,7 +97,7 @@ fun HidratacionScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                // Posicionamiento de Botón menú y Título
+                // Contenedor del botón de menú lateral y placa del título principal
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center
@@ -128,7 +129,7 @@ fun HidratacionScreen(
 
                 Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
-                // Fila de accesos secundarios: Historial y Perrito
+                // Fila de accesos rápidos: Enlace al historial personal e hidratación de la mascota
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -158,7 +159,7 @@ fun HidratacionScreen(
                 }
             }
 
-            // Cuerpo principal dividido en 2 columnas
+            // Área de contenido dividida en dos bloques de control y visualización
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -168,7 +169,7 @@ fun HidratacionScreen(
                 verticalAlignment = Alignment.Top
             ) {
 
-                // Columna izquierda: Registro de agua y Calculadora
+                // Columna izquierda: Botones de incremento de agua y acceso a la calculadora de metas
                 Column(
                     modifier = Modifier.weight(1.2f),
                     horizontalAlignment = Alignment.Start
@@ -214,7 +215,7 @@ fun HidratacionScreen(
                     )
                 }
 
-                // Columna derecha: Visualización de botella y meta
+                // Columna derecha: Gráfico indicativo de botella y tarjeta con el progreso numérico actual
                 Column(
                     modifier = Modifier.weight(1f),
                     horizontalAlignment = Alignment.End,
@@ -231,7 +232,6 @@ fun HidratacionScreen(
 
                     Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
-                    // Tarjeta flotante de progreso
                     Box(
                         modifier = Modifier
                             .background(AzulTarjetaProgreso, shape = RoundedCornerShape(Dimens.cornerRadiusSmall))
@@ -254,7 +254,7 @@ fun HidratacionScreen(
 
             Spacer(modifier = Modifier.height(Dimens.spacerExtraLarge))
 
-            // Botón de regresar inferior
+            // Panel inferior interactivo para retornar al menú general de hábitos
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -263,7 +263,7 @@ fun HidratacionScreen(
                     .clickable { navController.navigate(HidratacionRoutes.REGRESO_HABITOS) }
                     .padding(vertical = Dimens.paddingMedium),
                 contentAlignment = Alignment.Center
-            ){
+            ) {
                 Text(
                     text = stringResource(R.string.desc_regresar),
                     color = TextoBlanco,
@@ -275,7 +275,7 @@ fun HidratacionScreen(
     }
 }
 
-// Componente reutilizable local
+// Componente interactivo reutilizable para el registro rápido de tomas de agua con un icono representativo
 @Composable
 fun BotonConsumoOvalado(
     texto: String,

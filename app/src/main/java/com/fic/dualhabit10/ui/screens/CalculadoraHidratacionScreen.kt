@@ -54,23 +54,26 @@ import com.fic.dualhabit10.ui.theme.VerdeFondoHabitos
 import com.fic.dualhabit10.ui.theme.TextoNegro
 import com.fic.dualhabit10.ui.theme.GrisTextoHint
 
-// Constantes de navegación
+// Definición de las rutas de navegación exclusivas de esta sección
 private object CalculadoraRoutes {
     const val RESULTADO = "resultado_hidratacion"
 }
 
+// Interfaz para la calculadora de hidratación del usuario
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalculadoraHidratacionScreen(
     navController: NavController,
     viewModel: HidratacionViewModel = viewModel()
 ) {
+    // Gestión de los estados locales para controlar los campos del formulario
     val scrollState = rememberScrollState()
     var peso by remember { mutableStateOf(viewModel.usuarioPeso.toString()) }
 
     var actividad by remember { mutableStateOf(viewModel.actividadNivel) }
     var expActividad by remember { mutableStateOf(false) }
 
+    // Estructura principal de la vista con su respectiva barra de navegación superior
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -106,6 +109,8 @@ fun CalculadoraHidratacionScreen(
             )
         }
     ) { innerPadding ->
+
+        // Contenedor principal con soporte para desplazamiento vertical
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -129,24 +134,24 @@ fun CalculadoraHidratacionScreen(
                 modifier = Modifier.padding(bottom = Dimens.paddingSmall)
             )
 
-            // Campo de Peso Actual
+            // Campo de entrada para el peso con validación de formato en tiempo real
             OutlinedTextField(
                 value = peso,
                 onValueChange = { input ->
-                    // Convierte comas en puntos y permite solo números y puntos
+                    // Sustituye comas por puntos y conserva únicamente valores numéricos o decimales
                     var filtrado = input.replace(',', '.').filter { it.isDigit() || it == '.' }
 
-                    // Ignora la acción de un segundo punto decimal
+                    // Previene la inserción de múltiples puntos decimales en la cadena
                     if (filtrado.count { it == '.' } > 1) {
                         filtrado = filtrado.substring(0, filtrado.lastIndexOf('.'))
                     }
 
-                    // Fuerza un punto automáticamente al escribir el 4to carácter (si no hay punto ya)
+                    // Aplica un punto decimal de forma automática al ingresar el cuarto dígito
                     if (filtrado.length == 4 && !filtrado.contains('.')) {
                         filtrado = "${filtrado.substring(0, 3)}.${filtrado.substring(3)}"
                     }
 
-                    // Limita a un máximo de 4 dígitos numéricos
+                    // Restringe el valor a un máximo de 4 dígitos para mantener la coherencia de los datos
                     val cantDigitos = filtrado.count { it.isDigit() }
                     if (cantDigitos <= 4) {
                         peso = filtrado
@@ -156,13 +161,15 @@ fun CalculadoraHidratacionScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(Dimens.cornerRadiusSmall),
                 singleLine = true,
-                // Forzamos el teclado numérico
+
+                // Configuración para mostrar el teclado numérico por defecto
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
                 )
             )
 
+            // Asignación de la etiqueta de actividad correspondiente según el idioma actual
             val actividadMostrada = when (actividad) {
                 "Sedentario" -> stringResource(R.string.actividad_sedentario)
                 "Moderado" -> stringResource(R.string.actividad_moderado)
@@ -170,6 +177,7 @@ fun CalculadoraHidratacionScreen(
                 else -> actividad
             }
 
+            // Componente desplegable para la selección del nivel de actividad física
             ExposedDropdownMenuBox(
                 expanded = expActividad,
                 onExpandedChange = { expActividad = !expActividad }
@@ -204,6 +212,7 @@ fun CalculadoraHidratacionScreen(
                 }
             }
 
+            // Procesamiento de las variables meteorológicas para su presentación
             val estadoClimaTraducido = if (viewModel.entornoClima == "Calido") {
                 stringResource(R.string.clima_calido)
             } else {
@@ -216,6 +225,7 @@ fun CalculadoraHidratacionScreen(
                 estadoClimaTraducido
             )
 
+            // Campo de información visual que muestra el clima detectado por la aplicación
             OutlinedTextField(
                 value = textoClimaInformativo,
                 onValueChange = {},
@@ -228,6 +238,7 @@ fun CalculadoraHidratacionScreen(
 
             Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
+            // Botón de confirmación para guardar los datos ingresados y proceder a los resultados
             Button(
                 onClick = {
                     viewModel.guardarPerfil(

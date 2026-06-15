@@ -49,7 +49,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "dual_habit_database"
+                    "dual_habit_database_v1"
                 )
                 .fallbackToDestructiveMigration()
                 .build()

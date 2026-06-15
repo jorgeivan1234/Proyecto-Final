@@ -63,10 +63,10 @@ import com.fic.dualhabit10.ui.theme.VerdeCompletado
 import com.fic.dualhabit10.ui.theme.TextoNegro
 import com.fic.dualhabit10.ui.theme.TextoBlanco
 
-// Lógica de Datos (ViewModel)
+// Gestiona la lógica de negocio para el contador de rachas y el seguimiento semanal del usuario
 class HabitosViewModel(application: Application) : AndroidViewModel(application) {
 
-    // Constantes para evitar typos en las llaves de memoria
+    // Constantes para evitar errores de escritura en las llaves de memoria local
     companion object {
         private const val PREFS_NAME = "dualhabit_prefs"
         private const val KEY_RACHA_CONTADOR = "racha_contador"
@@ -76,6 +76,7 @@ class HabitosViewModel(application: Application) : AndroidViewModel(application)
 
     private val prefs = application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
+    // Estados reactivos observables por la capa de interfaz de usuario
     var rachaContador by mutableStateOf(0)
         private set
     var diasSemanaActual by mutableStateOf<List<DiaData>>(emptyList())
@@ -86,10 +87,12 @@ class HabitosViewModel(application: Application) : AndroidViewModel(application)
         private set
 
     init {
+        // Inicialización del estado de la racha y cálculo de los días correspondientes a la semana en curso
         cargarYVerificarRacha()
         generarDiasDeLaSemana()
     }
 
+    // Recupera los datos de racha almacenados localmente y valida si se ha mantenido la continuidad de días
     private fun cargarYVerificarRacha() {
         try {
             val hoy = LocalDate.now()
@@ -115,6 +118,7 @@ class HabitosViewModel(application: Application) : AndroidViewModel(application)
                         rachaRegistradaHoy = false
                     }
                     else -> {
+                        // Reseteo de racha si se ha interrumpido la secuencia de días consecutivos
                         rachaContador = 0
                         rachaRegistradaHoy = false
                         prefs.edit().putInt(KEY_RACHA_CONTADOR, 0).apply()
@@ -127,6 +131,7 @@ class HabitosViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    // Incrementa y consolida de forma persistente la racha actual al registrar la participación diaria del usuario
     fun registrarRachasDeHoy() {
         if (!rachaRegistradaHoy) {
             val hoy = LocalDate.now()
@@ -146,6 +151,7 @@ class HabitosViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    // Calcula y estructura cronológicamente los días del bloque semanal a partir del lunes actual
     fun generarDiasDeLaSemana() {
         val hoy = LocalDate.now()
         val lunesDeEstaSemana = hoy.with(DayOfWeek.MONDAY)
@@ -173,7 +179,7 @@ class HabitosViewModel(application: Application) : AndroidViewModel(application)
     }
 }
 
-// Modelos de Datos
+// Estructuras de datos para la organización del calendario de hábitos
 data class DiaData(
     val nombre: String,
     val numero: String,
@@ -189,7 +195,7 @@ data class HabitoItem(
     val colorTexto: Color
 )
 
-// Interfaz Gráfica (UI)
+// Interfaz Gráfica Principal que integra el panel de control semanal de rachas y el catálogo modular de hábitos
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitosScreen(
@@ -199,6 +205,7 @@ fun HabitosScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scoper = rememberCoroutineScope()
 
+    // Definición del catálogo modular de hábitos disponibles dentro del ecosistema de la aplicación
     val listaHabitos = listOf(
         HabitoItem(
             titulo = stringResource(R.string.title_hidratacion),
@@ -250,12 +257,12 @@ fun HabitosScreen(
                 .fillMaxSize()
                 .background(VerdeFondoHabitos)
         ) {
+            // Cabecera superior que contiene el panel de visualización de rachas y calendario
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
                         color = NaranjaCabecera,
-                        // Utilizamos shape manual porque es asimétrico
                         shape = RoundedCornerShape(bottomStart = Dimens.paddingLarge, bottomEnd = Dimens.paddingLarge)
                     )
                     .statusBarsPadding()
@@ -283,6 +290,7 @@ fun HabitosScreen(
                         )
                     }
 
+                    // Botón de activación interactiva para consolidar la racha diaria
                     Box(
                         modifier = Modifier
                             .background(AmarilloFondo, shape = MaterialTheme.shapes.extraLarge)
@@ -324,6 +332,7 @@ fun HabitosScreen(
 
                 Spacer(modifier = Modifier.height(Dimens.paddingDefault))
 
+                // Carrusel horizontal para la visualización del estado de los días de la semana
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -342,6 +351,7 @@ fun HabitosScreen(
                 }
             }
 
+            // Cuadrícula principal con accesos directos modulares a cada sección de hábitos
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier
@@ -363,7 +373,7 @@ fun HabitosScreen(
     }
 }
 
-// Componentes Visuales Reutilizables
+// Representa visualmente de forma individual el estado de cumplimiento de un día específico
 @Composable
 fun DiaItem(diaSemana: String, numeroDia: String, esHoy: Boolean, esCompletado: Boolean) {
     Column(
@@ -410,6 +420,7 @@ fun DiaItem(diaSemana: String, numeroDia: String, esHoy: Boolean, esCompletado: 
     }
 }
 
+// Tarjeta interactiva estilizada que representa una categoría del catálogo de hábitos
 @Composable
 fun Tarjetahabito(habito: HabitoItem, onClick: () -> Unit) {
     Card(

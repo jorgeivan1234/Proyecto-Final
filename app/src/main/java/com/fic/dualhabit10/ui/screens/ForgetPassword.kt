@@ -49,23 +49,25 @@ import com.fic.dualhabit10.ui.theme.RojoError
 import com.fic.dualhabit10.ui.theme.TextoNegro
 import com.fic.dualhabit10.ui.theme.TextoBlanco
 
+// Pantalla responsable de gestionar la recuperación de contraseña del usuario
 @Composable
 fun Forget_Password(
     navController: NavHostController,
     authViewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
+    // Declaración de estados locales para el control de la interfaz y los errores
     var email by remember { mutableStateOf("") }
     var errorMensaje by remember { mutableStateOf("") }
     var mostrarAlertaExito by remember { mutableStateOf(false) }
     var campoError by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
-    // Traemos los mensajes desde strings.xml para mantenibilidad
+    // Carga de mensajes de error desde los recursos para facilitar su mantenimiento
     val msjCorreoVacio = stringResource(id = R.string.err_correo_vacio_recuperacion)
     val msjCorreoInvalido = stringResource(id = R.string.err_correo_invalido_recuperacion)
     val msjCorreoNoRegistrado = stringResource(id = R.string.err_correo_no_registrado)
 
-    // Lógica para procesar la recuperación
+    // Función encargada de validar y procesar la solicitud de recuperación de contraseña
     val procesarRecuperacion = {
         val emailLimpio = email.trim()
         if (emailLimpio.isBlank()) {
@@ -88,6 +90,7 @@ fun Forget_Password(
         }
     }
 
+    // Contenedor principal con imagen de fondo ajustada a la pantalla
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -99,6 +102,8 @@ fun Forget_Password(
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
+
+        // Tarjeta central que agrupa los elementos del formulario
         Column(
             modifier = Modifier
                 .align(Alignment.Center)
@@ -124,6 +129,7 @@ fun Forget_Password(
             )
             Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
+            // Campo de entrada de texto para el correo con validación de estado
             TextField(
                 value = email,
                 onValueChange = {
@@ -163,6 +169,7 @@ fun Forget_Password(
 
             Spacer(modifier = Modifier.height(Dimens.spacerMedium))
 
+            // Botón de acción que ejecuta el proceso de validación y envío
             Button(
                 onClick = {
                     focusManager.clearFocus()
@@ -182,6 +189,7 @@ fun Forget_Password(
             }
             Spacer(modifier = Modifier.height(Dimens.paddingDefault))
 
+            // Enlace interactivo para regresar a la pantalla de inicio de sesión
             Text(
                 text = stringResource(id = R.string.Login_Back),
                 color = TextoBlanco,
@@ -197,6 +205,7 @@ fun Forget_Password(
         }
     }
 
+    // Cuadro de diálogo para notificar el envío exitoso del correo de recuperación
     if (mostrarAlertaExito) {
         AlertDialog(
             onDismissRequest = { mostrarAlertaExito = false },
@@ -206,7 +215,7 @@ fun Forget_Password(
                     fontWeight = FontWeight.Bold
                 )
             },
-            // Pasamos el email como variable al string para que se inyecte dinámicamente
+            // Se incluye el correo ingresado como parámetro dinámico en el mensaje de confirmación
             text = {
                 Text(text = stringResource(id = R.string.msg_correo_enviado, email))
             },

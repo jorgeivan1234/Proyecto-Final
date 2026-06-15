@@ -33,6 +33,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.fic.dualhabit10.R
@@ -53,6 +55,7 @@ private object ResultadoRoutes {
     const val HABITOS_HIDRATACION = "hidratacion"
 }
 
+// Vista analítica que procesa, desglosa y presenta la meta de consumo de agua personalizada para el usuario
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResultadoHidratacionScreen(
@@ -67,6 +70,7 @@ fun ResultadoHidratacionScreen(
 
     Scaffold(
         topBar = {
+            // Cabecera unificada y estilizada con soporte para barras de estado del sistema
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -125,6 +129,7 @@ fun ResultadoHidratacionScreen(
             )
             Spacer(modifier = Modifier.height(Dimens.paddingDefault))
 
+            // Tarjeta de visualización principal que destaca la meta diaria en litros
             Card(
                 shape = RoundedCornerShape(Dimens.cornerRadiusLarge),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -164,6 +169,7 @@ fun ResultadoHidratacionScreen(
             )
             Spacer(modifier = Modifier.height(Dimens.paddingSmall))
 
+            // Fila ilustrativa para la equivalencia volumétrica traducida a vasos estándar
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
@@ -191,16 +197,19 @@ fun ResultadoHidratacionScreen(
             )
             Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
+            // Contenedor analítico que detalla las adiciones por factores biológicos y ambientales
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = AzulFondoDesglose)
             ){
                 Column( modifier = Modifier.padding(Dimens.paddingDefault)){
+                    // Consumo base estimado de acuerdo al peso corporal actual
                     DesgloseItem(
                         label = stringResource(R.string.format_desglose_base, viewModel.usuarioPeso.toString()),
                         value = stringResource(R.string.format_ml, basePeso.toString())
                     )
 
+                    // Incremento condicional basado en la intensidad del desgaste por actividad física
                     if(viewModel.actividadNivel == "Alto" || viewModel.actividadNivel == "Intenso") {
                         DesgloseItem(
                             label = stringResource(R.string.format_desglose_actividad, viewModel.actividadNivel.lowercase()),
@@ -209,6 +218,7 @@ fun ResultadoHidratacionScreen(
                         )
                     }
 
+                    // Incremento condicional debido al estrés térmico por factores climatológicos extremos
                     if(viewModel.entornoClima == "Calido" || viewModel.entornoClima == "Extremo") {
                         DesgloseItem(
                             label = stringResource(R.string.format_desglose_clima, viewModel.entornoClima.lowercase()),
@@ -220,6 +230,7 @@ fun ResultadoHidratacionScreen(
             }
             Spacer(modifier = Modifier.height(Dimens.paddingXXLarge))
 
+            // Botón de confirmación que consolida el registro y purga el historial de navegación hacia atrás
             Button(
                 onClick = {
                     navController.navigate(ResultadoRoutes.HABITOS_HIDRATACION) {
@@ -244,6 +255,7 @@ fun ResultadoHidratacionScreen(
     }
 }
 
+// Componente utilitario reutilizable para dar formato tabular a los elementos del desglose metabólico
 @Composable
 fun DesgloseItem(label: String, value: String, color: Color = TextoNegro) {
     Row(
@@ -255,4 +267,11 @@ fun DesgloseItem(label: String, value: String, color: Color = TextoNegro) {
         Text(text = label, style = MaterialTheme.typography.bodyMedium)
         Text(text = value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = color)
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewResultadoHidratacionScreen() {
+    val nav = rememberNavController()
+    ResultadoHidratacionScreen(navController = nav)
 }

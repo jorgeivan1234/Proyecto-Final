@@ -48,27 +48,30 @@ import androidx.navigation.NavController
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.viewmodels.HidratacionMascotaViewModel
 
+// Pantalla encargada de recopilar los parámetros y calcular las necesidades de hidratación de la mascota
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalculadoraHidratacionMacotaScreen(
     navController: NavController,
     viewModel: HidratacionMascotaViewModel = viewModel()
 ) {
+    // Inicialización de los estados necesarios para manejar la entrada de datos del usuario
     val scrollState = rememberScrollState()
     var dieta by remember { mutableStateOf(viewModel.tipoDieta) }
     var hizoEjercicio by remember { mutableStateOf(viewModel.hizoEjercicio) }
     var climaCaluroso by remember { mutableStateOf(viewModel.climaCaluroso) }
     var expDieta by remember { mutableStateOf(false) }
 
+    // Estructura principal de la vista con barra superior de navegación
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Calcular de Agua Macota", fontWeight = FontWeight.Bold) },
+                title = { Text("Cálculo de agua para mascota", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Atras"
+                            contentDescription = "Volver"
                         )
                     }
                 },
@@ -76,6 +79,8 @@ fun CalculadoraHidratacionMacotaScreen(
             )
         }
     ) { innerPadding ->
+
+        // Contenedor principal con capacidad de desplazamiento vertical para dispositivos de pantallas pequeñas
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -88,15 +93,18 @@ fun CalculadoraHidratacionMacotaScreen(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.img_calculadora),
-                contentDescription = "Calculadora Mascota",
+                contentDescription = "Calculadora de mascota",
                 modifier = Modifier.size(120.dp)
             )
+
             Text(
-                text = "Ajusta los parametros diarios de tu mascota(${viewModel.tipoMascota} para calcular su requerimiento hidrico: ",
+                text = "Ajusta los parámetros diarios de tu mascota (${viewModel.tipoMascota}) para calcular su requerimiento hídrico:",
                 fontSize = 14.sp,
                 color = Color.DarkGray,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
+
+            // Campo de texto de solo lectura para mostrar el peso registrado en el perfil
             OutlinedTextField(
                 value = "${viewModel.pesoKG} KG",
                 onValueChange = {},
@@ -105,13 +113,14 @@ fun CalculadoraHidratacionMacotaScreen(
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(disabledBorderColor = Color.Gray)
             )
-            //Selector del tipo de dieta
+
+            // Menú desplegable para seleccionar el tipo de dieta alimenticia
             ExposedDropdownMenuBox(
                 expanded = expDieta,
                 onExpandedChange = { expDieta = !expDieta }
             ) {
                 OutlinedTextField(
-                    value = if (dieta.lowercase() == "humedo") "Humedo (Aporta agua al cuerpo)" else "Seco (Croquetas tradicionales)",
+                    value = if (dieta.lowercase() == "humedo") "Húmedo (Aporta agua al cuerpo)" else "Seco (Croquetas tradicionales)",
                     onValueChange = {},
                     readOnly = true,
                     label = { Text("Tipo de dieta alimenticia") },
@@ -127,13 +136,13 @@ fun CalculadoraHidratacionMacotaScreen(
                         onClick = { dieta = "Seco"; expDieta = false }
                     )
                     DropdownMenuItem(
-                        text = { Text("Humedo (Reduce base x 0.7)") },
+                        text = { Text("Húmedo (Reduce base x 0.7)") },
                         onClick = { dieta = "Humedo"; expDieta = false }
                     )
                 }
             }
 
-            //interruptor de ejercicio
+            // Interruptor para indicar si la mascota realizó actividad física durante el día
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -145,9 +154,9 @@ fun CalculadoraHidratacionMacotaScreen(
                     modifier = Modifier
                         .weight(1f)
                 ) {
-                    Text("¿Hizo ejercicio hoy?", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text("¿Realizó actividad física hoy?", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     Text(
-                        "Incrementa un 20% el consumo  necesario por desgaste.",
+                        "Incrementa un 20% el consumo necesario por desgaste físico.",
                         fontSize = 12.sp,
                         color = Color.Gray
                     )
@@ -158,7 +167,8 @@ fun CalculadoraHidratacionMacotaScreen(
                     colors = SwitchDefaults.colors(checkedThumbColor = Color(0xFFFF7A22))
                 )
             }
-            //interruptor de clima
+
+            // Interruptor para indicar si el entorno presenta altas temperaturas
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -171,12 +181,12 @@ fun CalculadoraHidratacionMacotaScreen(
                         .weight(1f)
                 ) {
                     Text(
-                        "¿El entorno esta muy caluroso?",
+                        "¿El entorno presenta altas temperaturas?",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
                     Text(
-                        "Sube un 40% el requerimiento (Temp >= 30°C).",
+                        "Aumenta un 40% el requerimiento (Temp >= 30°C).",
                         fontSize = 12.sp,
                         color = Color.Gray
                     )
@@ -190,6 +200,7 @@ fun CalculadoraHidratacionMacotaScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
+            // Botón de acción para procesar los datos y navegar a la pantalla de resultados
             Button(
                 onClick = {
                     viewModel.guardarPerfilMascota(
@@ -203,7 +214,7 @@ fun CalculadoraHidratacionMacotaScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7A22))
             ) {
                 Text(
-                    "Calcular requerimiento de mascota",
+                    "Calcular requerimiento hídrico",
                     color = Color.Black,
                     fontWeight = FontWeight.Bold
                 )

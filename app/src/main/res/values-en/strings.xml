@@ -1,115 +1,65 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-        <string name="desc_fondo_cielo_inicio">Fondo decorativo de cielo azul</string>
-        <string name="desc_personaje_saludo">Character waving friendly</string>
-        <string name="desc_perro_inicio">Pet walking to welcome</string>
-        <string name="desc_globo_bienvenida">Globo de texto que dice Welcome</string>
+        // General strings:
+        <string name="app_name">DualHabit</string>
+        <string name="app_title">DualHabit App</string>
+        <string name="bienvenido_a_dualhabit">Welcome to DualHabit</string>
+        <string name="btn_entendido">Got it</string>
+        <string name="label_si">Yes</string>
+        <string name="label_no">No</string>
+        <string name="desc_select">Select</string>
+        <string name="desc_eliminar">Delete</string>
+        <string name="btn_historial">History</string>
 
+        // Home Screen:
+        <string name="desc_personaje_saludo">Character waving happily</string>
+        <string name="desc_perro_inicio">Companion pet dog</string>
+        <string name="desc_globo_bienvenida">Text balloon saying Welcome</string>
+
+        // Login / Sign In Screen:
         <string name="desc_fondo_login">Decorative background image for login</string>
+        <string name="iniciar">START</string>
+        <string name="login">Log In</string>
+        <string name="hint_password">Password</string>
+        <string name="chk_recordar">Remember my details</string>
+        <string name="err_credenciales_incorrectas">Incorrect email or password</string>
+        <string name="desc_ocultar_pass">Hide password</string>
+        <string name="desc_mostrar_pass">Show password</string>
         <string name="btn_modo_offline">Offline mode</string>
         <string name="btn_offline_bloqueado">Offline mode locked</string>
 
+        // Recover Password Screen:
         <string name="desc_fondo_cielo_recuperar">Sky background for password recovery</string>
         <string name="desc_perro_saltando">Dog jumping happily</string>
-        <string name="err_correo_vacio_recuperacion">Required: Please enter your email account</string>
-        <string name="err_correo_invalido_recuperacion">Please enter a valid email format</string>
         <string name="err_correo_no_registrado">We could not find an account registered with this email</string>
-        <string name="hint_correo_electronico">Email address</string>
         <string name="title_correo_enviado">Email Sent</string>
         <string name="msg_correo_enviado">We have sent a recovery link to:\n%1$s\n\nCheck your inbox or spam folder</string>
-        <string name="btn_entendido">Got it</string>
+        <string name="text_forget_password">Forgot your password</string>
+        <string name="Send_Code">Send code</string>
+        <string name="Login_Back">Back to Login</string>
+        <string name="btn_recuperar_pass">Recover Password</string>
 
-        <string name="label_nombre_reg">First Name(s)</string>
-        <string name="label_apellido_reg">Last Name(s)</string>
-        <string name="label_correo_reg">Email Address</string>
-        <string name="label_password_reg">Password</string>
-        <string name="label_telefono_reg">Phone Number (9 digits)</string>
-        <string name="label_fecha_nac_reg">Date of Birth DD/MM/YYYY</string>
-        <string name="btn_aceptar_reg">Accept</string>
-        <string name="btn_cancelar_reg">Cancel</string>
-        <string name="text_ya_tengo_cuenta">Log In</string>
-
-        <string name="error_campos_vacios_reg">Please fill in all fields</string>
-        <string name="error_pass_corta_reg">Password must be at least 6 characters long</string>
-        <string name="error_email_invalido_reg">Please enter a valid email address</string>
-
-        // Successful Registration Screen
-        <string name="desc_fondo_cielo">Decorative blue sky with clouds background</string>
+        // Registration Screen:
+        <string name="desc_fondo_registro">Decorative background image for registration</string>
+        <string name="Register">Register</string>
+        <string name="Text_Register">Get ready to keep yourself and your pet healthy</string>
         <string name="title_registro_exitoso">Registration Successful!</string>
-        <string name="btn_continuar">Continue</string>
+        <string name="Register_Successful">Registration was Successful!</string>
+        <string name="label_password_reg">Password</string>
 
-        // Habits Screen (Main Menu)
+        // Main Menu and Navigation:
+        <string name="desc_menu">Open side menu</string>
+        <string name="menu_home">Home</string>
+        <string name="menu_profile">View profile</string>
+        <string name="menu_delete_account">Delete Account</string>
+        <string name="menu_logout">Log Out</string>
         <string name="title_hidratacion">Hydration</string>
         <string name="title_sueno">Sleep</string>
         <string name="title_actividad_fisica">Physical Activity</string>
-        <string name="title_alimentacion">Nutrition</string>
+        <string name="title_alimentacion">Diet</string>
         <string name="title_mascotas">Pets</string>
         <string name="title_sugerencias">Suggestions</string>
 
-        <string name="desc_menu">Open side menu</string>
-        <string name="desc_racha_completada">Indicator for streak registered today</string>
-        <string name="desc_dia_completado">Indicator for completed day</string>
-        <string name="racha_lista">Today´s streak is ready</string>
-        <string name="activar_racha">Activate streak: %1$d days</string>
-
-        <!-- Pet Hydration -->
-        <string name="title_hidratacion_mascota">Pet Hydration</string>
-        <string name="label_clima_api">Culiacan Weather (API)</string>
-        <string name="format_temperatura">%1$s°C</string>
-        <string name="label_calor_detectado">Heat detected</string>
-        <string name="label_clima_estable">Stable weather</string>
-        <string name="label_progreso_hoy">Today\'s Progress</string>
-        <string name="format_progreso_ml">%1$s / %2$s ml</string>
-        <string name="label_mascota_activa">Active pet in Room</string>
-        <string name="format_mascota_peso">%1$s weighing %2$s KG</string>
-        <string name="label_hizo_ejercicio">Did they exercise today?</string>
-        <string name="label_si">Yes</string>
-        <string name="label_no">No</string>
-        <string name="btn_reiniciar_progreso">Reset Progress</string>
-
-        <string name="desc_fondo_registro">Decorative background image for registration</string>
-        <string name="hint_nombre">First Name (s)</string>
-        <string name="hint_apellido">Last Name (s)</string>
-        <string name="hint_telefono">Phone Number</string>
-        <string name="hint_fecha_nacimiento">Date of Birth DD/MM/YYYY</string>
-        <string name="btn_aceptar">Accept</string>
-        <string name="btn_cancelar">Cancel</string>
-        <string name="txt_iniciar_sesion_link">Log In</string>
-
-        <string name="err_campos_incompletos">Please fill in all fields</string>
-        <string name="err_pass_corta">Password must be at least 8 characters long</string>
-        <string name="err_correo_invalido_format">Please enter a valid email address</string>
-
-        <string name="app_name">DualHabit</string>
-        <string name="iniciar">START</string>
-        <string name="bienvenido_a_dualhabit">Welcome to DualHabit</string>
-        <string name="login">Log In</string>
-        <string name="Register">Register</string>
-        <string name="continu">Continue</string>
-        <string name="Text_Register">Get ready to keep yourself and your pet healthy</string>
-        <string name="Register_Successful">Registration was Successful!</string>
-        <string name="text_forget_password">Forgot your password?</string>
-        <string name="Send_Code">Send code</string>
-        <string name="Login_Back">Back to Login</string>
-        <string name="Menu_Mascota">Pet Menu</string>
-        <string name="Ver_Mascota">View Virtual Pet</string>
-        <string name="hint_correo">Enter email address</string>
-        <string name="hint_password">Password</string>
-        <string name="btn_recuperar_pass">Recover Password</string>
-        <string name="chk_recordar">Remember me</string>
-        <string name="err_campos_vacios">Required: You must enter an account and password</string>
-        <string name="err_correo_invalido">Please enter a valid email address</string>
-        <string name="err_credenciales_incorrectas">Incorrect email or password</string>
-        <string name="err_llenar_campos">Please fill in all fields</string>
-        <string name="desc_ocultar_pass">Hide password</string>
-        <string name="desc_mostrar_pass">Show password</string>
-
-        <string name="app_title">DualHabit App</string>
-        <string name="menu_home">Home</string>
-        <string name="menu_profile">View Profile</string>
-        <string name="menu_delete_account">Delete Account</string>
-        <string name="menu_logout">Log Out</string>
-
+        // Account Settings and Reauthentication Screen:
         <string name="dialog_delete_title">Delete Account</string>
         <string name="dialog_delete_body">Are you sure you want to delete your account? This action is irreversible.</string>
         <string name="dialog_btn_yes">Yes, delete</string>
@@ -119,64 +69,80 @@
         <string name="dialog_reauth_body">For security reasons, since some time has passed since your last login, you must log out and log in again before you can delete your account.</string>
         <string name="dialog_btn_goto_login">Go to Login</string>
 
+        // Streak System:
+        <string name="desc_racha_completada">Indicator for streak registered today</string>
+        <string name="desc_dia_completado">Indicator for completed day</string>
+        <string name="racha_lista">Today\'s streak is ready</string>
+        <string name="activar_racha">Activate streak: %1$d days</string>
+
+        // Biometric Configuration (Human):
+        <string name="title_config_biometrica">Biometric Parameters Configuration</string>
+        <string name="title_perfil_compartido">Shared Profile</string>
+        <string name="label_usuario">User</string>
+        <string name="desc_foto_usuario">Photo chosen by the user</string>
+        <string name="desc_foto_humano">Human Photo</string>
+        <string name="hint_cambiar_foto">Tap to change</string>
+        <string name="label_nivel_cuenta">Account Level: %1$d</string>
+        <string name="label_exp_siguiente_logro">Experience points for the next level</string>
+        <string name="label_peso_actual">Current weight (Kg)</string>
+        <string name="label_genero">Biological Gender</string>
+        <string name="label_actividad">Physical Activity Level</string>
+        <string name="label_entorno_clima">Current Weather Environment: </string>
+        <string name="btn_guardar_recalcular">Save and Recalculate Goal</string>
+        <string-array name="generos_biologicos">
+                <item>Male</item>
+                <item>Female</item>
+        </string-array>
+        <string-array name="niveles_actividad">
+                <item>Sedentary</item>
+                <item>Moderate</item>
+                <item>Intense</item>
+        </string-array>
+
+        // Pet Profile and Menu:
+        <string name="Menu_Mascota">Pet menu</string>
+        <string name="Ver_Mascota">View Virtual pets</string>
         <string name="title_perfil_mascota">Pet Profile</string>
-        <string name="desc_atras">Back</string>
-        <string name="desc_select">Select</string>
-        <string name="desc_regresar">Return</string>
+        <string name="label_mascota">Pet</string>
         <string name="btn_add_foto">Add Photo</string>
         <string name="desc_foto_mascota">Pet Photo</string>
+        <string name="hint_ver_perfil">View profile</string>
         <string name="label_nombre_mascota">Pet Name</string>
-        <string name="label_sexo_mascota">Pet Sex</string>
         <string name="title_especie">Species</string>
         <string name="label_peso">Weight (KG)</string>
         <string name="label_edad">Age (Years)</string>
+        <string name="label_sexo_mascota">Sex</string>
         <string name="btn_guardar_mascota">Save Pet Data</string>
-
         <string-array name="especies_mascota">
-            <item>Dog</item>
-            <item>Cat</item>
-            <item>Bird</item>
-            <item>Rodent/Rabbit</item>
+                <item>Dog</item>
+                <item>Cat</item>
+                <item>Bird</item>
+                <item>Rodent/Rabbit</item>
         </string-array>
         <string-array name="sexo_mascota">
                 <item>Male</item>
                 <item>Female</item>
         </string-array>
 
-        <string name="title_perfil_compartido">Shared Profile</string>
-        <string name="desc_foto_usuario">Photo chosen by the user</string>
-        <string name="desc_foto_humano">Human Photo</string>
-        <string name="label_usuario">User</string>
-        <string name="hint_cambiar_foto">Tap to change</string>
-        <string name="label_mascota">Pet</string>
-        <string name="hint_ver_perfil">View profile</string>
+        // Internal Pet Menu Screen:
+        <string name="title_habitos_mascotas">Pet Habits</string>
+        <string name="msg_selecciona_categoria">Select a category to manage your pet\'s care</string>
+        <string name="menu_habitos_mascota">Pet habits</string>
+        <string name="menu_ejercicios">Exercises</string>
+        <string name="menu_ir_habitos_humanos">Go to my human habits</string>
+        <string name="menu_noticias">Pet news</string>
+        <string name="menu_juegos">Games</string>
+        <string name="menu_enciclopedia">Encyclopedia</string>
+        <string name="menu_aprender">Learn (PetDex)</string>
+        <string name="menu_mantenimiento">(maintenance)</string>
+        <string name="habito_hidratacion">Pet Hydration</string>
+        <string name="habito_alimentacion">Diet and Nutrition</string>
+        <string name="habito_paseos">Walk Record</string>
+        <string name="habito_higiene">Hygiene and Grooming</string>
+        <string name="habito_salud">Health and Vaccines</string>
+        <string name="habito_juegos">Activities and Games</string>
 
-        <string name="label_nivel_cuenta">Account Level: %1$d</string>
-        <string name="label_exp_siguiente_logro">Experience points for the next level</string>
-        <string name="title_config_biometrica">Biometric Parameters Configuration</string>
-        <string name="label_peso_actual">Current weight (Kg)</string>
-        <string name="label_genero">Biological Gender</string>
-        <string name="label_actividad">Physical Activity Level</string>
-        <string name="label_entorno_clima">Current Weather Environment: </string>
-        <string name="btn_guardar_recalcular">Save and Recalculate Goal</string>
-
-        <string-array name="generos_biologicos">
-                <item>Male</item>
-            <item>Female</item>
-        </string-array>
-
-        <string-array name="niveles_actividad">
-                <item>Sedentary</item>
-            <item>Moderate</item>
-            <item>Intense</item>
-        </string-array>
-
-        <string name="title_buzon_sugerencias">Suggestion Box</string>
-        <string name="hint_escribe_comentario">Write your comment here...</string>
-        <string name="btn_enviar_sugerencia">Submit suggestion</string>
-
-        <string name="btn_historial">History</string>
-        <string name="desc_hidratacion_mascota">Go to Pet Hydration</string>
+        // Module: Human Hydration:
         <string name="btn_add_250ml">+250ml</string>
         <string name="btn_add_500ml">+500ml</string>
         <string name="btn_add_1l">+1L</string>
@@ -184,15 +150,12 @@
         <string name="desc_calculadora">Calculator</string>
         <string name="desc_botella_agua">Water bottle</string>
         <string name="label_llevas_agua">Progress:\n%1$.1f / %2$.1f L</string>
-
         <string name="title_historial_agua">Water History</string>
         <string name="tab_dia">Day</string>
         <string name="tab_semana">Week</string>
         <string name="tab_mes">Month</string>
-
         <string name="label_consumo_hoy">Today\'s Intake</string>
         <string name="label_meta_alcanzada">You\'ve reached %1$d%% of your goal! Keep it up</string>
-
         <string name="label_desempeno_semanal">Performance over the last 7 days</string>
         <string name="dia_dom">Sun</string>
         <string name="dia_lun">Mon</string>
@@ -201,28 +164,22 @@
         <string name="dia_jue">Thu</string>
         <string name="dia_vie">Fri</string>
         <string name="dia_sab">Sat</string>
-
         <string name="label_resumen_mes">%1$s %2$d Summary</string>
         <string name="label_promedio_diario">Daily Average: </string>
         <string name="label_dias_meta_cumplida">Goal Met Days: </string>
         <string name="label_efectividad_mes">Monthly Effectiveness: </string>
         <string name="format_dias_de_dias">%1$s of %2$s</string>
-
         <string name="title_calculadora_agua">Water Calculator</string>
         <string name="instrucciones_calculadora">Adjust your parameters to recalculate your minimum daily water requirement.</string>
         <string name="label_nivel_actividad">Physical activity level</string>
-
         <string name="actividad_sedentario">Sedentary</string>
         <string name="actividad_moderado">Moderate</string>
         <string name="actividad_intenso">Intense</string>
-
         <string name="clima_calido">Warm / Very Hot</string>
         <string name="clima_frio">Cold / Mild</string>
         <string name="label_entorno_meteo">Meteorological Environment</string>
         <string name="format_clima">%1$s°C (%2$s)</string>
-
         <string name="btn_calcular_actualizar">Calculate and Update Requirement</string>
-
         <string name="title_plan_hidratacion">Your Hydration Plan</string>
         <string name="label_meta_calculada">Goal Calculated!</string>
         <string name="label_necesitas_tomar">You need to drink: </string>
@@ -239,13 +196,195 @@
         <string name="ajuste_500ml">+500ml</string>
         <string name="btn_aceptar_meta">Got it, accept goal!</string>
 
-        <string-array name="tips_mascotas_sueno">
-                <item>Adult dogs sleep between 12 and 14 hours a day. Make sure their space is comfortable!</item>
-                <item>Restless sleep in your pet may indicate they need more physical activity during the day.</item>
-                <item>Puppies can sleep up to 18 hours a day to support their rapid bone growth.</item>
-                <item>Avoid letting your pet sleep in direct drafts or very cold air conditioning.</item>
+        // Module: Pet Hydration:
+        <string name="title_hidratacion_mascota">Pet Hydration</string>
+        <string name="desc_hidratacion_mascota">Go to Pet Hydration</string>
+        <string name="label_clima_api">Culiacan Weather (API)</string>
+        <string name="format_temperatura">%1$s°C</string>
+        <string name="label_calor_detectado">Heat detected</string>
+        <string name="label_clima_estable">Stable weather</string>
+        <string name="label_progreso_hoy">Today\'s Progress</string>
+        <string name="format_progreso_ml">%1$s / %2$s ml</string>
+        <string name="label_mascota_activa">Active pet in Room</string>
+        <string name="format_mascota_peso">%1$s weighing %2$s KG</string>
+        <string name="label_hizo_ejercicio">Did they exercise today?</string>
+        <string name="btn_reiniciar_progreso">Reset Progress</string>
+
+        // Module: Diet and Recipes (Human and Pet):
+        <string name="title_recetas">Recipes</string>
+        <string name="desc_mapa">Map</string>
+        <string name="btn_restaurantes_cercanos">Nearby healthy restaurants</string>
+        <string name="title_preparacion">Preparation</string>
+        <string name="title_ingredientes">Ingredients</string>
+        <string name="title_pasos_seguir">Steps to follow</string>
+        <string name="title_dieta_mascotas">Pet Diet</string>
+        <string name="label_mascota_default">Pet</string>
+        <string name="format_apto_para">Suitable for: %1$s</string>
+        <string name="title_descripcion_dieta">Diet Description</string>
+        <string name="msg_aviso_veterinario">Make sure to consult with your veterinarian for the ideal portions according to your pet\'s weight and breed!</string>
+
+        // Human Recipe 1: Chicken:
+        <string name="receta_pollo_nombre">Chicken with Rice and Vegetables</string>
+        <string name="receta_pollo_desc">A balanced dish, high in protein and easy to digest to maintain your pet\'s energy.</string>
+        <string-array name="receta_pollo_ingredientes">
+                <item>150g cooked and shredded chicken breast (no salt)</item>
+                <item>50g cooked brown rice</item>
+                <item>30g grated carrot</item>
+                <item>20g finely diced zucchini</item>
+        </string-array>
+        <string-array name="receta_pollo_pasos">
+                <item>Cook the chicken breast in boiling water without adding salt, garlic, or onion.</item>
+                <item>In another pot, steam the brown rice and vegetables until soft.</item>
+                <item>Shred the chicken perfectly once cold to prevent choking.</item>
+                <item>Mix the chicken, rice, and vegetables in a bowl and let cool to room temperature before serving.</item>
         </string-array>
 
+        // Human Recipe 2: Salmon:
+        <string name="receta_salmon_nombre">Salmon with Sweet Potato and Peas</string>
+        <string name="receta_salmon_desc">Excellent source of Omega-3 for a shiny coat and cardiovascular health.</string>
+        <string-array name="receta_salmon_ingredientes">
+                <item>120g cooked salmon fillet</item>
+                <item>1 medium boiled sweet potato</item>
+                <item>a pinch of steamed peas</item>
+        </string-array>
+        <string-array name="receta_salmon_pasos">
+                <item>Boil the sweet potato until soft and cut into cubes.</item>
+                <item>Steam or grill the salmon (without oil).</item>
+                <item>Meticulously remove all bones from the fish.</item>
+                <item>Mix everything in your pet\'s bowl.</item>
+        </string-array>
+
+        // Pet Recipes Database:
+        <string name="receta_croque_nombre">Homemade Chicken Kibble</string>
+        <string name="receta_croque_desc">A balanced and delicious recipe to spoil your furry friend.</string>
+        <string name="receta_croque_cal">250 kcal</string>
+        <string name="receta_croque_tipo">Dog</string>
+        <string name="receta_fresa_nombre">Refreshing Strawberry Ice Treats</string>
+        <string name="receta_fresa_desc">Frozen treats perfect for hot summer days. They help to cool down.</string>
+        <string name="receta_fresa_cal">80 kcal</string>
+        <string name="receta_fresa_tipo">Dog / Cat</string>
+        <string name="receta_avena_nombre">Oatmeal and Banana Cookies</string>
+        <string name="receta_avena_desc">Crunchy baked treats, easy to break into small pieces.</string>
+        <string name="receta_avena_cal">120 kcal</string>
+        <string name="receta_avena_tipo">Dog</string>
+        <string name="receta_caldo_nombre">Magic Bone Broth</string>
+        <string name="receta_caldo_desc">Ideal for keeping joints hydrated and improving digestion.</string>
+        <string name="receta_caldo_cal">95 kcal</string>
+        <string name="receta_caldo_tipo">Dog / Cat</string>
+
+        // Module: Physical Activity and Challenges:
+        <string name="btn_parques_cercanos">View nearby parks</string>
+        <string name="label_duracion">DURATION</string>
+        <string name="label_intensidad">INTENSITY</string>
+        <string name="title_detalle_rutina">Routine Detail</string>
+        <string name="label_duracion_detalle">Duration:</string>
+        <string name="label_intensidad_detalle">Intensity:</string>
+        <string name="title_instrucciones">Exercise Instructions</string>
+        <string name="title_modulo_reto">Interactive Challenge Module</string>
+        <string name="msg_haz_actividad">Do the activity with your pet now!</string>
+        <string name="btn_cancelar_entrenamiento">Cancel Training</string>
+        <string name="title_reto_completado">Challenge Completed!</string>
+        <string name="msg_puntos_acumulados">You have earned +%1$d Happiness Points. The record was successfully saved in your walk log.</string>
+        <string name="btn_jugar_nuevo">Play Again</string>
+        <string name="msg_presiona_iniciar">Press start to time your real session and earn points.</string>
+        <string name="btn_iniciar_reto">Start Real Challenge</string>
+        <string name="msg_recuerda_agua">Remember to bring enough water for you and your pet during the training!</string>
+        <string name="nota_juego_completado">Physical play session successfully completed! Earned </string>
+
+        // Physical Activities List:
+        <string name="canicross_ligero_titulo">Light Canicross</string>
+        <string name="canicross_ligero_desc">Continuous jogging where your dog is attached to your waist with an elastic harness. Ideal for improving cardiovascular endurance for both.</string>
+        <string name="agility_casero_titulo">Homemade Agility</string>
+        <string name="agility_casero_desc">Create an obstacle course with cones and low hurdles. Combine squats (you) with jump and speed commands (your pet).</string>
+        <string name="caminata_intervalos_titulo">Interval Walk</string>
+        <string name="caminata_intervalos_desc">Alternate 2 minutes of fast walking with 1 minute of explosive jogging. Strengthens your dog\'s joints and burns calories.</string>
+        <string name="lanzamiento_despliegue_titulo">Fetch and Deploy</string>
+        <string name="lanzamiento_despliegue_desc">Throw their favorite toy. While your dog runs to fetch it, do as many lunges or push-ups as you can until they return.</string>
+        <string name="yoga_dogi_titulo">Doga (Dog Yoga) Stretching</string>
+        <string name="yoga_dogi_desc">Guided deep body stretching session where you involve your pet by maintaining balance postures together.</string>
+        <string name="frisbee_cardio_titulo">Frisbee Cardio Trail</string>
+        <string name="frisbee_cardio_desc">Sprint in zigzag catching flying discs. Develops extreme agility, reflexes, and explosive acceleration in open spaces.</string>
+
+        // Duration / Intensity Labels:
+        <string name="duracion_15m">15 min</string>
+        <string name="duracion_20m">20 min</string>
+        <string name="duracion_25m">25 min</string>
+        <string name="duracion_30m">30 min</string>
+        <string name="duracion_40m">40 min</string>
+        <string name="intensidad_baja">Low</string>
+        <string name="intensidad_media">Medium</string>
+        <string name="intensidad_alta">High</string>
+        <string name="intensidad_baja_media">Low - Medium</string>
+
+        // Module: Pet Walks:
+        <string name="title_registro_paseo">Walk Record</string>
+        <string name="title_anadir_paseo">Add walk details</string>
+        <string name="label_duracion_minutos">Duration (in minutes)</string>
+        <string name="label_notas_paseo">Walk notes or description</string>
+        <string name="btn_guardar_paseo">Save walk</string>
+        <string name="title_historial_paseos">Walk History</string>
+        <string name="msg_sin_paseos">You haven\'t recorded any walks yet.</string>
+        <string name="format_duracion">Duration: %1$s minutes</string>
+        <string name="format_fecha">Date: %1$s</string>
+        <string name="format_notas">Notes: %1$s</string>
+        <string name="desc_eliminar_registro">Delete Record</string>
+
+        // Module: Pet Hygiene:
+        <string name="title_higiene_mascota">Pet Hygiene</string>
+        <string name="title_tareas_diarias">Daily Tasks</string>
+        <string name="tarea_dental_titulo">Dental Hygiene</string>
+        <string name="tarea_dental_desc">Brushing or tartar snack</string>
+        <string name="tarea_cepillado_titulo">Hair brushing</string>
+        <string name="tarea_cepillado_desc">Prevents knots and reduces shedding</string>
+        <string name="tarea_entorno_titulo">Environment cleaning</string>
+        <string name="tarea_entorno_desc">Wash bowls or clean space</string>
+        <string name="card_control_titulo">Bath and Nail Control</string>
+        <string name="card_control_desc">Check due date alerts</string>
+        <string name="title_fechas_historial">Dates and History</string>
+        <string name="title_cronograma_cuidados">Care Schedule</string>
+        <string name="alerta_ultimo_bano">Last bath</string>
+        <string name="alerta_ultimo_corte">Last nail trim</string>
+        <string name="estado_sin_registros">No previous records</string>
+        <string name="estado_hoy">Done today!</string>
+        <string name="estado_ayer">1 day ago</string>
+        <string name="estado_dias">%1$d days ago</string>
+        <string name="intervalo_recomendado">Recommended interval: Every %1$d days</string>
+        <string name="btn_hecho_hoy">Done today</string>
+
+        // Module: Health and Vaccines:
+        <string name="title_salud_vacunas">Health and Vaccines</string>
+        <string name="tab_vacunas">Vaccines</string>
+        <string name="tab_tratamientos">Treatments</string>
+        <string name="tab_historial">History</string>
+        <string name="btn_add_registro">Add record</string>
+        <string name="btn_buscar_vet">Find Vets</string>
+        <string name="vacunas_guia_titulo">Essential Vaccination Guide</string>
+        <string name="vacunas_guia_desc">Make sure to keep your pet\'s vaccination schedule up to date.</string>
+        <string name="vacuna_rabia_titulo">Rabies Vaccine 🦠</string>
+        <string name="vacuna_rabia_desc">Mandatory by law. Applied for the first time at 3-4 months of age and requires a mandatory annual booster.</string>
+        <string name="vacuna_quintuple_titulo">5-in-1 / Feline Triple Vaccine 🐕🐈</string>
+        <string name="vacuna_quintuple_desc">Protects against deadly diseases like Parvovirus, Distemper, Hepatitis, and Leptospirosis. Annual booster.</string>
+        <string name="vacuna_giardiasis_titulo">Giardiasis Vaccine 🧼</string>
+        <string name="vacuna_giardiasis_desc">Optional but highly recommended if your pet frequently visits public parks or interacts with other animals.</string>
+        <string name="tratamientos_titulo">Parasite Control and Medication</string>
+        <string name="tratamientos_desc">Key information for daily preventive health.</string>
+        <string name="tratamiento_desparasitacion_titulo">Internal Deworming 💊</string>
+        <string name="tratamiento_desparasitacion_desc">Ideally performed every 3 to 4 months using the exact dose based on your pet\'s current weight.</string>
+        <string name="tratamiento_antipulgas_titulo">Flea and Tick Control 🛡️</string>
+        <string name="tratamiento_antipulgas_desc">Via monthly pipettes, collars, or chewable pills. Vital to prevent the transmission of diseases.</string>
+        <string name="tratamiento_med_titulo">Responsible Use of Medication ⚠️</string>
+        <string name="tratamiento_med_desc">Never self-medicate your pet. Incorrect dosages can severely damage their internal organs.</string>
+        <string name="form_nuevo_registro">New Health Record</string>
+        <string name="chip_vacuna">Vaccine</string>
+        <string name="chip_desparasitante">Dewormer</string>
+        <string name="chip_nota">Note</string>
+        <string name="hint_nombre_registro">Name (e.g., Feline Triple, Flea Control)</string>
+        <string name="hint_fecha_registro">Date (DD/MM/YYYY)</string>
+        <string name="hint_notas_registro">Additional notes or observations</string>
+        <string name="btn_guardar_bitacora">Save to Logbook</string>
+        <string name="empty_state_historial">No vaccines or notes recorded yet.\nUse the \'+\' button to add one.</string>
+
+        // Module: Sleep (Human and Pet):
         <string name="title_modo_sueno">Sleep Mode</string>
         <string name="desc_estado_sueno">Sleep status</string>
         <string name="text_listo_descansar">Ready to rest!</string>
@@ -259,4 +398,78 @@
         <string name="dialog_title_despertar">Good morning!\nHow did you rest today?</string>
         <string name="dialog_desc_despertar">Select the emoji that best represents your energy and your pet\'s this morning.</string>
         <string name="text_horas_dormidas">%1$s hrs</string>
+        <string-array name="tips_mascotas_sueno">
+                <item>Adult dogs sleep between 12 and 14 hours a day. Make sure their space is comfortable!</item>
+                <item>Restless sleep in your pet may indicate they need more physical activity during the day.</item>
+                <item>Puppies can sleep up to 18 hours a day to support their rapid bone growth.</item>
+                <item>Avoid letting your pet sleep in direct drafts or very cold air conditioning.</item>
+        </string-array>
+
+        // Maintenance / Suggestion Box Screen:
+        <string name="title_proximamente">Coming Soon</string>
+        <string name="text_en_construccion">Feature under construction!</string>
+        <string name="text_mantenimiento_desc">We are working hard to implement this feature. Check back soon!</string>
+        <string name="btn_regresar_inicio">Return to home</string>
+        <string name="title_buzon_sugerencias">Suggestion Box</string>
+        <string name="hint_escribe_comentario">Write your comment here...</string>
+        <string name="btn_enviar_sugerencia">Submit suggestion</string>
+
+
+        // Duplicates:
+
+                // Buttons and Actions:
+                <string name="btn_aceptar">Accept</string>
+                <string name="btn_aceptar_reg">Accept</string>
+
+                <string name="btn_cancelar">Cancel</string>
+                <string name="btn_cancelar_reg">Cancel</string>
+
+                <string name="btn_continuar">Continue</string>
+                <string name="continu">Continue</string>
+
+                <string name="desc_volver">Go Back</string>
+                <string name="desc_regresar">Return</string>
+                <string name="desc_atras">Back</string>
+
+                // Login / Registration Texts:
+                <string name="txt_iniciar_sesion_link">Log In</string>
+                <string name="text_ya_tengo_cuenta">Log In</string>
+
+                // Form Labels and Hints:
+                <string name="label_nombre_reg">First Name(s)</string>
+                <string name="hint_nombre">First Name(s)</string>
+
+                <string name="label_apellido_reg">Last Name(s)</string>
+                <string name="hint_apellido">Last Name(s)</string>
+
+                <string name="hint_telefono">Phone Number</string>
+                <string name="label_telefono_reg">Phone Number (9 digits)</string>
+
+                <string name="label_fecha_nac_reg">Date of Birth DD/MM/YYYY</string>
+                <string name="hint_fecha_nacimiento">Date of Birth DD/MM/YYYY</string>
+
+                <string name="label_correo_reg">Email Address</string>
+                <string name="hint_correo_electronico">Email address</string>
+                <string name="hint_correo">Enter email address</string>
+
+                // Validation Errors:
+                <string name="err_campos_incompletos">Please fill in all fields</string>
+                <string name="error_campos_vacios_reg">Please fill in all fields</string>
+                <string name="err_llenar_campos">Please fill in all fields</string>
+
+                <string name="err_correo_vacio_recuperacion">Required: Please enter your email account</string>
+                <string name="err_campos_vacios">Required: You must enter an account and password</string>
+
+                <string name="err_correo_invalido_format">Please enter a valid email address</string>
+                <string name="error_email_invalido_reg">Please enter a valid email address</string>
+                <string name="err_correo_invalido">Please enter a valid email address</string>
+                <string name="err_correo_invalido_recuperacion">Please enter a valid email format</string>
+
+                <string name="err_pass_corta">Password must be at least 8 characters long</string>
+                <string name="error_pass_corta_reg">Password must be at least 6 characters long</string>
+
+                // Decorative Background Images:
+                <string name="desc_fondo_cielo_inicio">Decorative blue sky background</string>
+                <string name="desc_fondo_cielo">Decorative blue sky with clouds background</string>
+
 </resources>
