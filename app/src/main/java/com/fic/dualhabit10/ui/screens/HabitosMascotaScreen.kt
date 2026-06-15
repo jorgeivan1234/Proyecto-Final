@@ -3,31 +3,14 @@ package com.fic.dualhabit10.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -35,64 +18,77 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
 import kotlinx.coroutines.launch
+import com.fic.dualhabit10.ui.theme.Dimens
+import com.fic.dualhabit10.ui.theme.VerdeFondoHabitos
+import com.fic.dualhabit10.ui.theme.NaranjaCabecera
+import com.fic.dualhabit10.ui.theme.AmarilloFondo
+import com.fic.dualhabit10.ui.theme.TextoNegro
+import com.fic.dualhabit10.ui.theme.GrisOscuro
+import com.fic.dualhabit10.ui.theme.AzulFondoProgresoMascota
+import com.fic.dualhabit10.ui.theme.PastelCrema
+import com.fic.dualhabit10.ui.theme.PastelVerde
+import com.fic.dualhabit10.ui.theme.PastelMorado
+import com.fic.dualhabit10.ui.theme.PastelRosa
+import com.fic.dualhabit10.ui.theme.AmarilloAlimentacion
 
 data class SeccionHabitoMascota(
-    val titulo: String,
+    val tituloResId: Int, // Identificador del recurso de texto para el título de la sección
     val rutaNavigation: String,
     val colorFondo: Color,
     val imagenRes: Int
 )
 
+// Pantalla principal que muestra el menú de categorías de hábitos para la mascota
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitosMascotaScreen(navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
+    // Definición de las secciones disponibles con sus respectivos estilos y rutas de navegación
     val listaSecciones = listOf(
         SeccionHabitoMascota(
-            titulo = "Hidratacion Mascota",
+            tituloResId = R.string.habito_hidratacion,
             rutaNavigation = "hidratacion_mascota",
-            colorFondo = Color(0xFFBBDEFB),
+            colorFondo = AzulFondoProgresoMascota,
             imagenRes = R.drawable.img_bol_y_perro
         ),
         SeccionHabitoMascota(
-            titulo = "Alimentacion y Dieta",
+            tituloResId = R.string.habito_alimentacion,
             rutaNavigation = "alimentacion_mascota",
-            colorFondo = Color(0xFFFFF0B2),
+            colorFondo = PastelCrema,
             imagenRes = R.drawable.img_plato_perro
         ),
         SeccionHabitoMascota(
-            titulo = "Registro de Paseos",
+            tituloResId = R.string.habito_paseos,
             rutaNavigation = "registro_paseos",
-            colorFondo = Color(0xFFC8E6C9),
+            colorFondo = PastelVerde,
             imagenRes = R.drawable.img_perro_saltando
         ),
         SeccionHabitoMascota(
-            titulo = "Higiene y Limipieza",
+            tituloResId = R.string.habito_higiene,
             rutaNavigation = "higiene_mascota",
-            colorFondo = Color(0xFFE1BEE7),
+            colorFondo = PastelMorado,
             imagenRes = R.drawable.img_perro_rascandose
         ),
         SeccionHabitoMascota(
-            titulo = "Salud y Vacunas",
+            tituloResId = R.string.habito_salud,
             rutaNavigation = "salud_mascota",
-            colorFondo = Color(0xFFF8BBD0),
+            colorFondo = PastelRosa,
             imagenRes = R.drawable.img_inyeccion
         ),
         SeccionHabitoMascota(
-            titulo = "Actividades y Juegos",
-            rutaNavigation = "actividad_fisica_mascota", // ultima pantalla faltante!!!!
-            colorFondo = Color(0xFFFFF9C4),
+            tituloResId = R.string.habito_juegos,
+            rutaNavigation = "actividad_fisica_mascota",
+            colorFondo = AmarilloAlimentacion,
             imagenRes = R.drawable.img_perro_jugando
         )
     )
@@ -104,74 +100,81 @@ fun HabitosMascotaScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF9EFFEB))
+                .background(VerdeFondoHabitos)
         ) {
+            // Barra superior de navegación y título de la pantalla
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(110.dp)
+                    .height(Dimens.topBarHeightExtra)
                     .background(
-                        color = Color(0xFFFF7A22),
-                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
+                        color = NaranjaCabecera,
+                        shape = RoundedCornerShape(
+                            bottomStart = Dimens.cornerRadiusExtraLarge,
+                            bottomEnd = Dimens.cornerRadiusExtraLarge
+                        )
                     )
-                    .padding(horizontal = 12.dp)
-                    .padding(top = 24.dp),
-                contentAlignment = Alignment.Center
+                    .padding(horizontal = Dimens.paddingMediumSmall)
+                    .padding(top = Dimens.paddingLarge),
+                contentAlignment = Alignment.TopCenter
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(onClick = { scope.launch { drawerState.open() } }) {
                         Icon(
                             imageVector = Icons.Default.Menu,
-                            contentDescription = "Abrir Menu",
-                            tint = Color.Black,
-                            modifier = Modifier.size(28.dp)
+                            contentDescription = stringResource(R.string.desc_menu),
+                            tint = TextoNegro,
+                            modifier = Modifier.size(Dimens.iconSizeExtraLarge)
                         )
                     }
                     Box(
                         modifier = Modifier
-                            .weight(1f),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))
-                                .padding(horizontal = 24.dp, vertical = 6.dp)
-                        ) {
-                            Text(
-                                text = "Habitos Mascotas",
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black,
-                                fontSize = 18.sp
+                            .background(AmarilloFondo, shape = RoundedCornerShape(Dimens.cornerRadiusLarge))
+                            .padding(
+                                horizontal = Dimens.paddingLarge,
+                                vertical = Dimens.paddingSmallMedium
                             )
-                        }
+                    ) {
+                        Text(
+                            text = stringResource(R.string.title_habitos_mascotas),
+                            fontWeight = FontWeight.Bold,
+                            color = TextoNegro,
+                            fontSize = Dimens.textSizeBodyLarge
+                        )
                     }
-                    Spacer(modifier = Modifier.size(48.dp))
+                    Spacer(modifier = Modifier.size(Dimens.spacerHeader))
                 }
             }
+
+            // Contenedor principal con la cuadrícula de categorías
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 20.dp, vertical = 16.dp),
+                    .padding(
+                        horizontal = Dimens.paddingDefault,
+                        vertical = Dimens.paddingDefault
+                    ),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Selecciona una categoria para gestionar el cuidado de tu mascota",
-                    fontSize = 16.sp,
+                    text = stringResource(R.string.msg_selecciona_categoria),
+                    fontSize = Dimens.textSizeBody,
                     fontWeight = FontWeight.Medium,
-                    color = Color.DarkGray,
+                    color = GrisOscuro,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(bottom = 20.dp)
+                    modifier = Modifier.padding(bottom = Dimens.paddingDefault)
                 )
 
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(Dimens.paddingDefault),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.paddingDefault),
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(bottom = 16.dp)
+                    contentPadding = PaddingValues(bottom = Dimens.paddingDefault)
                 ) {
                     items(listaSecciones) { seccion ->
                         TarjetaCategoriaMascota(
@@ -189,39 +192,40 @@ fun HabitosMascotaScreen(navController: NavController) {
     }
 }
 
+// Componente visual para representar cada categoría en formato de tarjeta seleccionable
 @Composable
 fun TarjetaCategoriaMascota(seccion: SeccionHabitoMascota, onClick: () -> Unit){
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(160.dp)
+            .height(Dimens.tarjetaHabitoHeight)
             .clickable { onClick() },
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(Dimens.cornerRadiusMedium),
         colors = CardDefaults.cardColors(containerColor = seccion.colorFondo),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = Dimens.elevationSmall)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp),
+                .padding(Dimens.paddingMedium),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ){
             Image(
                 painter = painterResource(id = seccion.imagenRes),
-                contentDescription = seccion.titulo,
-                modifier = Modifier.size(65.dp),
+                contentDescription = stringResource(seccion.tituloResId),
+                modifier = Modifier.size(Dimens.iconSizeCategory),
                 contentScale = ContentScale.Fit
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(Dimens.paddingTiny))
             Text(
-                text = seccion.titulo,
-                color = Color. Black,
-                fontSize = 15.sp,
+                text = stringResource(seccion.tituloResId),
+                color = TextoNegro,
+                fontSize = Dimens.textSizeBody,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                lineHeight = 18.sp
+                lineHeight = Dimens.lineHeightSmall
             )
         }
     }

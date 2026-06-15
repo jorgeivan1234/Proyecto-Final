@@ -1,82 +1,81 @@
 package com.fic.dualhabit10.ui.viewmodels
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fic.dualhabit10.data.local.AlimentacionMascotaEntity
 import com.fic.dualhabit10.data.local.AppDatabase
-import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import com.fic.dualhabit10.data.model.ComidaMascota
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-
-class AlimentacionMascotaViewModel (application: Application) : AndroidViewModel (application) {
+class AlimentacionMascotaViewModel(application: Application) : AndroidViewModel(application) {
 
     private val mascotaDao = AppDatabase.getDatebase(application).alimentacionMascotaDao()
     private val _recetas = MutableStateFlow<List<AlimentacionMascotaEntity>>(emptyList())
-    val recetas: StateFlow<List<AlimentacionMascotaEntity>> = _recetas.asStateFlow()
+    val recetas: StateFlow<List<AlimentacionMascotaEntity>> = _recetas
 
-    fun buscarRecetaPorId(recetaId: Int): kotlinx.coroutines.flow.Flow<AlimentacionMascotaEntity?> {
-        return mascotaDao.buscarRecetaPorId(recetaId)
-    }
-    init{
+    init {
+        checarYPrecargarRecetas()
         escucharRecetasLocales()
+    }
+
+    // Se mantiene esta función porque es necesaria para ver los detalles de una receta específica
+    fun buscarRecetaPorId(recetaId: Int): Flow<AlimentacionMascotaEntity?> {
+        return mascotaDao.buscarRecetaPorId(recetaId)
     }
 
     private fun escucharRecetasLocales() {
         viewModelScope.launch {
-            if (mascotaDao.cantidadRecetasMascota() == 0) {
-                Log.d("RoomMascotas", "Base de datos vacia. Precargando datos de la imagen...")
-                precargarDatosMascota()
-            }
-
-            mascotaDao.obtenerRecetasMascota().collect { listaLocal ->
-                _recetas.value = listaLocal
-                Log.d("RoomMascotas", "Recetas cargadas desde Room: ${listaLocal.size}")
+            mascotaDao.obtenerRecetasMascota().collectLatest { entidades ->
+                _recetas.value = entidades
             }
         }
     }
-    private suspend fun precargarDatosMascota() {
-        val listaPrevia = listOf(
-            AlimentacionMascotaEntity(
-                nombre = "Croquetas Caseras de Pollo",
-                descripcion = "Una receta balanceada y deliciosa para consentir a tu lomito",
-                calorias = "250 kcal",
-                TipoMascota = "Perro",
-                imagenUrl = "croquetas_caseras",
-                colorHex = "#FFFDE7"
-            ),
-            AlimentacionMascotaEntity(
-                nombre = "Helados Refrescantes de Fresa",
-                descripcion = "Premios congelados perfectos para los días calurosos de verano. Ayudan",
-                calorias = "80 kcal",
-                TipoMascota = "Perro / Gato",
-                imagenUrl = "helados_fresa",
-                colorHex = "#FCE4EC"
-            ),
-            AlimentacionMascotaEntity(
-                nombre = "Galletas de Avena y Plátano",
-                descripcion = "Premios horneados crujientes, fáciles de partir en pedacitos pequeños.",
-                calorias = "120 kcal",
-                TipoMascota = "Perro",
-                imagenUrl = "galletas_avena",
-                colorHex = "#F5F5F5"
-            ),
-            AlimentacionMascotaEntity(
-                nombre = "Caldo de Huesos Mágico",
-                descripcion = "Ideal para mantener hidratadas las articulaciones y mejorar la digestión.",
-                calorias = "95 kcal",
-                TipoMascota = "Perro / Gato",
-                imagenUrl = "caldo_huesos",
-                colorHex = "#FFE0B2"
-            )
-        )
-        mascotaDao.insertarRecetasMascota(listaPrevia)
+
+    private fun checarYPrecargarRecetas() {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (mascotaDao.cantidadRecetasMascota() == 0) {
+                // Solo insertamos las claves de nuestro diccionario para traducción dinámica
+                val recetasDefecto = listOf(
+                    AlimentacionMascotaEntity(
+                        nombre = "receta_croque_nombre",
+                        descripcion = "receta_croque_desc",
+                        calorias = "receta_croque_cal",
+                        TipoMascota = "receta_croque_tipo",
+                        imagenUrl = "croquetas_caseras",
+                        colorHex = "#FFFDE7"
+                    ),
+                    AlimentacionMascotaEntity(
+                        nombre = "receta_fresa_nombre",
+                        descripcion = "receta_fresa_desc",
+                        calorias = "receta_fresa_cal",
+                        TipoMascota = "receta_fresa_tipo",
+                        imagenUrl = "helados_fresa",
+                        colorHex = "#FCE4EC"
+                    ),
+                    AlimentacionMascotaEntity(
+                        nombre = "receta_avena_nombre",
+                        descripcion = "receta_avena_desc",
+                        calorias = "receta_avena_cal",
+                        TipoMascota = "receta_avena_tipo",
+                        imagenUrl = "galletas_avena",
+                        colorHex = "#F5F5F5"
+                    ),
+                    AlimentacionMascotaEntity(
+                        nombre = "receta_caldo_nombre",
+                        descripcion = "receta_caldo_desc",
+                        calorias = "receta_caldo_cal",
+                        TipoMascota = "receta_caldo_tipo",
+                        imagenUrl = "caldo_huesos",
+                        colorHex = "#FFE0B2"
+                    )
+                )
+                mascotaDao.insertarRecetasMascota(recetasDefecto)
+            }
+        }
     }
 }

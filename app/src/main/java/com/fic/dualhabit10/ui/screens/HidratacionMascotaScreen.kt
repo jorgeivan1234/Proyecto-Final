@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -49,8 +48,6 @@ import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.viewmodels.HidratacionMascotaViewModel
 import kotlinx.coroutines.launch
-
-// Importamos el sistema de diseño
 import com.fic.dualhabit10.ui.theme.Dimens
 import com.fic.dualhabit10.ui.theme.NaranjaCabecera
 import com.fic.dualhabit10.ui.theme.VerdeFondoHabitos
@@ -68,6 +65,7 @@ import com.fic.dualhabit10.ui.theme.AzulClimaFrio
 import com.fic.dualhabit10.ui.theme.AzulBotonSumaOscuro
 import com.fic.dualhabit10.ui.theme.RojoAlerta
 
+// Pantalla principal encargada del monitoreo y registro del consumo diario de agua de la mascota
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HidratacionMascotaScreen(
@@ -76,11 +74,11 @@ fun HidratacionMascotaScreen(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val scrollState = rememberScrollState()
 
     val aguaConsumida = viewModel.aguaMascotaConsumidaML
     val metaDiaria = viewModel.metaMascotaDiariaML
 
+    // Mapeo dinámico y seguro del porcentaje de progreso actual de hidratación
     val progreso = remember(aguaConsumida, metaDiaria) {
         if (metaDiaria > 0) {
             (aguaConsumida.toFloat() / metaDiaria.toFloat()).coerceIn(0f, 1f)
@@ -98,7 +96,12 @@ fun HidratacionMascotaScreen(
                 CenterAlignedTopAppBar(
                     modifier = Modifier
                         .height(Dimens.topBarHeightExtra)
-                        .clip(RoundedCornerShape(bottomStart = Dimens.cornerRadiusExtraLarge, bottomEnd = Dimens.cornerRadiusExtraLarge)),
+                        .clip(
+                            RoundedCornerShape(
+                                bottomStart = Dimens.cornerRadiusExtraLarge,
+                                bottomEnd = Dimens.cornerRadiusExtraLarge
+                            )
+                        ),
                     title = {
                         Box(
                             modifier = Modifier
@@ -121,7 +124,7 @@ fun HidratacionMascotaScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Menu,
-                                contentDescription = "Menu",
+                                contentDescription = stringResource(R.string.desc_menu),
                                 tint = TextoNegro,
                                 modifier = Modifier.size(Dimens.iconSizeLarge)
                             )
@@ -152,6 +155,7 @@ fun HidratacionMascotaScreen(
     }
 }
 
+// Tarjeta informativa que despliega las variables climatológicas del entorno para ajustar el consumo idóneo
 @Composable
 fun InfoCardClima(viewModel: HidratacionMascotaViewModel) {
     Card(
@@ -167,8 +171,16 @@ fun InfoCardClima(viewModel: HidratacionMascotaViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                Text(stringResource(R.string.label_clima_api), style = MaterialTheme.typography.labelSmall, color = GrisTextoHint)
-                Text(stringResource(R.string.format_temperatura, viewModel.temperaturaActual.toString()), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+                Text(
+                    text = stringResource(R.string.label_clima_api),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = GrisTextoHint
+                )
+                Text(
+                    text = stringResource(R.string.format_temperatura, viewModel.temperaturaActual.toString()),
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
             }
             Text(
                 text = stringResource(if (viewModel.climaCaluroso) R.string.label_calor_detectado else R.string.label_clima_estable),
@@ -186,6 +198,7 @@ fun InfoCardClima(viewModel: HidratacionMascotaViewModel) {
     }
 }
 
+// Bloque de progreso visual del volumen ingerido frente al objetivo establecido del día
 @Composable
 fun CardProgreso(agua: Int, meta: Int, progreso: Float) {
     Card(
@@ -198,8 +211,16 @@ fun CardProgreso(agua: Int, meta: Int, progreso: Float) {
             modifier = Modifier.padding(Dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(stringResource(R.string.label_progreso_hoy), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
-            Text(stringResource(R.string.format_progreso_ml, agua.toString(), meta.toString()), style = MaterialTheme.typography.displaySmall, fontWeight = FontWeight.ExtraBold)
+            Text(
+                text = stringResource(R.string.label_progreso_hoy),
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = stringResource(R.string.format_progreso_ml, agua.toString(), meta.toString()),
+                style = MaterialTheme.typography.displaySmall,
+                fontWeight = FontWeight.ExtraBold
+            )
 
             LinearProgressIndicator(
                 progress = { progreso },
@@ -214,6 +235,7 @@ fun CardProgreso(agua: Int, meta: Int, progreso: Float) {
     }
 }
 
+// Tarjeta que detalla las características físicas base del animal registradas en la sesión
 @Composable
 fun InfoCardMascota(viewModel: HidratacionMascotaViewModel) {
     Card(
@@ -222,7 +244,11 @@ fun InfoCardMascota(viewModel: HidratacionMascotaViewModel) {
         colors = CardDefaults.cardColors(containerColor = BlancoTarjeta90),
     ) {
         Column(modifier = Modifier.padding(Dimens.paddingMediumSmall)) {
-            Text(stringResource(R.string.label_mascota_activa), style = MaterialTheme.typography.labelSmall, color = GrisTextoHint)
+            Text(
+                text = stringResource(R.string.label_mascota_activa),
+                style = MaterialTheme.typography.labelSmall,
+                color = GrisTextoHint
+            )
             Text(
                 text = stringResource(R.string.format_mascota_peso, viewModel.tipoMascota, viewModel.pesoKG.toString()),
                 fontWeight = FontWeight.Bold,
@@ -233,6 +259,7 @@ fun InfoCardMascota(viewModel: HidratacionMascotaViewModel) {
     }
 }
 
+// Módulo interactivo de adición rápida de tomas de agua y controles adaptativos de esfuerzo físico
 @Composable
 fun ControlesHidratacion(viewModel: HidratacionMascotaViewModel) {
     Card(
@@ -247,7 +274,11 @@ fun ControlesHidratacion(viewModel: HidratacionMascotaViewModel) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(stringResource(R.string.label_hizo_ejercicio), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(start = Dimens.paddingSmall))
+            Text(
+                text = stringResource(R.string.label_hizo_ejercicio),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(start = Dimens.paddingSmall)
+            )
             FilterChip(
                 selected = viewModel.hizoEjercicio,
                 onClick = {
@@ -269,7 +300,7 @@ fun ControlesHidratacion(viewModel: HidratacionMascotaViewModel) {
             colors = ButtonDefaults.buttonColors(containerColor = AzulClimaFrio),
             shape = RoundedCornerShape(Dimens.cornerRadiusLarge)
         ) {
-            Text(stringResource(R.string.btn_add_250ml), color = Color.White, fontWeight = FontWeight.Bold)
+            Text(text = stringResource(R.string.btn_add_250ml), color = Color.White, fontWeight = FontWeight.Bold)
         }
         Button(
             onClick = { viewModel.sumarAguaMascota(500) },
@@ -279,7 +310,7 @@ fun ControlesHidratacion(viewModel: HidratacionMascotaViewModel) {
             colors = ButtonDefaults.buttonColors(containerColor = AzulBotonSumaOscuro),
             shape = RoundedCornerShape(Dimens.cornerRadiusLarge)
         ) {
-            Text(stringResource(R.string.btn_add_500ml), color = Color.White, fontWeight = FontWeight.Bold)
+            Text(text = stringResource(R.string.btn_add_500ml), color = Color.White, fontWeight = FontWeight.Bold)
         }
     }
 
@@ -290,7 +321,7 @@ fun ControlesHidratacion(viewModel: HidratacionMascotaViewModel) {
             .height(Dimens.buttonHeight),
         colors = ButtonDefaults.outlinedButtonColors(contentColor = RojoAlerta)
     ) {
-        Text(stringResource(R.string.btn_reiniciar_progreso))
+        Text(text = stringResource(R.string.btn_reiniciar_progreso))
     }
 }
 

@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CleanHands
 import androidx.compose.material.icons.filled.ContentPasteSearch
 import androidx.compose.material.icons.filled.CrueltyFree
@@ -37,15 +37,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.viewmodels.HigieneMascotaViewModel
 import java.time.LocalDate
+import com.fic.dualhabit10.ui.theme.Dimens
+import com.fic.dualhabit10.ui.theme.VerdeCheck
+import com.fic.dualhabit10.ui.theme.RosaDestacado
+import com.fic.dualhabit10.ui.theme.AzulCard
+import com.fic.dualhabit10.ui.theme.AzulHidratacion
+import com.fic.dualhabit10.ui.theme.AzulObscuro
+import com.fic.dualhabit10.ui.theme.BlancoFondo
+import com.fic.dualhabit10.ui.theme.TextoNegro
+import com.fic.dualhabit10.ui.theme.GrisOscuro
 
+// Pantalla principal de gestión de higiene para la mascota que monitoriza el cumplimiento de tareas diarias
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HigieneMascotaScreen(
@@ -53,6 +63,8 @@ fun HigieneMascotaScreen(
     viewModel: HigieneMascotaViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     val estadoHigiene by viewModel.estadoHigiene.collectAsState()
+
+    // Sincronización inicial del estado diario al cargar el componente basándose en la fecha actual del sistema
     LaunchedEffect(Unit) {
         viewModel.cargarDatosDiarios(LocalDate.now().toString())
     }
@@ -60,101 +72,117 @@ fun HigieneMascotaScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Higiene de Mascota", fontWeight = FontWeight.Bold) },
+                title = {
+                    Text(
+                        text = stringResource(R.string.title_higiene_mascota),
+                        fontWeight = FontWeight.Bold,
+                        color = TextoNegro
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Atras")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.desc_volver),
+                            tint = TextoNegro
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorResource(id = R.color.azul_cielo)
+                    containerColor = AzulHidratacion
                 )
             )
         },
-        containerColor = colorResource(id = R.color.azul_cielo)
+        containerColor = AzulHidratacion
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(Dimens.paddingDefault),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Tareas Diarias",
-                fontSize = 22.sp,
+                text = stringResource(R.string.title_tareas_diarias),
+                fontSize = Dimens.textSizeSubtitle,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.Start).padding(bottom = 16.dp)
+                color = TextoNegro,
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(bottom = Dimens.paddingDefault)
             )
-            // tarjetas de habitos diarios
+
+            // Tarjetas de hábitos diarios
             ItemHigieneDiaria(
-                titulo = "Higiene Dental",
-                descripcion = "Cepillado o snack para el sarro",
+                titulo = stringResource(R.string.tarea_dental_titulo),
+                descripcion = stringResource(R.string.tarea_dental_desc),
                 icono = Icons.Default.Pets,
-                checkColor = colorResource(id = R.color.azul_fuerte),
+                checkColor = AzulObscuro,
                 isChecked = estadoHigiene.higieneDental,
                 onCheckedChange = { viewModel.actualizarHabitoDiario("dental", it) }
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
+            // Tarjetas de hábitos diarios
             ItemHigieneDiaria(
-                titulo = "Cepillado de pelo",
-                descripcion = "Evita nudos y reduce la caida",
+                titulo = stringResource(R.string.tarea_cepillado_titulo),
+                descripcion = stringResource(R.string.tarea_cepillado_desc),
                 icono = Icons.Default.CrueltyFree,
-                checkColor = colorResource(id = R.color.verde),
+                checkColor = VerdeCheck,
                 isChecked = estadoHigiene.cepilladoPelo,
                 onCheckedChange = { viewModel.actualizarHabitoDiario("cepillado", it) }
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
+            // Tarjetas de hábitos diarios
             ItemHigieneDiaria(
-                titulo = "Limpieza del entorno",
-                descripcion = "Lavar platos o limpiar espacio",
+                titulo = stringResource(R.string.tarea_entorno_titulo),
+                descripcion = stringResource(R.string.tarea_entorno_desc),
                 icono = Icons.Default.CleanHands,
-                checkColor = Color(0xFFE91E63),
+                checkColor = RosaDestacado,
                 isChecked = estadoHigiene.limpiezaEntorno,
                 onCheckedChange = { viewModel.actualizarHabitoDiario("entorno", it) }
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(Dimens.paddingXXLarge))
 
-            // tarjeta de navegacion al control a largo plazo
+            // Tarjeta de acceso al panel de control cronológico extendido (baño, corte de uñas)
             Card(
                 onClick = { navController.navigate("higiene_mascota_detalle") },
-                shape = RoundedCornerShape(24.dp),
+                shape = RoundedCornerShape(Dimens.cornerRadiusMedium),
                 colors = CardDefaults.cardColors(
-                    containerColor = colorResource(id = R.color.azul)
+                    containerColor = AzulCard
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(110.dp)
+                    .height(Dimens.heightCardControl)
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp),
+                        .padding(Dimens.paddingDefault),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         imageVector = Icons.Default.ContentPasteSearch,
                         contentDescription = null,
-                        modifier = Modifier.size(40.dp),
-                        tint = Color.Black
+                        modifier = Modifier.size(Dimens.iconSizeCard),
+                        tint = TextoNegro
                     )
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(Dimens.paddingDefault))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Control de Baño y Uñas",
-                            fontSize = 18.sp,
+                            text = stringResource(R.string.card_control_titulo),
+                            fontSize = Dimens.textSizeBodyLarge,
                             fontWeight = FontWeight.Bold,
-                            color = Color.Black
+                            color = TextoNegro
                         )
                         Text(
-                            text = "Revisa alertas de vencimiento",
-                            fontSize = 14.sp,
-                            color = Color.DarkGray
+                            text = stringResource(R.string.card_control_desc),
+                            fontSize = Dimens.textSizeMedium,
+                            color = GrisOscuro
                         )
                     }
                 }
@@ -163,6 +191,7 @@ fun HigieneMascotaScreen(
     }
 }
 
+// Componente modular interactivo tipo tarjeta para representar una tarea de higiene diaria
 @Composable
 fun ItemHigieneDiaria(
     titulo: String,
@@ -173,20 +202,23 @@ fun ItemHigieneDiaria(
     onCheckedChange: (Boolean) -> Unit
 ) {
     Card(
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        shape = RoundedCornerShape(Dimens.cornerRadiusMedium),
+        colors = CardDefaults.cardColors(containerColor = BlancoFondo),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(Dimens.paddingDefault),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .size(48.dp)
-                    .background(checkColor.copy(alpha = 0.15f), RoundedCornerShape(14.dp)),
+                    .size(Dimens.iconSizeBox)
+                    .background(
+                        color = checkColor.copy(alpha = 0.15f),
+                        shape = RoundedCornerShape(Dimens.cornerRadiusMediumLarge)
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -195,18 +227,18 @@ fun ItemHigieneDiaria(
                     tint = checkColor
                 )
             }
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(Dimens.paddingDefault))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = titulo,
-                    fontSize = 16.sp,
+                    fontSize = Dimens.textSizeBody,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = TextoNegro
                 )
                 Text(
                     text = descripcion,
-                    fontSize = 12.sp,
-                    color = Color.Gray
+                    fontSize = Dimens.textSizeExtraSmall,
+                    color = GrisOscuro
                 )
             }
             Checkbox(
@@ -218,4 +250,11 @@ fun ItemHigieneDiaria(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewHigieneMascotaScreen() {
+    val nav = rememberNavController()
+    HigieneMascotaScreen(navController = nav)
 }

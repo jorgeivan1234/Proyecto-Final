@@ -1,25 +1,48 @@
 package com.fic.dualhabit10.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.fic.dualhabit10.R
 import kotlinx.coroutines.launch
+import com.fic.dualhabit10.ui.theme.Dimens
+import com.fic.dualhabit10.ui.theme.AzulCielo
+import com.fic.dualhabit10.ui.theme.NaranjaCabecera
+import com.fic.dualhabit10.ui.theme.TextoNegro
+import com.fic.dualhabit10.ui.theme.GrisTextoHint
+import com.fic.dualhabit10.ui.theme.TextoBlanco
 
+// Pantalla informativa para secciones en desarrollo o bajo mantenimiento administrativo
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MantenimientoScreen(navController: NavController) {
@@ -30,72 +53,114 @@ fun MantenimientoScreen(navController: NavController) {
         navController = navController,
         drawerState = drawerState
     ) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text("Próximamente", fontWeight = FontWeight.Bold) },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = { scope.launch { drawerState.open() } }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = "Abrir Menu",
-                                tint = Color.Black,
-                                modifier = Modifier.size(35.dp)
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF7A22)),
-                    modifier = Modifier.clip(RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
-                )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(AzulCielo)
+        ) {
+            // Contenedor superior para la barra de navegación personalizada
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(Dimens.topBarHeightExtra)
+                    .background(
+                        color = NaranjaCabecera,
+                        shape = RoundedCornerShape(
+                            bottomStart = Dimens.cornerRadiusExtraLarge,
+                            bottomEnd = Dimens.cornerRadiusExtraLarge
+                        )
+                    )
+                    .padding(horizontal = Dimens.paddingMedium)
+                    .padding(top = Dimens.paddingLarge),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = stringResource(R.string.desc_menu),
+                            tint = TextoNegro,
+                            modifier = Modifier.size(Dimens.iconSizeLarge)
+                        )
+                    }
+
+                    Text(
+                        text = stringResource(R.string.title_proximamente),
+                        color = TextoNegro,
+                        fontSize = Dimens.textSizeBodyLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    // Margen de compensación para equilibrar la alineación del título
+                    Spacer(modifier = Modifier.size(Dimens.iconSizeLarge))
+                }
             }
-        ) { innerPadding ->
+
+            // Organización visual de los elementos centrales de la interfaz
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFF5EDCFF))
-                    .padding(innerPadding)
-                    .padding(24.dp),
+                    .padding(Dimens.paddingLarge),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.Build,
-                    contentDescription = "Mantenimiento",
-                    modifier = Modifier.size(100.dp),
-                    tint = Color(0xFFFF7A22)
+                    contentDescription = null,
+                    modifier = Modifier.size(Dimens.iconSizeGiant),
+                    tint = NaranjaCabecera
                 )
-                Spacer(modifier = Modifier.height(32.dp))
+
+                Spacer(modifier = Modifier.height(Dimens.paddingExtraLarge))
+
                 Text(
-                    text = "¡Función en construcción!",
-                    fontSize = 24.sp,
+                    text = stringResource(R.string.text_en_construccion),
+                    fontSize = Dimens.textSizeSubtitle,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black,
+                    color = TextoNegro,
                     textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+
+                Spacer(modifier = Modifier.height(Dimens.paddingDefault))
 
                 Text(
-                    text = "Estamos trabajando duro para implementar esta característica. ¡Vuelve pronto!",
-                    fontSize = 16.sp,
-                    color = Color.Gray,
+                    text = stringResource(R.string.text_mantenimiento_desc),
+                    fontSize = Dimens.textSizeBody,
+                    color = GrisTextoHint,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = Dimens.paddingDefault)
                 )
 
-                Spacer(modifier = Modifier.height(48.dp))
+                Spacer(modifier = Modifier.height(Dimens.paddingExtraLarge))
+
+                // Control de navegación para retornar al estado previo en la pila
                 Button(
                     onClick = { navController.popBackStack() },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7A22)),
-                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = NaranjaCabecera),
+                    shape = RoundedCornerShape(Dimens.cornerRadiusMedium),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp)
+                        .height(Dimens.buttonHeight)
                 ) {
-                    Text("Regresar al inicio", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = stringResource(R.string.btn_regresar_inicio),
+                        fontSize = Dimens.textSizeBody,
+                        fontWeight = FontWeight.Bold,
+                        color = TextoBlanco
+                    )
                 }
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewMantenimientoScreen() {
+    val nav = rememberNavController()
+    MantenimientoScreen(navController = nav)
 }

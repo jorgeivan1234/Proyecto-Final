@@ -23,14 +23,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.theme.Dimens
 import com.fic.dualhabit10.ui.theme.AzulCielo
 import com.fic.dualhabit10.ui.theme.VerdeDual
 import com.fic.dualhabit10.ui.theme.TextoNegro
 
+// Pantalla de bienvenida con verificación de estado de sesión
 @Composable
 fun InicioScreen(navController: NavController) {
     val context = LocalContext.current
@@ -131,4 +134,11 @@ fun InicioScreen(navController: NavController) {
                 .offset(x = 90.dp, y = (-260).dp)
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewInicioScreen() {
+    val nav = rememberNavController()
+    InicioScreen(navController = nav)
 }

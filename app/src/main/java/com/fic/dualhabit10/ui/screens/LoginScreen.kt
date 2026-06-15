@@ -62,6 +62,7 @@ import com.fic.dualhabit10.ui.theme.RojoError
 import com.fic.dualhabit10.ui.theme.TextoNegro
 import com.fic.dualhabit10.ui.theme.TextoBlanco
 
+// Pantalla de autenticación y acceso con soporte offline
 @Composable
 fun LoginScreen(
     navController: NavHostController,
@@ -305,7 +306,7 @@ fun LoginScreen(
             }
             Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
-            // Botón Offline
+            // Botón para iniciar sesión en modo local sin conexión
             Button(
                 onClick = {
                     if (tieneCuentaLocal) {

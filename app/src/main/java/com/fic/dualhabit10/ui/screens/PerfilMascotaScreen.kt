@@ -51,6 +51,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
@@ -65,7 +67,7 @@ import com.fic.dualhabit10.ui.theme.TextoBlanco
 import com.fic.dualhabit10.ui.theme.GrisTextoHint
 import com.fic.dualhabit10.ui.theme.AmarilloFondo
 
-// Vista principal del perfil para mascotas
+// Vista de administración de datos, especie, peso e identidad de la mascota virtual
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PerfilMascotaScreen(
@@ -101,6 +103,7 @@ fun PerfilMascotaScreen(
 
     Scaffold(
         topBar = {
+            // Contenedor superior para la barra de navegación personalizada
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -164,6 +167,7 @@ fun PerfilMascotaScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
+            // Marco circular interactivo para cargar o previsualizar la fotografía
             Box(
                 modifier = Modifier
                     .size(Dimens.imageProfileSizeLarge)
@@ -184,7 +188,7 @@ fun PerfilMascotaScreen(
                         contentDescription = stringResource(R.string.desc_foto_mascota),
                         modifier = Modifier
                             .fillMaxSize()
-                            .clip(CircleShape), // Evita que la imagen sobresalga del borde circular
+                            .clip(CircleShape),
                         contentScale = ContentScale.Crop
                     )
                 } else {
@@ -198,6 +202,7 @@ fun PerfilMascotaScreen(
 
             Spacer(modifier = Modifier.height(Dimens.spacerMedium))
 
+            // Captura de texto estructurada con filtrado de caracteres alfanuméricos
             OutlinedTextField(
                 value = viewModel.nombreMascota,
                 onValueChange = { newValue ->
@@ -224,6 +229,8 @@ fun PerfilMascotaScreen(
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleSmall
             )
+
+            // Distribución horizontal para la selección exclusiva de la especie
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(Dimens.paddingTiny)
@@ -245,6 +252,8 @@ fun PerfilMascotaScreen(
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleSmall
             )
+
+            // Distribución horizontal para la selección del sexo biológico
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(Dimens.paddingTiny)
@@ -260,6 +269,7 @@ fun PerfilMascotaScreen(
 
             Spacer(modifier = Modifier.height(Dimens.spacerSmall))
 
+            // Bloque adaptativo de dos columnas para magnitudes numéricas de peso y edad
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(Dimens.paddingSmall)
@@ -303,6 +313,7 @@ fun PerfilMascotaScreen(
 
             Spacer(modifier = Modifier.height(Dimens.spacerLarge))
 
+            // Botón de persistencia para confirmar los cambios locales en el repositorio
             Button(
                 onClick = {
                     viewModel.guardarDatos {
@@ -323,4 +334,11 @@ fun PerfilMascotaScreen(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewPerfilMascotaScreen() {
+    val nav = rememberNavController()
+    PerfilMascotaScreen(navController = nav)
 }

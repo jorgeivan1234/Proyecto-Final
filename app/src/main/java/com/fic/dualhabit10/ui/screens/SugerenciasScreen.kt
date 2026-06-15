@@ -32,17 +32,23 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.viewmodels.SugerenciasViewModel
 import kotlinx.coroutines.launch
+import com.fic.dualhabit10.ui.theme.Dimens
+import com.fic.dualhabit10.ui.theme.VerdeFondoHabitos
+import com.fic.dualhabit10.ui.theme.NaranjaCabecera
+import com.fic.dualhabit10.ui.theme.AmarilloFondo
+import com.fic.dualhabit10.ui.theme.TextoNegro
+import com.fic.dualhabit10.ui.theme.TextoBlanco
+import com.fic.dualhabit10.ui.theme.GrisOscuro
+import com.fic.dualhabit10.ui.theme.AzulOscuroSueno
 
 @Composable
 fun Sugerencias(
@@ -52,37 +58,35 @@ fun Sugerencias(
     var sugerenciaTexto by remember { mutableStateOf("") }
     val limiteCaracteres = 500
 
-    // 1. Estado y scope necesarios para que el menú lateral funcione
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scoper = rememberCoroutineScope()
 
-    // Envolvemos toda la pantalla en el BaseCustomDrawer
     BaseCustomDrawer(navController = navController, drawerState = drawerState) {
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF9EFFEB))
+                .background(VerdeFondoHabitos)
         ) {
-
-            //BARRA DE NAVEGACIÓN SUPERIOR
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        Color(0xFFFF7A22), // Mismo naranja de HabitosScreen
-                        shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
+                        color = NaranjaCabecera,
+                        shape = RoundedCornerShape(bottomStart = Dimens.cornerRadiusMedium, bottomEnd = Dimens.cornerRadiusMedium)
                     )
                     .statusBarsPadding()
-                    .padding(start = 12.dp, end = 12.dp, bottom = 20.dp, top = 28.dp)
+                    .padding(
+                        start = Dimens.paddingMedium,
+                        end = Dimens.paddingMedium,
+                        bottom = Dimens.spacerMedium,
+                        top = Dimens.paddingExtraLarge
+                    )
             ) {
-
-                // Cambiamos el Row por un Box para lograr un centrado absoluto
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    // Botón para abrir el menú lateral, anclado a la izquierda
                     IconButton(
                         onClick = { scoper.launch { drawerState.open() } },
                         modifier = Modifier.align(Alignment.CenterStart)
@@ -90,40 +94,39 @@ fun Sugerencias(
                         Icon(
                             imageVector = Icons.Default.Menu,
                             contentDescription = stringResource(R.string.desc_menu),
-                            tint = Color.Black,
-                            modifier = Modifier.size(32.dp)
+                            tint = TextoNegro,
+                            modifier = Modifier.size(Dimens.iconSizeLarge)
                         )
                     }
 
-                    // Título de la pantalla con fondo amarillo, anclado al centro por defecto en este Box
                     Box(
                         modifier = Modifier
-                            .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))
-                            .padding(horizontal = 20.dp, vertical = 6.dp)
+                            .background(AmarilloFondo, shape = RoundedCornerShape(Dimens.cornerRadiusLarge))
+                            .padding(horizontal = Dimens.spacerMedium, vertical = Dimens.paddingSmallMedium)
                     ) {
                         Text(
                             text = stringResource(R.string.title_sugerencias),
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
-                            color = Color.Black
+                            color = TextoNegro
                         )
                     }
                 }
             }
 
-            //El formulario de sugerencias
+            // Formulario de Sugerencias
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(24.dp),
+                    .padding(Dimens.paddingLarge),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = stringResource(R.string.title_buzon_sugerencias),
                     style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    color = Color.Black
+                    modifier = Modifier.padding(bottom = Dimens.paddingDefault),
+                    color = TextoNegro
                 )
 
                 TextField(
@@ -136,23 +139,23 @@ fun Sugerencias(
                     label = { Text(stringResource(R.string.hint_escribe_comentario)) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(180.dp),
+                        .height(Dimens.textAreaHeight),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Done
                     )
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(Dimens.paddingSmall))
 
                 Text(
                     text = "${sugerenciaTexto.length} / $limiteCaracteres",
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.align(Alignment.End),
-                    color = Color.DarkGray
+                    color = GrisOscuro
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(Dimens.paddingDefault))
 
                 Button(
                     onClick = {
@@ -164,8 +167,8 @@ fun Sugerencias(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF1A237E), // Azul oscuro
-                        contentColor = Color.White // Color del texto dentro del botón
+                        containerColor = AzulOscuroSueno,
+                        contentColor = TextoBlanco
                     )
                 ) {
                     Text(stringResource(R.string.btn_enviar_sugerencia), fontSize = 16.sp)

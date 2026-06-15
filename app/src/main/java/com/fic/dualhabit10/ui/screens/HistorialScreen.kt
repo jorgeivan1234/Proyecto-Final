@@ -45,8 +45,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
 import kotlinx.coroutines.launch
@@ -62,6 +64,7 @@ import com.fic.dualhabit10.ui.theme.GrisFondoProgreso
 import com.fic.dualhabit10.ui.theme.AzulTarjetaProgreso
 import com.fic.dualhabit10.ui.theme.VerdeCompletado
 
+// Pantalla de historial de hidratación organizada por pestañas temporales
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistorialScreen(
@@ -116,6 +119,7 @@ fun HistorialScreen(
                 verticalArrangement = Arrangement.spacedBy(Dimens.paddingLarge)
             ) {
 
+                // Selector de pestañas para alternar el rango temporal del historial
                 Card(
                     shape = RoundedCornerShape(Dimens.cornerRadiusSmall),
                     colors = CardDefaults.cardColors(containerColor = AzulFondoDesglose),
@@ -150,6 +154,7 @@ fun HistorialScreen(
                     }
                 }
 
+                // Contenedor dinámico que conmuta la vista según el filtro activo
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -166,6 +171,7 @@ fun HistorialScreen(
     }
 }
 
+// Componente de progreso diario que muestra el consumo actual frente a la meta fija
 @Composable
 fun VistaDiariaReal(viewModel: HidratacionViewModel) {
     val consumo = viewModel.aguaConsumidaML
@@ -212,6 +218,7 @@ fun VistaDiariaReal(viewModel: HidratacionViewModel) {
     }
 }
 
+// Gráfico de barras que representa el consumo de los últimos siete días
 @Composable
 fun VistaSemanalReal(viewModel: HidratacionViewModel) {
     val diasSemana = listOf(
@@ -221,6 +228,7 @@ fun VistaSemanalReal(viewModel: HidratacionViewModel) {
     )
     val hoy = LocalDate.now()
 
+    // Cálculo del porcentaje de consumo para cada día de la semana
     val consumoSemanaPorcentaje = remember(viewModel.historialConsumoMap, viewModel.metaDiariaML) {
         List(7) { i ->
             val fechaDia = hoy.minusDays((6 - i).toLong())
@@ -302,6 +310,7 @@ fun VistaSemanalReal(viewModel: HidratacionViewModel) {
     }
 }
 
+// Panel estadístico que procesa el promedio, días cumplidos y efectividad del mes
 @Composable
 fun VistaMensualReal(viewModel: HidratacionViewModel) {
     val hoy = LocalDate.now()
@@ -311,6 +320,7 @@ fun VistaMensualReal(viewModel: HidratacionViewModel) {
     val nombreMes = hoy.month.getDisplayName(java.time.format.TextStyle.FULL, javaLocale)
         .replaceFirstChar { if (it.isLowerCase()) it.titlecase(javaLocale) else it.toString() }
 
+    // Filtrado y cálculo de métricas para los registros del mes en curso
     val estadisticasMes = remember(viewModel.historialConsumoMap, viewModel.metaDiariaML){
         val prefijoMes = hoy.toString().substring(0, 7)
         val registrosDelMes = viewModel.historialConsumoMap.filter { it.key.startsWith(prefijoMes) }
@@ -377,4 +387,11 @@ fun VistaMensualReal(viewModel: HidratacionViewModel) {
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewHistorialScreen() {
+    val nav = rememberNavController()
+    HistorialScreen(navController = nav)
 }

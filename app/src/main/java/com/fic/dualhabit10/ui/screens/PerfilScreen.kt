@@ -29,6 +29,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -47,18 +49,18 @@ import com.fic.dualhabit10.ui.theme.AmarilloNivel
 import com.fic.dualhabit10.ui.theme.AzulClimaFrio
 import com.fic.dualhabit10.ui.theme.AmarilloFondo
 
-
-// Constantes
+// Llaves de persistencia para el almacenamiento local de preferencias de usuario
 private object PerfilPrefs {
     const val FILE_NAME = "perfil_preferences"
     const val KEY_PROFILE_URI = "saved_profile_uri"
 }
 
+// Rutas estáticas centralizadas para el grafo de navegación de Compose
 private object PerfilRoutes {
     const val MASCOTA = "perfil_mascota"
 }
 
-// Pantalla de Perfil Compartido
+// Pantalla de administración simbiótica que unifica los datos biométricos del usuario y el acceso a la mascota virtual
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PerfilScreen(
@@ -153,13 +155,13 @@ fun PerfilScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(Dimens.paddingDefault)
         ) {
-            // Posicionamiento de perfiles lado a lado (Humano y Mascota)
+            // Fila de avatares interactivos para alternar la visualización del usuario o la mascota
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Apartado Humano
+                // Sección de identidad del usuario humano
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Box(modifier = Modifier.size(Dimens.imageProfileSize)) {
                         AsyncImage(
@@ -186,7 +188,7 @@ fun PerfilScreen(
                     )
                 }
 
-                // Apartado Mascota
+                // Sección de enlace al perfil secundario de la mascota virtual
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Box(modifier = Modifier.size(Dimens.imageProfileSize)) {
                         AsyncImage(
@@ -214,7 +216,7 @@ fun PerfilScreen(
                 }
             }
 
-            // Tarjeta de Nivel y Experiencia
+            // Tarjeta de gamificación que ilustra el nivel de la cuenta y los puntos acumulados
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = FondoOscuroTarjeta)
@@ -245,7 +247,6 @@ fun PerfilScreen(
                 }
             }
 
-            // Campos de configuración
             Text(
                 text = stringResource(R.string.title_config_biometrica),
                 fontWeight = FontWeight.Bold,
@@ -253,6 +254,7 @@ fun PerfilScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            // Entrada de datos flotantes restrictiva para el peso corporal
             OutlinedTextField(
                 value = peso,
                 onValueChange = { newValue ->
@@ -267,6 +269,7 @@ fun PerfilScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next)
             )
 
+            // Entrada de datos enteros restrictiva para la edad cronológica
             OutlinedTextField(
                 value = edad,
                 onValueChange = { if (it.length <= 3) edad = it.filter { c -> c.isDigit() } },
@@ -276,7 +279,7 @@ fun PerfilScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done)
             )
 
-            // Menú Género
+            // Selector interactivo (Dropdown) para la asignación del género biológico
             Box(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
                     value = genero,
@@ -302,7 +305,7 @@ fun PerfilScreen(
                 }
             }
 
-            // Menú Actividad
+            // Selector interactivo (Dropdown) para la asignación del coeficiente de actividad física
             Box(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
                     value = actividad,
@@ -328,7 +331,7 @@ fun PerfilScreen(
                 }
             }
 
-            // Clima
+            // Tarjeta de monitorización para las condiciones térmicas de hidratación
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = TextoBlanco.copy(alpha = 0.5f))
@@ -351,6 +354,7 @@ fun PerfilScreen(
 
             Spacer(modifier = Modifier.height(Dimens.paddingDefault))
 
+            // Botón ejecutor que persiste los datos biométricos y recalcula las metas diarias
             Button(
                 onClick = {
                     viewModel.guardarPerfil(peso.toFloatOrNull() ?: 70f, edad.toIntOrNull() ?: 25, genero, actividad)
@@ -369,4 +373,11 @@ fun PerfilScreen(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewPerfilScreen() {
+    val nav = rememberNavController()
+    PerfilScreen(navController = nav)
 }

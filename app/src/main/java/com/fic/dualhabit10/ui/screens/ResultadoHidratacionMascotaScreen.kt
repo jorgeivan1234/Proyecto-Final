@@ -77,7 +77,7 @@ fun ResultadoHidratacionMascotaScreen(
                 color = Color(0xFFFF9A22)
             )
             Spacer(modifier = Modifier.height(16.dp))
-            //tarjeta de litros o mililitros requerids
+            //tarjeta de litros o mililitros requeridos
             Card(
                 shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
