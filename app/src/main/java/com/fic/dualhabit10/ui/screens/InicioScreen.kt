@@ -1,111 +1,144 @@
 package com.fic.dualhabit10.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
+import com.fic.dualhabit10.ui.theme.Dimens
+import com.fic.dualhabit10.ui.theme.AzulCielo
+import com.fic.dualhabit10.ui.theme.VerdeDual
+import com.fic.dualhabit10.ui.theme.TextoNegro
 
-
-
+// Pantalla de bienvenida con verificación de estado de sesión
 @Composable
 fun InicioScreen(navController: NavController) {
+    val context = LocalContext.current
+    val sharedPreferences = remember {
+        context.getSharedPreferences("login_preferences", Context.MODE_PRIVATE)
+    }
+
+    // Validación automática si ya estaba logueado
+    LaunchedEffect(Unit) {
+        val recordarActivo = sharedPreferences.getBoolean("remember_active", false)
+        val sesionIniciada = sharedPreferences.getBoolean("is_logged_in", false)
+        if (recordarActivo && sesionIniciada) {
+            navController.navigate("habitos") {
+                popUpTo("inicio") { inclusive = true }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.azul_cielo))
+            .background(AzulCielo)
     ) {
-        //imagen del fondo
+        // Imagen de fondo
         Image(
             painter = painterResource(id = R.drawable.bg_inicio_cielo),
-            contentDescription = null,
+            contentDescription = stringResource(R.string.desc_fondo_cielo_inicio),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
-        //titulo
+
+        // Título principal
         Text(
             text = stringResource(R.string.bienvenido_a_dualhabit),
-            fontSize = 32.sp,
+            style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
-            color = Color.Black,
+            color = TextoNegro,
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .offset(y = 60.dp)
+                .offset(y = Dimens.paddingXXLarge * 2)
         )
-        // boton de iniciar sesion
-        Button(
-            onClick = {
-                navController.navigate("login")
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(id = R.color.verde)
-            ),
+
+        // Contenedor para alinear el botón de Iniciar
+        Column(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .offset(y = 140.dp)
-                .size(width = 200.dp, height = 65.dp)
+                .offset(y = Dimens.paddingXXLarge * 4),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(R.string.iniciar),
-                color = Color.Black,
-                fontSize = 18.sp
-            )
+            Button(
+                onClick = {
+                    navController.navigate("login")
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = VerdeDual
+                ),
+                modifier = Modifier.size(
+                    width = Dimens.buttonWidth,
+                    height = Dimens.buttonHeightLarge
+                ),
+                shape = MaterialTheme.shapes.extraLarge
+            ) {
+                Text(
+                    text = stringResource(R.string.iniciar),
+                    color = TextoNegro,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
         }
-        //personaje
+
+        // Personaje principal
         Image(
-            painter = painterResource(
-                id = R.drawable.img_personaje_saludo
-            ),
-            contentDescription = null,
+            painter = painterResource(id = R.drawable.img_personaje_saludo),
+            contentDescription = stringResource(R.string.desc_personaje_saludo),
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .offset(x = (-100).dp, y = 70.dp)
-                .size(width = 312.dp, height = 559.dp)
+                .size(width = Dimens.imageHeroWidth, height = Dimens.imageHeroHeight)
         )
-        //perro
+
+        // Perro IMG
         Image(
-            painter = painterResource(
-                id = R.drawable.img_perro_inicio
-            ),
-            contentDescription = null,
+            painter = painterResource(id = R.drawable.img_perro_inicio),
+            contentDescription = stringResource(R.string.desc_perro_inicio),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .offset(x = (-96).dp, y = 50.dp)
                 .scale(scaleX = -1f, scaleY = 1f)
-                .size(306.dp)
+                .size(Dimens.imageDogSize)
         )
-        //bienvenida
+
+        // Globo de bienvenida
         Image(
-            painter = painterResource(
-                id = R.drawable.img_globo_welcome
-            ),
-            contentDescription = null,
+            painter = painterResource(id = R.drawable.img_globo_welcome),
+            contentDescription = stringResource(R.string.desc_globo_bienvenida),
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .offset(x = 90.dp, y = (-260).dp)
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewInicioScreen() {
+    val nav = rememberNavController()
+    InicioScreen(navController = nav)
 }

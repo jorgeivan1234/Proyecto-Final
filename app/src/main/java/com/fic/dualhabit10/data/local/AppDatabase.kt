@@ -4,17 +4,41 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
 @Database(
-    entities = [RegistroAguaEntity::class, RegistroAguaMascotaEntity::class, ActividadFisicaEntity::class],
-    version = 1,
+    entities = [
+        RegistroAguaEntity::class,
+        RegistroAguaMascotaEntity::class,
+        ActividadFisicaEntity::class,
+        PerfilMascotaEntity::class,
+        AlimentacionEntity::class,
+        SuenoEntity::class,
+        SugerenciaEntity::class,
+        AlimentacionMascotaEntity::class,
+        PaseoEntity::class,
+        HigieneMascotaEntity::class,
+        SaludMascotaEntity::class
+    ],
+    version = 10,
     exportSchema = false
 )
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun hidratacionDao(): HidratacionDao
     abstract fun hidratacionMascotaDao(): HidratacionMascotaDao
     abstract fun actividadFisicaDao(): ActividadFisicaDao
+    abstract fun perfilMacotaDao(): PerfilMascotaDao
+    abstract fun alimentacionDao(): AlimentacionDao
+    abstract fun suenoDao(): SuenoDao
+    abstract fun sugerenciaDao(): SugerenciaDao
+    abstract fun alimentacionMascotaDao(): AlimentacionMascotaDao
+    abstract fun paseoDao(): PaseoDao
+    abstract fun higieneMascotaDao(): HigieneMascotaDao
+    abstract fun saludMascotaDao(): SaludMascotaDao
+
+
 
 
     companion object {
@@ -25,7 +49,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "dual_habit_database"
+                    "dual_habit_database_v1"
                 )
                 .fallbackToDestructiveMigration()
                 .build()

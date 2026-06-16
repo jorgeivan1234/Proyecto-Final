@@ -1,0 +1,29 @@
+<changelist name="Uncommitted_changes_before_Update_at_04_06_2026_06_41_p_ m__[Changes]" date="1780623696365" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_04_06_2026_06_41_p_ m__[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 04/06/2026 06:41 p. m. [Changes]" />
+  <binary>
+    <option name="AFTER_PATH" value=".idea/shelf/Uncommitted_changes_before_Checkout_at_03_06_2026_02_54_p_ m__[Changes]/gradle-wrapper.jar" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_04_06_2026_06_41_p_ m__[Changes]/gradle-wrapper.jar" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="gradle/wrapper/gradle-wrapper.jar" />
+    <option name="AFTER_PATH" value="gradle/wrapper/gradle-wrapper.jar" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_04_06_2026_06_41_p_ m__[Changes]/gradle-wrapper1.jar" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/src/main/res/drawable/croquetas_caseras.jpg" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_04_06_2026_06_41_p_ m__[Changes]/croquetas_caseras.jpg" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/src/main/res/drawable/caldo_huesos.webp" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_04_06_2026_06_41_p_ m__[Changes]/caldo_huesos.webp" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/src/main/res/drawable/galletas_avena.jpg" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_04_06_2026_06_41_p_ m__[Changes]/galletas_avena.jpg" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/src/main/res/drawable/helados_fresa.jpg" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_04_06_2026_06_41_p_ m__[Changes]/helados_fresa.jpg" />
+  </binary>
+</changelist>

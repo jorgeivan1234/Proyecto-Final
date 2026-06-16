@@ -4,341 +4,380 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.ActivityNavigatorExtras
 import coil.compose.AsyncImage
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
-import kotlin.math.exp
+import com.fic.dualhabit10.ui.viewmodels.PerfilMascotaViewModel
+import com.fic.dualhabit10.ui.theme.Dimens
+import com.fic.dualhabit10.ui.theme.NaranjaCabecera
+import com.fic.dualhabit10.ui.theme.VerdeFondoHabitos
+import com.fic.dualhabit10.ui.theme.TextoNegro
+import com.fic.dualhabit10.ui.theme.TextoBlanco
+import com.fic.dualhabit10.ui.theme.GrisTextoHint
+import com.fic.dualhabit10.ui.theme.FondoOscuroTarjeta
+import com.fic.dualhabit10.ui.theme.AzulBarraExp
+import com.fic.dualhabit10.ui.theme.AmarilloNivel
+import com.fic.dualhabit10.ui.theme.AzulClimaFrio
+import com.fic.dualhabit10.ui.theme.AmarilloFondo
 
+// Llaves de persistencia para el almacenamiento local de preferencias de usuario
+private object PerfilPrefs {
+    const val FILE_NAME = "perfil_preferences"
+    const val KEY_PROFILE_URI = "saved_profile_uri"
+}
+
+// Rutas estáticas centralizadas para el grafo de navegación de Compose
+private object PerfilRoutes {
+    const val MASCOTA = "perfil_mascota"
+}
+
+// Pantalla de administración simbiótica que unifica los datos biométricos del usuario y el acceso a la mascota virtual
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PerfilScreen(
     navController: NavController,
     viewModel: HidratacionViewModel = viewModel(),
-){
+    mascotaViewModel: PerfilMascotaViewModel = viewModel()
+) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+    val sharedPreferences = remember { context.getSharedPreferences(PerfilPrefs.FILE_NAME, Context.MODE_PRIVATE) }
 
-    //para que no se pierda la foto de perfil
-    val sharedPreferences = remember {
-        context.getSharedPreferences("perfil_preferences", Context.MODE_PRIVATE)
+    var peso by remember { mutableStateOf("") }
+    var edad by remember { mutableStateOf("") }
+    var genero by remember { mutableStateOf("") }
+    var actividad by remember { mutableStateOf("") }
+
+    val climaActual = remember(viewModel.entornoClima) { viewModel.entornoClima }
+
+    LaunchedEffect(Unit) {
+        peso = if (viewModel.usuarioPeso > 0f) viewModel.usuarioPeso.toString() else ""
+        edad = if (viewModel.usuarioEdad > 0) viewModel.usuarioEdad.toString() else ""
+        genero = viewModel.usuarioGenero.ifEmpty { "" }
+        actividad = viewModel.actividadNivel.ifEmpty { "" }
     }
-    var peso by remember { mutableStateOf(viewModel.usuarioPeso.toString() )}
-    var edad by remember { mutableStateOf(viewModel.usuarioEdad.toString() )}
-    var clima by remember { mutableStateOf(viewModel.entornoClima)}
-    var genero by remember  { mutableStateOf(viewModel.usuarioGenero)}
-    var actividad by remember  { mutableStateOf(viewModel.actividadNivel)}
 
-    var expGenero by remember { mutableStateOf(false)}
-    var expActividad by remember { mutableStateOf(false)}
+    var expGenero by remember { mutableStateOf(false) }
+    var expActividad by remember { mutableStateOf(false) }
 
-    //recupera la foto
     var fotoUsuarioUri by remember {
-        mutableStateOf<Uri?>(
-            sharedPreferences.getString("saved_profile_uri", null)?.let { Uri.parse(it) }
-        )
+        mutableStateOf<Uri?>(sharedPreferences.getString(PerfilPrefs.KEY_PROFILE_URI, null)?.let { Uri.parse(it) })
     }
 
-    var galeriaLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        //si el usuario selecciona una imgen, guardamos su ruta
+    val fotoMascotaUri = remember(mascotaViewModel.imagenMascota) {
+        if (mascotaViewModel.imagenMascota.isNotEmpty()) {
+            try { Uri.parse(mascotaViewModel.imagenMascota) } catch(e: Exception) { null }
+        } else null
+    }
+
+    val galeriaLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             try {
-                val intent = null
-                context.contentResolver.takePersistableUriPermission(
-                    uri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
+                context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 fotoUsuarioUri = uri
-                //guarda la ruta
-                sharedPreferences.edit().putString("saved_profile_uri", uri.toString()).apply()
+                sharedPreferences.edit().putString(PerfilPrefs.KEY_PROFILE_URI, uri.toString()).apply()
             } catch (e: Exception) {
                 fotoUsuarioUri = uri
-                sharedPreferences.edit().putString("saved_profile_uri", uri.toString()).apply()
+                sharedPreferences.edit().putString(PerfilPrefs.KEY_PROFILE_URI, uri.toString()).apply()
             }
         }
     }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Perfil Compartido", fontWeight = FontWeight.Bold) },
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.title_perfil_compartido),
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = TextoNegro,
+                        modifier = Modifier
+                            .background(
+                                color = AmarilloFondo,
+                                shape = RoundedCornerShape(Dimens.cornerRadiusLarge)
+                            )
+                            .padding(
+                                horizontal = Dimens.spacerMedium,
+                                vertical = Dimens.paddingTiny
+                            )
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = {
-                        viewModel.guardarPerfil(
-                            peso.toFloatOrNull() ?: 70f,
-                            edad.toIntOrNull() ?: 25,
-                            genero,
-                            actividad,
-                            clima
-                        )
+                        viewModel.guardarPerfil(peso.toFloatOrNull() ?: 70f, edad.toIntOrNull() ?: 25, genero, actividad)
                         navController.popBackStack()
                     }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Atras")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = TextoNegro)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF7A22))
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = NaranjaCabecera),
+                modifier = Modifier.clip(RoundedCornerShape(bottomStart = Dimens.paddingLarge, bottomEnd = Dimens.paddingLarge))
             )
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF9EFFEB))
+                .background(VerdeFondoHabitos)
                 .padding(innerPadding)
                 .verticalScroll(scrollState)
-                .padding(20.dp),
+                .padding(Dimens.spacerMedium),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(Dimens.paddingDefault)
         ) {
+            // Fila de avatares interactivos para alternar la visualización del usuario o la mascota
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Sección de identidad del usuario humano
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    if (fotoUsuarioUri != null) {
+                    Box(modifier = Modifier.size(Dimens.imageProfileSize)) {
                         AsyncImage(
-                            model = fotoUsuarioUri,
-                            contentDescription = "Foto elegida por el usuario",
+                            model = fotoUsuarioUri ?: R.drawable.img_hidratacion,
+                            contentDescription = null,
                             modifier = Modifier
-                                .size(110.dp)
+                                .fillMaxSize()
                                 .clip(CircleShape)
-                                .border(3.dp, Color.Black, CircleShape)
-                                .clickable {
-                                    //al pulsar la foto abre galeria
-                                    galeriaLauncher.launch(
-                                        androidx.activity.result.PickVisualMediaRequest(
-                                            ActivityResultContracts.PickVisualMedia.ImageOnly
-                                        )
-                                    )
-                                },
-                            contentScale = ContentScale.Crop
-                        )
-                    } else {
-                        Image(
-                            painter = painterResource(id = R.drawable.img_hidratacion),
-                            contentDescription = "Foto Humano",
-                            modifier = Modifier
-                                .size(110.dp)
-                                .clip(CircleShape)
-                                .border(3.dp, Color.Black, CircleShape)
-                                .clickable {
-                                    galeriaLauncher.launch(
-                                        androidx.activity.result.PickVisualMediaRequest(
-                                            ActivityResultContracts.PickVisualMedia.ImageOnly
-                                        )
-                                    )
-                                },
+                                .border(Dimens.borderThickness, TextoNegro, CircleShape)
+                                .clickable { galeriaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
                             contentScale = ContentScale.Crop
                         )
                     }
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text("Usuario", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                    Text("Pulsame para cambiar", fontSize = 10.sp, color = Color.Gray)
+                    Spacer(modifier = Modifier.height(Dimens.paddingTiny))
+                    Text(
+                        text = stringResource(R.string.label_usuario),
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = stringResource(R.string.hint_cambiar_foto),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = GrisTextoHint
+                    )
                 }
 
+                // Sección de enlace al perfil secundario de la mascota virtual
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(
-                        painter = painterResource(id = R.drawable.img_mascotas_v),
-                        contentDescription = "Foto mascota",
-                        modifier = Modifier
-                            .size(110.dp)
-                            .clip(CircleShape)
-                            .border(3.dp, Color.Black, CircleShape)
-                            .clickable {
-                                navController.navigate("perfil_mascota")
-                            },
-                        contentScale = ContentScale.Crop
+                    Box(modifier = Modifier.size(Dimens.imageProfileSize)) {
+                        AsyncImage(
+                            model = fotoMascotaUri ?: R.drawable.img_mascotas_v,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(CircleShape)
+                                .border(Dimens.borderThickness, TextoNegro, CircleShape)
+                                .clickable { navController.navigate(PerfilRoutes.MASCOTA) },
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(Dimens.paddingTiny))
+                    Text(
+                        text = stringResource(R.string.label_mascota),
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.bodyMedium
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text("Mascota", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                    Text("Ver perfil", fontSize = 10.sp, color = Color.Gray)
+                    Text(
+                        text = stringResource(R.string.hint_ver_perfil),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = GrisTextoHint
+                    )
                 }
             }
 
-            //experiencia
+            // Tarjeta de gamificación que ilustra el nivel de la cuenta y los puntos acumulados
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color.Black)
+                colors = CardDefaults.cardColors(containerColor = FondoOscuroTarjeta)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(Dimens.paddingDefault)) {
                     Text(
-                        "Nivel de Cuenta: ${viewModel.experienciaNivel}",
-                        color = Color.Yellow,
+                        text = stringResource(R.string.label_nivel_cuenta, viewModel.experienciaNivel),
+                        color = AmarilloNivel,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        style = MaterialTheme.typography.titleMedium
                     )
-                    val progreso = if (viewModel.experienciaNivel > 0) {
-                        viewModel.experienciaPuntos / (100f * viewModel.experienciaNivel)
-                    } else {
-                        0f
+                    val progreso = remember(viewModel.experienciaNivel, viewModel.experienciaPuntos) {
+                        if (viewModel.experienciaNivel > 0) viewModel.experienciaPuntos / (100f * viewModel.experienciaNivel) else 0f
                     }
                     LinearProgressIndicator(
                         progress = { progreso },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        color = Color(0xFF29B6F6)
+                            .padding(top = Dimens.paddingSmall),
+                        color = AzulBarraExp
                     )
                     Text(
-                        "Puntos de Experiencia para el siguiente logro",
-                        color = Color.White,
-                        fontSize = 11.sp,
-                        modifier = Modifier.padding(top = 4.dp)
+                        text = stringResource(R.string.label_exp_siguiente_logro),
+                        color = TextoBlanco,
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(top = Dimens.paddingTiny)
                     )
                 }
             }
 
             Text(
-                "Confirguracion de parametros Biometricos",
+                text = stringResource(R.string.title_config_biometrica),
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.fillMaxWidth()
             )
+
+            // Entrada de datos flotantes restrictiva para el peso corporal
             OutlinedTextField(
                 value = peso,
-                onValueChange = { peso = it },
-                label = { Text("Peso actual (Kg)") },
-                modifier = Modifier.fillMaxWidth()
+                onValueChange = { newValue ->
+                    val filtered = newValue.replace(',', '.').filter { c -> c.isDigit() || c == '.' }
+                    if (filtered.count { it == '.' } <= 1 && filtered.length <= 5) {
+                        peso = filtered
+                    }
+                },
+                label = { Text(stringResource(R.string.label_peso_actual)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next)
             )
 
+            // Entrada de datos enteros restrictiva para la edad cronológica
             OutlinedTextField(
                 value = edad,
-                onValueChange = { edad = it },
-                label = { Text("Edad") },
-                modifier = Modifier.fillMaxWidth()
+                onValueChange = { if (it.length <= 3) edad = it.filter { c -> c.isDigit() } },
+                label = { Text(stringResource(R.string.label_edad)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done)
             )
 
-            ExposedDropdownMenuBox(
-                expanded = expGenero,
-                onExpandedChange = { expGenero = !expGenero }
-            ) {
+            // Selector interactivo (Dropdown) para la asignación del género biológico
+            Box(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
                     value = genero,
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Genero Biologico") },
+                    label = { Text(stringResource(R.string.label_genero)) },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expGenero) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .menuAnchor()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = NaranjaCabecera,
+                        unfocusedBorderColor = GrisTextoHint
+                    )
                 )
-                ExposedDropdownMenu(
-                    expanded = expGenero,
-                    onDismissRequest = { expGenero = false }
-                ) {
+                Box(modifier = Modifier.matchParentSize().clickable { expGenero = true })
+                DropdownMenu(expanded = expGenero, onDismissRequest = { expGenero = false }, modifier = Modifier.fillMaxWidth(0.9f)) {
                     DropdownMenuItem(
-                        text = { Text("Masculino") },
-                        onClick = { genero = "Masculino"; expGenero = false })
-                    DropdownMenuItem(
-                        text = { Text("Femenino") },
-                        onClick = { genero = "Femenino"; expGenero = false })
+                        text = { Text("Seleccionar") },
+                        onClick = { genero = "Seleccionar"; expGenero = false }
+                    )
+                    stringArrayResource(R.array.generos_biologicos).forEach { opcion ->
+                        DropdownMenuItem(text = { Text(opcion) }, onClick = { genero = opcion; expGenero = false })
+                    }
                 }
             }
 
-            ExposedDropdownMenuBox(
-                expanded = expActividad,
-                onExpandedChange = { expActividad = !expActividad }
-            ) {
+            // Selector interactivo (Dropdown) para la asignación del coeficiente de actividad física
+            Box(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
                     value = actividad,
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Nivel de Actividad Fisica") },
+                    label = { Text(stringResource(R.string.label_actividad)) },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expActividad) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .menuAnchor()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = NaranjaCabecera,
+                        unfocusedBorderColor = GrisTextoHint
+                    )
                 )
-                ExposedDropdownMenu(
-                    expanded = expActividad,
-                    onDismissRequest = { expActividad = false }
-                ) {
-                    DropdownMenuItem(text = { Text("Sedentario") }, onClick = { actividad = "Sedentario"; expActividad = false})
-                    DropdownMenuItem(text = { Text("Moderado") }, onClick = { actividad = "Moderado"; expActividad = false})
-                    DropdownMenuItem(text = { Text("Intenso") }, onClick = { actividad = "Intenso"; expActividad = false})
+                Box(modifier = Modifier.matchParentSize().clickable { expActividad = true })
+                DropdownMenu(expanded = expActividad, onDismissRequest = { expActividad = false }, modifier = Modifier.fillMaxWidth(0.9f)) {
+                    DropdownMenuItem(
+                        text = { Text("Seleccionar") },
+                        onClick = { actividad = "Seleccionar"; expActividad = false }
+                    )
+                    stringArrayResource(R.array.niveles_actividad).forEach { opcion ->
+                        DropdownMenuItem(text = { Text(opcion) }, onClick = { actividad = opcion; expActividad = false })
+                    }
                 }
             }
-            OutlinedTextField(
-                value = clima,
-                onValueChange = { clima = it },
-                label = { Text("Entorno Meteorologico (Calido / Frio)") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
 
+            // Tarjeta de monitorización para las condiciones térmicas de hidratación
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = TextoBlanco.copy(alpha = 0.5f))
+            ) {
+                Row(modifier = Modifier.padding(Dimens.paddingDefault), verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(R.string.label_entorno_clima),
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Spacer(modifier = Modifier.width(Dimens.paddingSmall))
+                    Text(
+                        text = climaActual,
+                        color = if (climaActual == "Calido") NaranjaCabecera else AzulClimaFrio,
+                        fontWeight = FontWeight.ExtraBold,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(Dimens.paddingDefault))
+
+            // Botón ejecutor que persiste los datos biométricos y recalcula las metas diarias
             Button(
                 onClick = {
-                    viewModel.guardarPerfil(
-                        peso.toFloatOrNull() ?: 70f,
-                        edad.toIntOrNull() ?: 25,
-                        genero,
-                        actividad,
-                        clima
-                    )
+                    viewModel.guardarPerfil(peso.toFloatOrNull() ?: 70f, edad.toIntOrNull() ?: 25, genero, actividad)
                     navController.popBackStack()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7A22))
+                    .height(Dimens.buttonHeight),
+                colors = ButtonDefaults.buttonColors(containerColor = NaranjaCabecera)
             ) {
-                Text("Guardar y Recalcular Meta", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(
+                    text = stringResource(R.string.btn_guardar_recalcular),
+                    color = TextoNegro,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewPerfilScreen() {
+    val nav = rememberNavController()
+    PerfilScreen(navController = nav)
 }

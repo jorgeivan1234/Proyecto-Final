@@ -17,6 +17,9 @@ interface ActividadFisicaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertarActividades(actividades: List<ActividadFisicaEntity>)
 
+    @Query("SELECT * FROM actividades_fiscias WHERE id = :id LIMIT 1")
+    fun obtenerActividadPorId(id: Int): Flow<ActividadFisicaEntity?>
+
     //aun no sabemos si usarlo pero hce que el usuario agrege un ejercicio personalizado
     /*@Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertarUnaActividad(actividad: ActividadFisicaEntity)*/

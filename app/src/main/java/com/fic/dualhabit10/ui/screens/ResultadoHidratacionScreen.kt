@@ -3,6 +3,7 @@ package com.fic.dualhabit10.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,33 +12,50 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
-import java.util.Locale
+import com.fic.dualhabit10.ui.theme.Dimens
+import com.fic.dualhabit10.ui.theme.NaranjaCabecera
+import com.fic.dualhabit10.ui.theme.AmarilloFondo
+import com.fic.dualhabit10.ui.theme.VerdeFondoHabitos
+import com.fic.dualhabit10.ui.theme.TextoNegro
+import com.fic.dualhabit10.ui.theme.GrisTextoHint
+import com.fic.dualhabit10.ui.theme.AzulTarjetaProgreso
+import com.fic.dualhabit10.ui.theme.AzulFondoDesglose
+import com.fic.dualhabit10.ui.theme.VerdeCompletado
+import com.fic.dualhabit10.ui.theme.NaranjaCalor
 
+// Constantes de navegación
+private object ResultadoRoutes {
+    const val HABITOS_HIDRATACION = "hidratacion"
+}
 
+// Vista analítica que procesa, desglosa y presenta la meta de consumo de agua personalizada para el usuario
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResultadoHidratacionScreen(
@@ -45,64 +63,113 @@ fun ResultadoHidratacionScreen(
     viewModel: HidratacionViewModel = viewModel(),
 ) {
     val scrollState = rememberScrollState()
+
     val metaLitros = viewModel.metaDiariaML / 1000f
     val cantidadVasos = if (viewModel.metaDiariaML > 0) viewModel.metaDiariaML / 250 else 0
     val basePeso = (viewModel.usuarioPeso * 35).toInt()
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Tu plan de Hidratacion", fontWeight = FontWeight.Bold, color = Color.White) },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF7A22))
-            )
+            // Cabecera unificada y estilizada con soporte para barras de estado del sistema
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = NaranjaCabecera,
+                        shape = RoundedCornerShape(
+                            bottomStart = Dimens.cornerRadiusLarge,
+                            bottomEnd = Dimens.cornerRadiusLarge
+                        )
+                    )
+                    .statusBarsPadding()
+                    .padding(
+                        start = Dimens.paddingMedium,
+                        end = Dimens.paddingMedium,
+                        bottom = Dimens.paddingLarge,
+                        top = Dimens.paddingExtraLarge
+                    )
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(R.string.title_plan_hidratacion),
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = TextoNegro,
+                        modifier = Modifier
+                            .background(
+                                color = AmarilloFondo,
+                                shape = RoundedCornerShape(percent = 50)
+                            )
+                            .padding(
+                                horizontal = Dimens.paddingLarge,
+                                vertical = Dimens.paddingTiny
+                            )
+                    )
+                }
+            }
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF9EFFEB))
+                .background(VerdeFondoHabitos)
                 .padding(innerPadding)
                 .verticalScroll(scrollState)
-                .padding(20.dp),
+                .padding(Dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Text(
-                text = "¡Meta Calculada!",
-                fontSize = 28.sp,
+                text = stringResource(R.string.label_meta_calculada),
+                style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Black,
-                color = Color(0xFFFF7A22)
+                color = NaranjaCabecera
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            // tarjeta con el resultado de litros
+            Spacer(modifier = Modifier.height(Dimens.paddingDefault))
+
+            // Tarjeta de visualización principal que destaca la meta diaria en litros
             Card(
-                shape = RoundedCornerShape(24.dp),
+                shape = RoundedCornerShape(Dimens.cornerRadiusLarge),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(8.dp)
+                elevation = CardDefaults.cardElevation(Dimens.elevationMedium)
             ) {
                 Column(
-                    modifier = Modifier.padding(32.dp),
+                    modifier = Modifier.padding(Dimens.paddingXXLarge),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "Necesitas tomar: ", fontSize = 16.sp, color = Color.Gray)
                     Text(
-                        text = String.format(Locale.US, "%.2f Litros", metaLitros),
-                        fontSize = 42.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = Color(0xFF448AFF)
+                        text = stringResource(R.string.label_necesitas_tomar),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = GrisTextoHint
                     )
-                    Text(text = "al dia", fontSize = 16.sp, color = Color.Gray)
+
+                    Text(
+                        text = stringResource(R.string.format_litros, metaLitros),
+                        style = MaterialTheme.typography.displayMedium,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = AzulTarjetaProgreso
+                    )
+
+                    Text(
+                        text = stringResource(R.string.label_al_dia),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = GrisTextoHint
+                    )
                 }
             }
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.paddingLarge))
 
             Text(
-                text = "Equivale a aproximadamente: ",
+                text = stringResource(R.string.label_equivale_a),
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.fillMaxWidth(),
-                fontSize = 16.sp
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            // equivalente a un vaso de agua
+            Spacer(modifier = Modifier.height(Dimens.paddingSmall))
+
+            // Fila ilustrativa para la equivalencia volumétrica traducida a vasos estándar
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
@@ -111,77 +178,100 @@ fun ResultadoHidratacionScreen(
                 Image(
                     painter = painterResource(id = R.drawable.img_vaso),
                     contentDescription = null,
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier.size(Dimens.iconSizeExtraLarge)
                 )
+                Spacer(modifier = Modifier.width(Dimens.paddingSmall))
                 Text(
-                    text = " x $cantidadVasos vasos de 250ml",
-                    fontSize = 20.sp,
+                    text = stringResource(R.string.format_vasos, cantidadVasos),
+                    style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
             }
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.paddingLarge))
 
             Text(
-                text = "¿Como llegamos a este numero?",
+                text = stringResource(R.string.label_como_llegamos),
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.fillMaxWidth(),
-                fontSize = 16.sp
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(12.dp))
-            //tarjeta de desglose
+            Spacer(modifier = Modifier.height(Dimens.paddingMedium))
+
+            // Contenedor analítico que detalla las adiciones por factores biológicos y ambientales
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFE0F7FA))
+                colors = CardDefaults.cardColors(containerColor = AzulFondoDesglose)
             ){
-                Column( modifier = Modifier.padding(16.dp)){
-                    DesgloseItem(label="Base por peso (${viewModel.usuarioPeso}kg)", value = "${basePeso}ml")
+                Column( modifier = Modifier.padding(Dimens.paddingDefault)){
+                    // Consumo base estimado de acuerdo al peso corporal actual
+                    DesgloseItem(
+                        label = stringResource(R.string.format_desglose_base, viewModel.usuarioPeso.toString()),
+                        value = stringResource(R.string.format_ml, basePeso.toString())
+                    )
 
+                    // Incremento condicional basado en la intensidad del desgaste por actividad física
                     if(viewModel.actividadNivel == "Alto" || viewModel.actividadNivel == "Intenso") {
                         DesgloseItem(
-                            label="Ajuste por actividad(${viewModel.actividadNivel.lowercase()})",
-                            value = "+600ml",
-                            color = Color(0xFF2E7D32)
+                            label = stringResource(R.string.format_desglose_actividad, viewModel.actividadNivel.lowercase()),
+                            value = stringResource(R.string.ajuste_600ml),
+                            color = VerdeCompletado
                         )
                     }
+
+                    // Incremento condicional debido al estrés térmico por factores climatológicos extremos
                     if(viewModel.entornoClima == "Calido" || viewModel.entornoClima == "Extremo") {
                         DesgloseItem(
-                            label="Ajuste por Clima calido${viewModel.entornoClima.lowercase()}",
-                            value = "+500ml",
-                            color = Color(0xFFD84315)
+                            label = stringResource(R.string.format_desglose_clima, viewModel.entornoClima.lowercase()),
+                            value = stringResource(R.string.ajuste_500ml),
+                            color = NaranjaCalor
                         )
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(32.dp))
-            // boton de aceptar
+            Spacer(modifier = Modifier.height(Dimens.paddingXXLarge))
+
+            // Botón de confirmación que consolida el registro y purga el historial de navegación hacia atrás
             Button(
                 onClick = {
-                    navController.navigate("hidratacion") {
-                        popUpTo("hidratacion") { inclusive = true }
+                    navController.navigate(ResultadoRoutes.HABITOS_HIDRATACION) {
+                        popUpTo(ResultadoRoutes.HABITOS_HIDRATACION) { inclusive = true }
                     }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(55.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7A22)),
-                shape = RoundedCornerShape(16.dp)
+                    .height(Dimens.buttonHeight),
+                colors = ButtonDefaults.buttonColors(containerColor = NaranjaCabecera),
+                shape = RoundedCornerShape(Dimens.cornerRadiusMedium)
             ) {
-                Text("¡Entendido, aceptar meta!", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Text(
+                    text = stringResource(R.string.btn_aceptar_meta),
+                    color = TextoNegro,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.labelLarge,
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
 }
 
+// Componente utilitario reutilizable para dar formato tabular a los elementos del desglose metabólico
 @Composable
-fun DesgloseItem(label: String, value: String, color: Color = Color.Black) {
+fun DesgloseItem(label: String, value: String, color: Color = TextoNegro) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = Dimens.paddingTiny),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = label, fontSize = 14.sp)
-        Text(text = value, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = color)
+        Text(text = label, style = MaterialTheme.typography.bodyMedium)
+        Text(text = value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = color)
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun PreviewResultadoHidratacionScreen() {
+    val nav = rememberNavController()
+    ResultadoHidratacionScreen(navController = nav)
+}

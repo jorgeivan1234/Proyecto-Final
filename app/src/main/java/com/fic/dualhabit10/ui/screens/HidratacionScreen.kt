@@ -21,35 +21,51 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import java.util.Locale
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
 import kotlinx.coroutines.launch
+import com.fic.dualhabit10.ui.theme.Dimens
+import com.fic.dualhabit10.ui.theme.VerdeFondoHabitos
+import com.fic.dualhabit10.ui.theme.AmarilloFondo
+import com.fic.dualhabit10.ui.theme.NaranjaCabecera
+import com.fic.dualhabit10.ui.theme.TextoNegro
+import com.fic.dualhabit10.ui.theme.TextoBlanco
+import com.fic.dualhabit10.ui.theme.AzulBotonClaro
+import com.fic.dualhabit10.ui.theme.AzulHidratacion
+import com.fic.dualhabit10.ui.theme.AzulTarjetaProgreso
 
+// Rutas de navegación internas para la sección de hidratación del usuario
+private object HidratacionRoutes {
+    const val HISTORIAL = "historial"
+    const val MASCOTA = "hidratacion_mascota"
+    const val CALCULADORA = "calculadora_agua"
+    const val REGRESO_HABITOS = "hid_habitos"
+}
+
+// Pantalla principal de hidratación que permite al usuario registrar y monitorear su consumo de agua diario
 @Composable
 fun HidratacionScreen(
     navController: NavController,
     viewModel: HidratacionViewModel = viewModel()
 ) {
+    // Conversión de mililitros a litros para simplificar la visualización en la tarjeta de progreso
     val litrosConsumidos = viewModel.aguaConsumidaML / 1000f
     val litrosMeta = viewModel.metaDiariaML / 1000f
+
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -57,20 +73,31 @@ fun HidratacionScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF9EFFEB))
+                .background(VerdeFondoHabitos)
         ) {
-            // Barra superior
+
+            // Cabecera superior con el menú de navegación, título y accesos directos secundarios
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        Color(0xFFFF7A22),
-                        shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
+                        color = NaranjaCabecera,
+                        shape = RoundedCornerShape(
+                            bottomStart = Dimens.cornerRadiusMedium,
+                            bottomEnd = Dimens.cornerRadiusMedium
+                        )
                     )
                     .statusBarsPadding()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 20.dp),
+                    .padding(
+                        start = Dimens.paddingMedium,
+                        end = Dimens.paddingMedium,
+                        bottom = Dimens.spacerMedium,
+                        top = Dimens.paddingExtraLarge
+                    ),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
+                // Contenedor del botón de menú lateral y placa del título principal
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center
@@ -81,26 +108,28 @@ fun HidratacionScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
-                            contentDescription = "Abrir Menu",
-                            tint = Color.Black,
-                            modifier = Modifier.size(35.dp)
+                            contentDescription = stringResource(R.string.desc_menu),
+                            tint = TextoNegro,
+                            modifier = Modifier.size(Dimens.iconSizeLarge)
                         )
                     }
                     Box(
                         modifier = Modifier
-                            .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))
-                            .padding(horizontal = 30.dp, vertical = 8.dp)
+                            .background(AmarilloFondo, shape = RoundedCornerShape(Dimens.cornerRadiusLarge))
+                            .padding(horizontal = Dimens.paddingXXLarge, vertical = Dimens.paddingSmall)
                     ) {
                         Text(
-                            text = "Hidratacion",
-                            color = Color.Black,
-                            fontSize = 22.sp,
+                            text = stringResource(R.string.title_hidratacion),
+                            color = TextoNegro,
+                            style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(12.dp))
 
+                Spacer(modifier = Modifier.height(Dimens.paddingMedium))
+
+                // Fila de accesos rápidos: Enlace al historial personal e hidratación de la mascota
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -108,84 +137,85 @@ fun HidratacionScreen(
                 ) {
                     Box(
                         modifier = Modifier
-                            .background(Color(0xFF81D4FA), shape = RoundedCornerShape(24.dp))
-                            .clickable { navController.navigate("historial") }
-                            .padding(horizontal = 36.dp, vertical = 18.dp)
+                            .background(AzulBotonClaro, shape = RoundedCornerShape(Dimens.cornerRadiusMedium))
+                            .clickable { navController.navigate(HidratacionRoutes.HISTORIAL) }
+                            .padding(horizontal = Dimens.paddingXXLarge, vertical = Dimens.paddingLarge)
                     ) {
                         Text(
-                            text = "Historial",
-                            color = Color.Black,
-                            fontSize = 20.sp,
+                            text = stringResource(R.string.btn_historial),
+                            color = TextoNegro,
+                            style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
                     }
                     Image(
                         painter = painterResource(id = R.drawable.img_bol_perro),
-                        contentDescription = "Ir a Hidratacion Mascota",
+                        contentDescription = stringResource(R.string.desc_hidratacion_mascota),
                         modifier = Modifier
-                            .size(150.dp)
-                            .clickable { navController.navigate("hidratacion_mascota") },
+                            .size(Dimens.imagePetBowlSize)
+                            .clickable { navController.navigate(HidratacionRoutes.MASCOTA) },
                         contentScale = ContentScale.Fit
                     )
                 }
             }
 
-            // Contenido Principal
+            // Área de contenido dividida en dos bloques de control y visualización
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
-                    .padding(horizontal = 20.dp, vertical = 16.dp),
+                    .height(Dimens.layoutHidratacionHeight)
+                    .padding(horizontal = Dimens.spacerMedium, vertical = Dimens.paddingDefault),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Top
             ) {
-                // Contenedor de Botones (Izquierda)
+
+                // Columna izquierda: Botones de incremento de agua y acceso a la calculadora de metas
                 Column(
                     modifier = Modifier.weight(1.2f),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(Dimens.paddingSmall))
 
                     BotonConsumoOvalado(
-                        texto = "+250ml",
+                        texto = stringResource(R.string.btn_add_250ml),
                         imagenRes = R.drawable.img_vaso,
                         onClick = { viewModel.agregarAgua(250) }
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(Dimens.paddingDefault))
                     BotonConsumoOvalado(
-                        texto = "+500ml",
+                        texto = stringResource(R.string.btn_add_500ml),
                         imagenRes = R.drawable.img_termo,
                         onClick = { viewModel.agregarAgua(500) }
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(Dimens.paddingDefault))
                     BotonConsumoOvalado(
-                        texto = "+1L",
+                        texto = stringResource(R.string.btn_add_1l),
                         imagenRes = R.drawable.img_jarra,
                         onClick = { viewModel.agregarAgua(1000) }
                     )
-                    Spacer(modifier = Modifier.height(36.dp))
+
+                    Spacer(modifier = Modifier.height(Dimens.spacerLarge))
 
                     Text(
-                        text = "Configurar parametros\nde hidratacion",
-                        color = Color.Black,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        lineHeight = 20.sp
+                        text = stringResource(R.string.label_configurar_parametros),
+                        color = TextoNegro,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(Dimens.paddingSmall))
 
                     Image(
                         painter = painterResource(id = R.drawable.img_calculadora),
-                        contentDescription = "Calculadora",
+                        contentDescription = stringResource(R.string.desc_calculadora),
                         modifier = Modifier
-                            .size(130.dp)
-                            .clickable { navController.navigate("calculadora_agua") },
+                            .size(Dimens.imageCalculadoraSize)
+                            .clickable { navController.navigate(HidratacionRoutes.CALCULADORA) },
                         contentScale = ContentScale.Fit
                     )
                 }
 
-                // Botella e Indicador (Derecha)
+                // Columna derecha: Gráfico indicativo de botella y tarjeta con el progreso numérico actual
                 Column(
                     modifier = Modifier.weight(1f),
                     horizontalAlignment = Alignment.End,
@@ -193,40 +223,59 @@ fun HidratacionScreen(
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.img_hidratacion),
-                        contentDescription = "Botella de agua",
+                        contentDescription = stringResource(R.string.desc_botella_agua),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(340.dp),
+                            .height(Dimens.imageBotellaHeight),
                         contentScale = ContentScale.Fit
                     )
 
-                    Spacer(modifier = Modifier.height(15.dp))
+                    Spacer(modifier = Modifier.height(Dimens.paddingMedium))
 
                     Box(
                         modifier = Modifier
-                            .background(Color(0xFF448AFF), shape = RoundedCornerShape(12.dp))
-                            .padding(horizontal = 16.dp, vertical = 16.dp)
+                            .background(AzulTarjetaProgreso, shape = RoundedCornerShape(Dimens.cornerRadiusSmall))
+                            .padding(horizontal = Dimens.paddingDefault, vertical = Dimens.paddingDefault)
                     ) {
                         Text(
-                            text = String.format(
-                                Locale.US,
-                                "Llevas:\n%.1f / %.1f L",
+                            text = stringResource(
+                                id = R.string.label_llevas_agua,
                                 litrosConsumidos,
                                 litrosMeta
                             ),
-                            color = Color.White,
-                            fontSize = 16.sp,
+                            color = TextoBlanco,
+                            style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center,
-                            lineHeight = 22.sp
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
+            }
+
+            Spacer(modifier = Modifier.height(Dimens.spacerExtraLarge))
+
+            // Panel inferior interactivo para retornar al menú general de hábitos
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Dimens.paddingDefault)
+                    .background(NaranjaCabecera, shape = RoundedCornerShape(Dimens.cornerRadiusLarge))
+                    .clickable { navController.navigate(HidratacionRoutes.REGRESO_HABITOS) }
+                    .padding(vertical = Dimens.paddingMedium),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.desc_regresar),
+                    color = TextoBlanco,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
 }
 
+// Componente interactivo reutilizable para el registro rápido de tomas de agua con un icono representativo
 @Composable
 fun BotonConsumoOvalado(
     texto: String,
@@ -235,10 +284,10 @@ fun BotonConsumoOvalado(
 ) {
     Box(
         modifier = Modifier
-            .width(180.dp)
-            .background(Color(0xFFB3E5FC), shape = RoundedCornerShape(50.dp))
+            .width(Dimens.buttonOvalWidth)
+            .background(AzulHidratacion, shape = RoundedCornerShape(Dimens.cornerRadiusLarge))
             .clickable { onClick() }
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(horizontal = Dimens.paddingDefault, vertical = Dimens.paddingMedium),
         contentAlignment = Alignment.CenterStart
     ) {
         Row(
@@ -248,22 +297,16 @@ fun BotonConsumoOvalado(
             Image(
                 painter = painterResource(id = imagenRes),
                 contentDescription = texto,
-                modifier = Modifier.size(36.dp),
+                modifier = Modifier.size(Dimens.iconSizeExtraLarge),
                 contentScale = ContentScale.Fit
             )
-            Spacer(modifier = Modifier.width(14.dp))
+            Spacer(modifier = Modifier.width(Dimens.spacerSmall))
             Text(
                 text = texto,
-                color = Color.Black,
-                fontSize = 18.sp,
+                color = TextoNegro,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewHidratacion(){
-    HidratacionScreen(navController = rememberNavController())
 }

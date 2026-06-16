@@ -10,29 +10,43 @@ import androidx.navigation.compose.rememberNavController
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.fic.dualhabit10.ui.screens.ActividadDetalleScreen
 import com.fic.dualhabit10.ui.screens.ActividadFisicaScreen
+import com.fic.dualhabit10.ui.screens.AlimentacionMascotaDetalleScreen
 import com.fic.dualhabit10.ui.screens.AlimentacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.AlimentacionScreen
+import com.fic.dualhabit10.ui.screens.CalculadoraHidratacionMacotaScreen
 import com.fic.dualhabit10.ui.screens.CalculadoraHidratacionScreen
 import com.fic.dualhabit10.ui.screens.Forget_Password
 import com.fic.dualhabit10.ui.screens.HabitosMascotaScreen
 import com.fic.dualhabit10.ui.screens.HabitosScreen
 import com.fic.dualhabit10.ui.screens.HidratacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.HidratacionScreen
+import com.fic.dualhabit10.ui.screens.HigieneMascotaDetalleScreen
+import com.fic.dualhabit10.ui.screens.HigieneMascotaScreen
 import com.fic.dualhabit10.ui.screens.HistorialScreen
 import com.fic.dualhabit10.ui.screens.InicioScreen
 import com.fic.dualhabit10.ui.screens.LoginScreen
+import com.fic.dualhabit10.ui.screens.MantenimientoScreen
 import com.fic.dualhabit10.ui.screens.MantenimientoSuenoScreen
 import com.fic.dualhabit10.ui.screens.MascotasMenu
 import com.fic.dualhabit10.ui.screens.PerfilMascotaScreen
 import com.fic.dualhabit10.ui.screens.PerfilScreen
+import com.fic.dualhabit10.ui.screens.RecetaDetalleScreen
 import com.fic.dualhabit10.ui.screens.RegisterScreen
 import com.fic.dualhabit10.ui.screens.RegisterSuccessful
+import com.fic.dualhabit10.ui.screens.RegistroPaseosScreen
+import com.fic.dualhabit10.ui.screens.ResultadoHidratacionMascotaScreen
 import com.fic.dualhabit10.ui.screens.ResultadoHidratacionScreen
+import com.fic.dualhabit10.ui.screens.SaludMascotaScreen
 import com.fic.dualhabit10.ui.viewmodels.HidratacionViewModel
+import com.fic.dualhabit10.ui.screens.Sugerencias
+import com.fic.dualhabit10.ui.viewmodels.AlimentacionViewModel
+import com.fic.dualhabit10.ui.viewmodels.HigieneMascotaViewModel
+import com.fic.dualhabit10.ui.viewmodels.PaseosViewModel
+import com.fic.dualhabit10.ui.viewmodels.SaludMascotaViewModel
+import com.fic.dualhabit10.ui.viewmodels.SugerenciasViewModel
 
 
 class MainActivity : ComponentActivity(){
@@ -41,7 +55,6 @@ class MainActivity : ComponentActivity(){
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
 
         setContent{
             MaterialTheme{
@@ -101,6 +114,11 @@ class MainActivity : ComponentActivity(){
                         HidratacionScreen(navController = navController, viewModel = hidratacionViewModel)
                     }
 
+                    //HidratacionScreen -> HabitosScreen
+                    composable(route = "hid_habitos"){
+                        HabitosScreen(navController = navController)
+                    }
+
                     //HidratacionScreen -> HidratacionMascotaScreen
                     composable(route = "hidratacion_mascota"){
                         HidratacionMascotaScreen(navController = navController)
@@ -130,8 +148,9 @@ class MainActivity : ComponentActivity(){
                     composable("habitos_mascota_menu"){
                         HabitosMascotaScreen(navController)
                     }
-                    composable("hidratacion_mascota"){
-                        HidratacionMascotaScreen(navController = navController)
+                    composable("registro_paseos"){
+                        val paseosViewModel: PaseosViewModel = viewModel()
+                        RegistroPaseosScreen(navController = navController, viewModel = paseosViewModel)
                     }
                     composable("perfil_mascota"){
                         PerfilMascotaScreen(navController = navController)
@@ -142,17 +161,91 @@ class MainActivity : ComponentActivity(){
                     composable("alimentacion"){
                         AlimentacionScreen(navController = navController)
                     }
+                    // AlimentacionScreen -> RecetaDetalleScreen
+                    composable(
+                        route = "receta_detalle/{recetaId}",
+                        arguments = listOf(navArgument("recetaId") { type = NavType.StringType }) // 1. Cambiamos a StringType
+                    ) { backStackEntry ->
+                        // 2. Extraemos el valor como String
+                        val recetaIdString = backStackEntry.arguments?.getString("recetaId") ?: "0"
+
+                        // 3. Lo convertimos a Int de forma segura
+                        val recetaId = recetaIdString.toIntOrNull() ?: 0
+
+                        val alimentacionViewModel: AlimentacionViewModel = viewModel()
+                        RecetaDetalleScreen(
+                            recetaId = recetaId,
+                            navController = navController,
+                            viewModel = alimentacionViewModel
+                        )
+                    }
                     composable("alimentacion_mascota") {
                         AlimentacionMascotaScreen(navController = navController)
                     }
                     composable (route = "receta_mascota_detalle/{recetaId}",
                         arguments = listOf(navArgument("recetaId") { type = NavType.StringType })
-                    ){
-
-                    }
-
+                    ){}
                     composable("sueño"){
                         MantenimientoSuenoScreen(navController = navController)
+                    }
+                    //pantalla de mantenimiento general
+                    composable("mantenimiento") {
+                        MantenimientoScreen(navController = navController)
+                    }
+                    //HidratacionMascotaScreen -> CalculadoraHidratacionMacotaScreen
+                    composable("calculadora_hidratacion_mascota"){
+                        CalculadoraHidratacionMacotaScreen(navController = navController)
+                    }
+                    //CalculadoraHidratacionMacotaScreen -> ResultadoHidratacionMascotaScreen
+                    composable("resultado_hidratacion_mascota"){
+                        ResultadoHidratacionMascotaScreen(navController = navController)
+                    }
+                    //cualquier actividad -> su pantalla propia
+                    composable(
+                        route = "actividad_detalle/{actividadId}",
+                        arguments = listOf(navArgument("actividadId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val id = backStackEntry.arguments?.getInt("actividadId") ?: 0
+                        ActividadDetalleScreen(actividadId = id, navController = navController)
+                    }
+                    //Sugerencias -> Pantalla de sugerencias
+                    composable("Sugerencias"){
+                        val sugerenciasViewModel: SugerenciasViewModel = viewModel()
+                        Sugerencias(navController = navController, viewModel = sugerenciasViewModel)
+                    }
+                    //cualquier receta -> su pantalla propia
+                    composable(
+                        route ="receta_mascota_detalle/{recetaId}",
+                        arguments = listOf(navArgument("recetaId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val id = backStackEntry.arguments?.getInt("recetaId") ?: 0
+                        AlimentacionMascotaDetalleScreen(recetaId = id, navController = navController)
+                    }
+
+                    //HabitosMascotaScreen -> HigieneMascotaScreen
+                    composable("higiene_mascota") {
+                        val higieneViewModel: HigieneMascotaViewModel = viewModel()
+                        HigieneMascotaScreen(
+                            navController = navController,
+                            viewModel = higieneViewModel
+                        )
+                    }
+                    //HigieneMascotaScreen -> HigieneMascotaDetalleScreen
+                    composable("higiene_mascota_detalle") {
+                        val higieneViewModel: HigieneMascotaViewModel = viewModel()
+                        HigieneMascotaDetalleScreen(
+                            navController = navController,
+                            viewModel = higieneViewModel
+                        )
+                    }
+
+                    //HabitosMascotaScreen -> SaludMascotaScreen
+                    composable("salud_mascota"){
+                        val saludViewModel: SaludMascotaViewModel = viewModel()
+                        SaludMascotaScreen(
+                            navController = navController,
+                            viewModel = saludViewModel
+                        )
                     }
                 }
             }

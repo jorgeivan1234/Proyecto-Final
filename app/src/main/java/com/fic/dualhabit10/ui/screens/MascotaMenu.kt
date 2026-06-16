@@ -3,15 +3,34 @@ package com.fic.dualhabit10.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,173 +40,202 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.fic.dualhabit10.R
+import kotlinx.coroutines.launch
+import com.fic.dualhabit10.ui.theme.Dimens
+import com.fic.dualhabit10.ui.theme.AmarilloAlimentacion
+import com.fic.dualhabit10.ui.theme.NaranjaCabecera
+import com.fic.dualhabit10.ui.theme.VerdeFondoHabitos
+import com.fic.dualhabit10.ui.theme.AmarilloFondo
+import com.fic.dualhabit10.ui.theme.AzulFondoProgresoMascota
+import com.fic.dualhabit10.ui.theme.TextoNegro
+import com.fic.dualhabit10.ui.theme.GrisOscuro
+import com.fic.dualhabit10.ui.theme.FondoTarjetaBlanco
+import com.fic.dualhabit10.ui.theme.NaranjaFondoClima
+import com.fic.dualhabit10.ui.theme.PastelMorado
+import com.fic.dualhabit10.ui.theme.PastelVerde
+import com.fic.dualhabit10.ui.theme.PastelRosa
 
+// Entidad que representa cada una de las opciones disponibles en el panel de la mascota virtual
 data class MascotaMenu(
-    val titulo: String,
-    val imagenRes: Int?, //El ? Sirve para poder poner null en el imagenres en caso de que las cards no tengan imagen
+    val tituloResId: Int,
+    val imagenRes: Int?,
     val rutaNavigation: String,
     val enMantenimiento: Boolean = false,
     val colorFondo: Color
 )
 
+// Pantalla principal del menú de la mascota virtual con accesos a juegos, hábitos y enciclopedia
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MascotasMenu(navController: NavController) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
-    val colores = listOf(
-        Color(0xFFFFE0B2),
-        Color(0xFFE1BEE7),
-        Color(0xFFC8E6C9),
-        Color(0xFFFFF9C4),
-        Color(0xFFF8BBD0),
-        Color(0xFFBBDEFB)
-    )
-    //La lista las tarjetas
     val Listacards = listOf(
         MascotaMenu(
-            titulo = "Noticias de mascotas",
-            imagenRes = null,
-            rutaNavigation = "", //Agregar ruta. ejmp | noticia_mascota | Cuando se cree la pantalla
-            enMantenimiento = true,
-            colorFondo = colores[0]
-        ),
-        MascotaMenu(
-            titulo = "Juegos",
-            imagenRes = null,
-            rutaNavigation = "", //Agregar ruta. ejmp | juegos | Cuando se cree la pantalla
-            enMantenimiento = true,
-            colorFondo = colores[1]
-        ),
-        MascotaMenu(
-            titulo = "Enciclopedia",
-            imagenRes = null,
-            rutaNavigation = "", //Agregar ruta. ejmp | enciclopedia | Cuando se cree la pantalla
-            enMantenimiento = true,
-            colorFondo = colores[2]
-        ),
-        MascotaMenu(
-            titulo = "Ir a mis hábitos humanos",
-            imagenRes = null,
-            rutaNavigation = "habitos",
-            enMantenimiento = false,
-            colorFondo = colores[3]
-        ),
-        MascotaMenu(
-            titulo = "Aprender (PetDex)",
-            imagenRes = null,
-            rutaNavigation = "", //Agregar ruta. ejmp | petdex | Cuando se cree la pantalla
-            enMantenimiento = true,
-            colorFondo = colores[4]
-        ),
-        MascotaMenu(
-            titulo = "Ejercicios",
+            tituloResId = R.string.menu_ejercicios,
             imagenRes = null,
             rutaNavigation = "actividad_fisica_mascota",
             enMantenimiento = false,
-            colorFondo = colores[5]
+            colorFondo = NaranjaFondoClima
+        ),
+        MascotaMenu(
+            tituloResId = R.string.menu_ir_habitos_humanos,
+            imagenRes = null,
+            rutaNavigation = "habitos",
+            enMantenimiento = false,
+            colorFondo = PastelMorado
+        ),
+        MascotaMenu(
+            tituloResId = R.string.menu_noticias,
+            imagenRes = null,
+            rutaNavigation = "mantenimiento",
+            enMantenimiento = true,
+            colorFondo = PastelVerde
+        ),
+        MascotaMenu(
+            tituloResId = R.string.menu_juegos,
+            imagenRes = null,
+            rutaNavigation = "mantenimiento",
+            enMantenimiento = true,
+            colorFondo = AmarilloAlimentacion
+        ),
+        MascotaMenu(
+            tituloResId = R.string.menu_enciclopedia,
+            imagenRes = null,
+            rutaNavigation = "mantenimiento",
+            enMantenimiento = true,
+            colorFondo = PastelRosa
+        ),
+        MascotaMenu(
+            tituloResId = R.string.menu_aprender,
+            imagenRes = null,
+            rutaNavigation = "mantenimiento",
+            enMantenimiento = true,
+            colorFondo = AzulFondoProgresoMascota
         )
     )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF9EFFEB))
+    BaseCustomDrawer(
+        navController = navController,
+        drawerState = drawerState
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0xFFFF7A22))
-                .padding(start = 12.dp, end = 12.dp, bottom = 20.dp)
+                .fillMaxSize()
+                .background(VerdeFondoHabitos)
         ) {
+            // Contenedor superior para la barra de navegación personalizada
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp)
+                    .height(Dimens.topBarHeightExtra)
+                    .background(
+                        color = NaranjaCabecera,
+                        shape = RoundedCornerShape(
+                            bottomStart = Dimens.cornerRadiusExtraLarge,
+                            bottomEnd = Dimens.cornerRadiusExtraLarge
+                        )
+                    )
+                    .padding(horizontal = Dimens.paddingMedium)
+                    .padding(top = Dimens.paddingLarge),
+                contentAlignment = Alignment.TopCenter
             ) {
-                // Botón regresar (flecha atrás)
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Regresar",
-                        tint = Color.Black,
-                        modifier = Modifier.size(32.dp)
-                    )
-                }
-                // Título centrado
-                Box(
-                    modifier = Modifier
-                        .background(Color(0xFFFFF200), shape = RoundedCornerShape(50.dp))
-                        .padding(horizontal = 20.dp, vertical = 6.dp)
-                        .align(Alignment.Center)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.Menu_Mascota),
-                        color = Color.Black,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = stringResource(R.string.desc_menu),
+                            tint = TextoNegro,
+                            modifier = Modifier.size(Dimens.iconSizeExtraLarge)
+                        )
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .background(AmarilloFondo, shape = RoundedCornerShape(Dimens.cornerRadiusLarge))
+                            .padding(
+                                horizontal = Dimens.paddingMedium,
+                                vertical = Dimens.paddingSmallMedium
+                            )
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.Menu_Mascota),
+                            color = TextoNegro,
+                            fontSize = Dimens.textSizeBodyLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    // Margen de compensación para equilibrar la alineación del título
+                    Spacer(modifier = Modifier.size(Dimens.spacerHeader))
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(Dimens.paddingDefault))
 
-        Tarjeta_Mascota_Grande(
-            colorFondo = Color(0xFFF5F5F5),
-            onClick = { navController.navigate("habitos_mascota_menu") }
-        )
+            Tarjeta_Mascota_Grande(
+                colorFondo = FondoTarjetaBlanco,
+                onClick = { navController.navigate("habitos_mascota_menu") }
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(Dimens.paddingDefault))
 
-        //Esto es la separacion de las cards en 2 filas
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(Listacards) { item ->
-                TarjetaMenuMascota(
-                    item = item,
-                    onClick = {
-                        if (!item.enMantenimiento && item.rutaNavigation.isNotEmpty()){
-                            navController.navigate(item.rutaNavigation)
+            // Rejilla de dos columnas con las secciones secundarias del menú
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = Dimens.paddingDefault),
+                horizontalArrangement = Arrangement.spacedBy(Dimens.paddingDefault),
+                verticalArrangement = Arrangement.spacedBy(Dimens.paddingDefault),
+                contentPadding = PaddingValues(bottom = Dimens.paddingLarge)
+            ) {
+                items(Listacards) { item ->
+                    TarjetaMenuMascota(
+                        item = item,
+                        onClick = {
+                            if (item.rutaNavigation.isNotEmpty()){
+                                navController.navigate(item.rutaNavigation)
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
     }
 }
-//Funcion para la tarjeta grande de la mascota
+
+// Tarjeta destacada de dimensiones mayores para acceder a los hábitos principales de la mascota
 @Composable
 fun Tarjeta_Mascota_Grande(colorFondo: Color, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(180.dp)
-            .padding(horizontal = 16.dp)
+            .height(Dimens.cardMenuGrandeHeight)
+            .padding(horizontal = Dimens.paddingDefault)
             .clickable { onClick() },
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(Dimens.cornerRadiusMedium),
         colors = CardDefaults.cardColors(containerColor = colorFondo)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(Dimens.paddingDefault),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Habitos de mascota",
-                color = Color.Black,
-                fontSize = 24.sp,
+                text = stringResource(R.string.menu_habitos_mascota),
+                color = TextoNegro,
+                fontSize = Dimens.textSizeSubtitle,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .weight(1.2f)
@@ -200,47 +248,47 @@ fun Tarjeta_Mascota_Grande(colorFondo: Color, onClick: () -> Unit) {
                 modifier = Modifier
                     .weight(0.8f)
                     .fillMaxWidth()
-                    .padding(4.dp),
+                    .padding(Dimens.paddingTiny),
                 contentScale = ContentScale.Fit
             )
         }
     }
 }
 
-//Funcion de las tarjetas abajo de la mascota virtual
+// Representación visual interna para cada una de las opciones del LazyVerticalGrid
 @Composable
 fun TarjetaMenuMascota(item: MascotaMenu, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(130.dp)
+            .height(Dimens.cardMenuSmallHeight)
             .clickable { onClick() },
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(Dimens.cornerRadiusMedium),
         colors = CardDefaults.cardColors(containerColor = item.colorFondo),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = Dimens.paddingMicro)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp),
+                .padding(Dimens.paddingMedium),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = item.titulo,
-                color = Color.Black,
-                fontSize = 18.sp,
+                text = stringResource(item.tituloResId),
+                color = TextoNegro,
+                fontSize = Dimens.textSizeBodyLarge,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                lineHeight = 22.sp
+                lineHeight = Dimens.lineHeightMedium
             )
-            // Etiqueta "(mantenimiento)" igual que en la imagen
+
             if (item.enMantenimiento) {
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(Dimens.paddingTiny))
                 Text(
-                    text = "(mantenimiento)",
-                    color = Color.DarkGray,
-                    fontSize = 11.sp,
+                    text = stringResource(R.string.menu_mantenimiento),
+                    color = GrisOscuro,
+                    fontSize = Dimens.textSizeMicro,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Medium
                 )
@@ -249,10 +297,7 @@ fun TarjetaMenuMascota(item: MascotaMenu, onClick: () -> Unit) {
     }
 }
 
-// -------------------------------------------------------
-// Preview
-// -------------------------------------------------------
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewMascotasMenu() {
     val nav = rememberNavController()
