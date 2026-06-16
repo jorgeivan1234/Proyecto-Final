@@ -31,6 +31,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.fic.dualhabit10.R
 import com.fic.dualhabit10.data.local.SaludMascotaEntity
@@ -44,6 +45,9 @@ import com.fic.dualhabit10.ui.theme.GrisPlata
 import com.fic.dualhabit10.ui.theme.GrisOscuro
 import com.fic.dualhabit10.ui.theme.BlancoFondo
 import com.fic.dualhabit10.ui.theme.TextoNegro
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -276,6 +280,7 @@ fun InfoTratamientosSeccion() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistorialCompletoSeccion(
     historial: List<SaludMascotaEntity>,
@@ -289,6 +294,31 @@ fun HistorialCompletoSeccion(
         stringResource(R.string.chip_nota)
     )
 
+    // Estados para el selector de fecha
+    var showDatePicker by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState()
+
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    datePickerState.selectedDateMillis?.let { millis ->
+                        // Ahora SOLAMENTE guardamos los números limpios, máximo 8 dígitos (ddMMyyyy) para mantener compatibilidad
+                        val formatter = SimpleDateFormat("ddMMyyyy", Locale.getDefault())
+                        viewModel.fechaRegistro = formatter.format(Date(millis))
+                    }
+                    showDatePicker = false
+                }) { Text("Aceptar") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) { Text("Cancelar") }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
     Column(modifier = Modifier.fillMaxSize().padding(Dimens.paddingDefault)) {
         AnimatedVisibility(visible = mostrarFormulario) {
             Card(
@@ -300,7 +330,7 @@ fun HistorialCompletoSeccion(
             ) {
                 Column(
                     modifier = Modifier.padding(Dimens.paddingDefault),
-                    verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium)
+                    verticalArrangement = Arrangement.spacedBy(15.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.form_nuevo_registro),
@@ -343,23 +373,31 @@ fun HistorialCompletoSeccion(
                         singleLine = true
                     )
 
-                    OutlinedTextField(
-                        value = viewModel.fechaRegistro,
-                        onValueChange = { input ->
-                            // Ahora SOLAMENTE guardamos los números limpios, máximo 8 dígitos
-                            val digitos = input.filter { it.isDigit() }.take(8)
-                            viewModel.fechaRegistro = digitos
-                        },
-                        label = { Text(stringResource(R.string.hint_fecha_registro)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Next
-                        ),
-                        // Usamos la transformación visual para que se "dibujen" las / sin afectar el cursor
-                        visualTransformation = DateTransformation()
-                    )
+                    // Campo de Fecha con Calendario
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        OutlinedTextField(
+                            value = viewModel.fechaRegistro,
+                            onValueChange = { },
+                            label = { Text(stringResource(R.string.hint_fecha_registro)) },
+                            modifier = Modifier.fillMaxWidth(),
+                            readOnly = true, // Evita que se abra el teclado
+                            enabled = false, // Necesario para que el clic lo maneje el Box
+                            // Usamos la transformación visual para que se "dibujen" las / sin afectar el cursor
+                            visualTransformation = DateTransformation(),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                disabledTextColor = Color.Black,
+                                disabledBorderColor = Color.Gray,
+                                disabledLabelColor = Color.Gray,
+                                disabledPlaceholderColor = Color.Gray,
+                            )
+                        )
+                        // Este Box invisible captura el toque para abrir el calendario
+                        Box(
+                            modifier = Modifier
+                                .matchParentSize()
+                                .clickable { showDatePicker = true }
+                        )
+                    }
 
                     OutlinedTextField(
                         value = viewModel.notasRegistro,
